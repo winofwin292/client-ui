@@ -1,11 +1,10 @@
 import React, { memo } from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { NotFound } from "../components/common";
 
 function MapAllowedRoutes({ routes, basePath, isAddNotFound }) {
-    const match = useRouteMatch(basePath);
     return (
-        <Switch>
+        <Routes>
             {routes.map((route) => {
                 const {
                     path,
@@ -16,17 +15,16 @@ function MapAllowedRoutes({ routes, basePath, isAddNotFound }) {
                     ...rest
                 } = route;
                 return (
-                    <Route {...rest} key={path} path={`${match.path}${path}`}>
-                        <Component children={children} />
-                    </Route>
+                    <Route
+                        {...rest}
+                        key={path}
+                        path={`${path}`}
+                        element={<Component children={children} />}
+                    />
                 );
             })}
-            {isAddNotFound && (
-                <Route>
-                    <NotFound />
-                </Route>
-            )}
-        </Switch>
+            {isAddNotFound && <Route element={<NotFound />} />}
+        </Routes>
     );
 }
 

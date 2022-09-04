@@ -7,21 +7,19 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-
 import Button from "@mui/material/Button";
-
 import MenuItem from "@mui/material/MenuItem";
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { isLoggedIn } from "../../utils";
 
 function TopNav(props) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    let history = useHistory();
+    let navigate = useNavigate();
 
     function handleLogout() {
         localStorage.removeItem("roles");
-        history.push("/");
+        navigate("/");
     }
 
     const handleOpenNavMenu = (event) => {
@@ -30,8 +28,11 @@ function TopNav(props) {
 
     const handleCloseNavMenu = (path) => {
         setAnchorElNav(null);
+        if (!!props.prefix) {
+            path = props.prefix + "/" + path;
+        }
         if (path) {
-            history.push(path);
+            navigate(path);
         }
     };
 
@@ -86,9 +87,7 @@ function TopNav(props) {
                                 <MenuItem
                                     key={path}
                                     onClick={() =>
-                                        handleCloseNavMenu(
-                                            `${props.prefix}${path}`
-                                        )
+                                        handleCloseNavMenu(`${path}`)
                                     }
                                 >
                                     <Typography textAlign="center">
@@ -125,9 +124,7 @@ function TopNav(props) {
                         {props.routes.map(({ path, title }) => (
                             <Button
                                 key={path}
-                                onClick={() =>
-                                    handleCloseNavMenu(`${props.prefix}${path}`)
-                                }
+                                onClick={() => handleCloseNavMenu(`${path}`)}
                                 sx={{
                                     my: 2,
                                     color: "white",

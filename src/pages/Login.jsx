@@ -1,8 +1,7 @@
 import React, { memo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-// import Link from "@mui/material/Link";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -13,7 +12,7 @@ import Container from "@mui/material/Container";
 
 function Login() {
     let [selected, setSelected] = useState([]);
-    let history = useHistory();
+    let navigate = useNavigate();
 
     function handleChange(e) {
         const { options } = e.target;
@@ -29,7 +28,8 @@ function Login() {
 
     function handleClick() {
         localStorage.setItem("roles", JSON.stringify(selected));
-        history.push("/app");
+        navigate("/app");
+        // window.location.href = "/app";
     }
 
     return (

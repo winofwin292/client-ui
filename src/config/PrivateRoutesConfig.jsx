@@ -1,28 +1,28 @@
 import Roles from "./Roles";
-import { Dashboard, TeacherCourse, StudentCourse, Shop } from "../pages";
+import { Dashboard, TeacherCourse, StudentCourse, Home } from "../pages";
 
 const PrivateRoutesConfig = [
     {
-        component: Shop,
+        component: Home,
         path: "",
-        title: "Shop",
+        title: "Home",
         exact: true,
     },
     {
         component: Dashboard,
-        path: "/dashboard",
+        path: "dashboard",
         title: "Dashboard",
         permission: [Roles.ADMIN],
     },
     {
         component: TeacherCourse,
-        path: "/teacher",
+        path: "teacher",
         title: "Giáo viên",
         permission: [Roles.TEACHER],
     },
     {
         component: StudentCourse,
-        path: "/student",
+        path: "student",
         title: "Học viên",
         permission: [Roles.STUDENT],
     },

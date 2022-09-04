@@ -5,7 +5,7 @@ import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import { isLoggedIn } from "../utils";
 
 const navOptions = [
-    { title: "Home", path: "/home" },
+    { title: "Home", path: "/" },
     { title: "Shop", path: "/shop" },
     { title: "Login", path: "/login" },
 ];
@@ -13,7 +13,7 @@ const navOptions = [
 function Shop() {
     return (
         <div>
-            {!isLoggedIn() && <TopNav routes={navOptions} />}
+            {!isLoggedIn() && <TopNav routes={navOptions} prefix={""} />}
             <BasicPage title="Shop Page" icon={<LocalGroceryStoreIcon />} />
         </div>
     );
