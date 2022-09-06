@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import history from "../utils/history";
+import history from "utils/history";
 import PrivateRoutes from "./PrivateRoutes";
 import Auth from "./Auth";
-import { Login, Shop, Home } from "../pages";
+import { Shop, Home } from "../pages";
+import Login from "../pages/Login/Login";
 import { getAllowedRoutes, isLoggedIn } from "../utils";
 import { PrivateRoutesConfig } from "../config/index";
 import { NotFound } from "../components/common";
