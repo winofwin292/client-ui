@@ -11,16 +11,19 @@ import { I18nextProvider } from "react-i18next";
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "context";
 
+import { BrowserRouter } from "react-router-dom";
+import history from "utils/history";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
-        <I18nextProvider i18n={i18n}>
-            <MaterialUIControllerProvider>
-                <I18nextProvider i18n={i18n}>
+        <BrowserRouter history={history}>
+            <I18nextProvider i18n={i18n}>
+                <MaterialUIControllerProvider>
                     <App />
-                </I18nextProvider>
-            </MaterialUIControllerProvider>
-        </I18nextProvider>
+                </MaterialUIControllerProvider>
+            </I18nextProvider>
+        </BrowserRouter>
     </React.StrictMode>
 );
 

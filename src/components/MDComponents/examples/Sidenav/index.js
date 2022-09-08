@@ -59,6 +59,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const location = useLocation();
     const collapseName = location.pathname.replace("/", "");
 
+    console.log(collapseName);
+
     let textColor = "white";
 
     if (transparentSidenav || (whiteSidenav && !darkMode)) {
@@ -98,7 +100,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
     // Render all the routes from the routes.js (All the visible items on the Sidenav)
     const renderRoutes = routes.map(
-        ({ type, name, icon, title, noCollapse, key, href, route }) => {
+        ({ type, name, icon, title, noCollapse, key, href, path }) => {
             let returnValue;
 
             if (type === "collapse") {
@@ -118,7 +120,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                         />
                     </Link>
                 ) : (
-                    <NavLink key={key} to={route}>
+                    <NavLink key={key} to={path}>
                         <SidenavCollapse
                             name={name}
                             icon={icon}
@@ -258,7 +260,8 @@ Sidenav.propTypes = {
     ]),
     brand: PropTypes.string,
     brandName: PropTypes.string.isRequired,
-    routes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    // routes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    routes: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Sidenav;

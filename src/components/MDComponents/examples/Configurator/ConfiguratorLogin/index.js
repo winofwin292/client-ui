@@ -107,11 +107,7 @@ function ConfiguratorLogin() {
                         {t("login.changeLang")}
                     </MDTypography>
 
-                    <Switch
-                        checked={lang}
-                        // value={lang}
-                        onChange={handleChangeLanguage}
-                    />
+                    <Switch checked={lang} onChange={handleChangeLanguage} />
                 </MDBox>
                 <Divider />
                 <MDBox

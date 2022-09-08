@@ -4,8 +4,14 @@ import { getAllowedRoutes, isLoggedIn } from "../utils";
 import { PrivateRoutesConfig } from "../config/index";
 import { TopNav } from "../components/common";
 
+// Material Dashboard 2 React contexts
+import { useMaterialUIController } from "context";
+
 function PrivateRoutes() {
     let allowedRoutes = [];
+    // eslint-disable-next-line
+    const [controller, dispatch] = useMaterialUIController();
+    const { layout } = controller;
 
     if (isLoggedIn()) {
         allowedRoutes = getAllowedRoutes(PrivateRoutesConfig);
@@ -15,7 +21,9 @@ function PrivateRoutes() {
 
     return (
         <Fragment>
-            <TopNav routes={allowedRoutes} prefix={"/app"} />
+            {layout !== "dashboard" && (
+                <TopNav routes={allowedRoutes} prefix={"/app"} />
+            )}
             <Outlet />
         </Fragment>
     );

@@ -9,7 +9,6 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDComponents/MDBox";
 
 // Material Dashboard 2 React example components
-import Configurator from "components/MDComponents/examples/Configurator";
 import ConfiguratorLogin from "components/MDComponents/examples/Configurator/ConfiguratorLogin";
 
 // Material Dashboard 2 React themes

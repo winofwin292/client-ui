@@ -1,5 +1,11 @@
 import Roles from "./Roles";
-import { Dashboard, TeacherCourse, StudentCourse, Home } from "../pages";
+import { TeacherCourse, StudentCourse, Home } from "../pages";
+import { Dashboard } from "pages/Dashboard";
+import { ManagerUser } from "pages/ManagerUser";
+import { Overview } from "pages/Dashboard/Overview";
+
+// @mui icons
+import Icon from "@mui/material/Icon";
 
 const PrivateRoutesConfig = [
     {
@@ -7,14 +13,30 @@ const PrivateRoutesConfig = [
         path: "",
         title: "Home",
         exact: true,
-        permission: [Roles.TEACHER, Roles.STUDENT],
     },
     {
         component: Dashboard,
-        path: "",
+        path: "dashboard/*",
         title: "Dashboard",
         permission: [Roles.ADMIN],
-        exact: true,
+        children: [
+            {
+                type: "collapse",
+                name: "Overview",
+                key: "overview",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "*",
+                component: <Overview />,
+            },
+            {
+                type: "collapse",
+                name: "Manager User",
+                key: "user",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "user",
+                component: <ManagerUser />,
+            },
+        ],
     },
     {
         component: TeacherCourse,
