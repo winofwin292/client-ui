@@ -4,5 +4,24 @@
         "class": "Lớp",
         "text": "Đây là văn bản",
         "selectLanguage": "Ngôn ngữ"
+    },
+    "login":{
+        "configurator":"Cấu hình",
+        "seeOur":"Tùy chọn bảng điều khiển:",
+        "changeLang":"Đổi ngôn ngữ",
+        "lightDark": "Giao diện sáng / Giao diện tối",
+        "signIn":"Đăng nhập",
+        "username":"Tên đăng nhập",
+        "password":"Mật khẩu",
+        "remember":"Lưu đăng nhập",
+        "haveAccount":"Chưa có tài khoản?",
+        "signUp":"Đăng ký",
+        "footer":{
+            "makeBy":"thực hiện bởi",
+            "about":"Về chúng tôi"
+        }
+    },
+    "home":{
+        "name":"Trang chủ"
     }
 }

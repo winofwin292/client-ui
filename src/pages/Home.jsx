@@ -1,8 +1,14 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { TopNav } from "../components/common";
 import { BasicPage } from "../components/common";
 import HomeIcon from "@mui/icons-material/Home";
 import { isLoggedIn } from "../utils";
+
+// Material Dashboard 2 React contexts
+import { useMaterialUIController, setLayout } from "context";
+
+//i18next translate
+import { useTranslation } from "react-i18next";
 
 const navOptions = [
     { title: "Home", path: "/" },
@@ -11,10 +17,21 @@ const navOptions = [
 ];
 
 function Home() {
+    //controller có thể lấy layout phục vụ cho chức năng thêm
+    // eslint-disable-next-line
+    const [controller, dispatch] = useMaterialUIController();
+    // const { direction, layout, openConfigurator, darkMode } = controller;
+
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        setLayout(dispatch, "home");
+    }, [dispatch]);
+
     return (
         <div>
             {!isLoggedIn() && <TopNav routes={navOptions} prefix={""} />}
-            <BasicPage title="Home Page" icon={<HomeIcon />} />
+            <BasicPage title={t("home.name")} icon={<HomeIcon />} />
         </div>
     );
 }

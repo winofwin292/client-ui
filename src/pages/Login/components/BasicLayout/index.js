@@ -20,26 +20,17 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
-import MDBox from "../../../../components/MDComponents/MDBox";
+import MDBox from "components/MDComponents/MDBox";
 
 // Material Dashboard 2 React example components
-import DefaultNavbar from "../../../../components/MDComponents/examples/Navbars/DefaultNavbar";
-import PageLayout from "../../../../components/MDComponents/examples/LayoutContainers/PageLayout";
+import PageLayout from "components/MDComponents/examples/LayoutContainers/PageLayout";
 
 // Authentication pages components
-import Footer from "../Footer";
+import Footer from "pages/Login/components/Footer";
 
 function BasicLayout({ image, children }) {
     return (
         <PageLayout>
-            <DefaultNavbar
-                action={{
-                    type: "external",
-                    route: "https://creative-tim.com/product/material-dashboard-react",
-                    label: "free download",
-                    color: "dark",
-                }}
-            />
             <MDBox
                 position="absolute"
                 width="100%"

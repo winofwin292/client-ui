@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -16,20 +16,36 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 
 // Material Dashboard 2 React components
-import MDBox from "../../components/MDComponents/MDBox";
-import MDTypography from "../../components/MDComponents/MDTypography";
-import MDInput from "../../components/MDComponents/MDInput";
-import MDButton from "../../components/MDComponents/MDButton";
+import MDBox from "components/MDComponents/MDBox";
+import MDTypography from "components/MDComponents/MDTypography";
+import MDInput from "components/MDComponents/MDInput";
+import MDButton from "components/MDComponents/MDButton";
 
 // Authentication layout components
-import BasicLayout from "./components/BasicLayout";
+import BasicLayout from "pages/Login/components/BasicLayout";
 
 // Images
-import bgImage from "../../assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+
+// Material Dashboard 2 React contexts
+import { useMaterialUIController, setLayout } from "context";
+
+//i18next translate
+import { useTranslation } from "react-i18next";
 
 function Login() {
     // let navigate = useNavigate();
     const [rememberMe, setRememberMe] = useState(false);
+    //controller có thể lấy layout phục vụ cho chức năng thêm
+    // eslint-disable-next-line
+    const [controller, dispatch] = useMaterialUIController();
+    // const { direction, layout, openConfigurator, darkMode } = controller;
+
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        setLayout(dispatch, "login");
+    }, [dispatch]);
 
     const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
@@ -60,7 +76,7 @@ function Login() {
                         color="white"
                         mt={1}
                     >
-                        Sign in
+                        {t("login.signIn")}
                     </MDTypography>
                     <Grid
                         container
@@ -103,12 +119,12 @@ function Login() {
                 <MDBox pt={4} pb={3} px={3}>
                     <MDBox component="form" role="form">
                         <MDBox mb={2}>
-                            <MDInput type="email" label="Email" fullWidth />
+                            <MDInput label={t("login.signIn")} fullWidth />
                         </MDBox>
                         <MDBox mb={2}>
                             <MDInput
                                 type="password"
-                                label="Password"
+                                label={t("login.password")}
                                 fullWidth
                             />
                         </MDBox>
@@ -128,7 +144,7 @@ function Login() {
                                     ml: -1,
                                 }}
                             >
-                                &nbsp;&nbsp;Remember me
+                                &nbsp;&nbsp;{t("login.remember")}
                             </MDTypography>
                         </MDBox>
                         <MDBox mt={4} mb={1}>
@@ -138,12 +154,12 @@ function Login() {
                                 color="info"
                                 fullWidth
                             >
-                                sign in
+                                {t("login.signIn")}
                             </MDButton>
                         </MDBox>
                         <MDBox mt={3} mb={1} textAlign="center">
                             <MDTypography variant="button" color="text">
-                                Don&apos;t have an account?{" "}
+                                {t("login.haveAccount")}{" "}
                                 <MDTypography
                                     component={Link}
                                     to="/authentication/sign-up"
@@ -152,7 +168,7 @@ function Login() {
                                     fontWeight="medium"
                                     textGradient
                                 >
-                                    Sign up
+                                    {t("login.signUp")}
                                 </MDTypography>
                             </MDTypography>
                         </MDBox>

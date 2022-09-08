@@ -4,5 +4,24 @@
         "class": "Class",
         "text": "This is text",
         "selectLanguage": "Language"
+    },
+    "login":{
+        "configurator":"Configurator",
+        "seeOur":"See our dashboard options.",
+        "changeLang":"Change Language",
+        "lightDark":"Light / Dark",
+        "signIn":"Sign in",
+        "username":"Username",
+        "password":"Password",
+        "remember":"Remember me",
+        "haveAccount":"Don&apos;t have an account?",
+        "signUp":"Sign up",
+        "footer":{
+            "makeBy":"make by",
+            "about":"About Us"
+        }
+    },
+    "home":{
+        "name":"Home Page"
     }
 }

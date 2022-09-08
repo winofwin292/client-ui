@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,24 +7,17 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
+import Button from "@mui/material/Button";
 
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-
-import { Trans } from "react-i18next";
-import i18n from "../../translation/i18n";
 
 import { isLoggedIn } from "../../utils";
 
 function TopNav(props) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     let navigate = useNavigate();
-    const [lang, setLang] = useState("vi");
 
     function handleLogout() {
         localStorage.removeItem("roles");
@@ -45,11 +38,6 @@ function TopNav(props) {
         }
     };
 
-    function handleChangeLanguage(e) {
-        i18n.changeLanguage(e.target.value);
-        setLang(e.target.value);
-    }
-
     return (
         <MuiAppBar position="static">
             <Container maxWidth="xl">
@@ -60,7 +48,7 @@ function TopNav(props) {
                         component="div"
                         sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
                     >
-                        <Trans i18nKey={"content.class"} />
+                        My App
                     </Typography>
 
                     <Box
@@ -155,24 +143,6 @@ function TopNav(props) {
                                 </Typography>
                             </MenuItem>
                         )}
-                    </Box>
-                    <Box>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">
-                                Language
-                            </InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={lang}
-                                label="Language"
-                                onChange={handleChangeLanguage}
-                                autoWidth
-                            >
-                                <MenuItem value="vi">Vi</MenuItem>
-                                <MenuItem value="en">En</MenuItem>
-                            </Select>
-                        </FormControl>
                     </Box>
                 </Toolbar>
             </Container>

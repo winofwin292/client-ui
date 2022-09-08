@@ -10,6 +10,7 @@ import MDBox from "components/MDComponents/MDBox";
 
 // Material Dashboard 2 React example components
 import Configurator from "components/MDComponents/examples/Configurator";
+import ConfiguratorLogin from "components/MDComponents/examples/Configurator/ConfiguratorLogin";
 
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
@@ -20,12 +21,14 @@ import themeDark from "assets/theme-dark";
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setOpenConfigurator } from "context";
 
+//i18next translate
+import i18n from "translation/i18n";
+
 import Routes from "./routes";
 
 const App = () => {
     const [controller, dispatch] = useMaterialUIController();
-    const { direction, openConfigurator, darkMode } = controller;
-    // const { pathname } = useLocation();
+    const { direction, layout, openConfigurator, darkMode } = controller;
 
     // Change the openConfigurator state
     const handleConfiguratorOpen = () =>
@@ -34,6 +37,9 @@ const App = () => {
     // Setting the dir attribute for the body element
     useEffect(() => {
         document.body.setAttribute("dir", direction);
+        const currLang = localStorage.getItem("lang") || "vi";
+        localStorage.setItem("lang", currLang);
+        i18n.changeLanguage(currLang);
     }, [direction]);
 
     const configsButton = (
@@ -63,8 +69,18 @@ const App = () => {
     return (
         <ThemeProvider theme={darkMode ? themeDark : theme}>
             <CssBaseline />
-            <Configurator />
-            {configsButton}
+            {layout === "home" && (
+                <>
+                    <ConfiguratorLogin />
+                    {configsButton}
+                </>
+            )}
+            {layout === "login" && (
+                <>
+                    <ConfiguratorLogin />
+                    {configsButton}
+                </>
+            )}
             <Routes />
         </ThemeProvider>
     );
