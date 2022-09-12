@@ -23,5 +23,9 @@
     },
     "home":{
         "name":"Trang chủ"
+    },
+    "adminSideBar":{
+        "overview":"Tổng quan",
+        "userMana": "Quản lý người dùng"
     }
 }

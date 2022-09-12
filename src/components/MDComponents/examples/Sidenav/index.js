@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useEffect } from "react";
 
 // react-router-dom components
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -47,6 +47,9 @@ import {
     setWhiteSidenav,
 } from "context";
 
+//i18next translate
+import { useTranslation } from "react-i18next";
+
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const [controller, dispatch] = useMaterialUIController();
     const {
@@ -58,8 +61,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     } = controller;
     const location = useLocation();
     const collapseName = location.pathname.replace("/", "");
-
-    console.log(collapseName);
+    const { t } = useTranslation();
+    let navigate = useNavigate();
 
     let textColor = "white";
 
@@ -98,6 +101,11 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         // eslint-disable-next-line
     }, [dispatch, location]);
 
+    function handleLogout() {
+        localStorage.removeItem("roles");
+        navigate("/");
+    }
+
     // Render all the routes from the routes.js (All the visible items on the Sidenav)
     const renderRoutes = routes.map(
         ({ type, name, icon, title, noCollapse, key, href, path }) => {
@@ -113,7 +121,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                         sx={{ textDecoration: "none" }}
                     >
                         <SidenavCollapse
-                            name={name}
+                            name={t(name)}
                             icon={icon}
                             active={key === collapseName}
                             noCollapse={noCollapse}
@@ -122,7 +130,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 ) : (
                     <NavLink key={key} to={path}>
                         <SidenavCollapse
-                            name={name}
+                            name={t(name)}
                             icon={icon}
                             active={key === collapseName}
                         />
@@ -224,17 +232,15 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 }
             />
             <List>{renderRoutes}</List>
+
             <MDBox p={2} mt="auto">
                 <MDButton
-                    component="a"
-                    href="https://www.creative-tim.com/product/material-dashboard-pro-react"
-                    target="_blank"
-                    rel="noreferrer"
                     variant="gradient"
                     color={sidenavColor}
                     fullWidth
+                    onClick={handleLogout}
                 >
-                    upgrade to pro
+                    Logout
                 </MDButton>
             </MDBox>
         </SidenavRoot>

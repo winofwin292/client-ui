@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+
 import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
@@ -67,13 +67,6 @@ const App = () => {
 
     return (
         <ThemeProvider theme={darkMode ? themeDark : theme}>
-            <CssBaseline />
-            {layout === "home" && (
-                <>
-                    <ConfiguratorLogin />
-                    {configsButton}
-                </>
-            )}
             {layout === "login" && (
                 <>
                     <ConfiguratorLogin />

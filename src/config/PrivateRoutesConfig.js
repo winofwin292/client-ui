@@ -1,28 +1,31 @@
 import Roles from "./Roles";
-import { TeacherCourse, StudentCourse, Home } from "../pages";
+import { TeacherCourse, StudentCourse } from "pages";
 import { Dashboard } from "pages/Dashboard";
 import { ManagerUser } from "pages/ManagerUser";
 import { Overview } from "pages/Dashboard/Overview";
+import { ManageHomePage } from "pages/ManageHomePage";
+import Loading from "components/common/Loading/Loading";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
 
 const PrivateRoutesConfig = [
     {
-        component: Home,
+        component: Loading,
         path: "",
-        title: "Home",
-        exact: true,
+        title: "Loading",
+        // exact: true,
     },
     {
         component: Dashboard,
         path: "dashboard/*",
         title: "Dashboard",
+        exact: true,
         permission: [Roles.ADMIN],
         children: [
             {
                 type: "collapse",
-                name: "Overview",
+                name: "adminSideBar.overview",
                 key: "overview",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
@@ -30,11 +33,19 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Manager User",
+                name: "adminSideBar.userMana",
                 key: "user",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "user",
                 component: <ManagerUser />,
+            },
+            {
+                type: "collapse",
+                name: "adminSideBar.homeMana",
+                key: "manage-home-page",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "manage-home-page",
+                component: <ManageHomePage />,
             },
         ],
     },

@@ -41,6 +41,7 @@ function ConfiguratorLogin() {
 
     const handleCloseConfigurator = () => setOpenConfigurator(dispatch, false);
 
+    //Change to dark mode
     const handleDarkMode = () => setDarkMode(dispatch, !darkMode);
 
     function handleChangeLanguage() {

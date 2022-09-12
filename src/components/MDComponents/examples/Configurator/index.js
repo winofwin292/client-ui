@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 // @mui material components
 import Divider from "@mui/material/Divider";
 import Switch from "@mui/material/Switch";
-import IconButton from "@mui/material/IconButton";
 import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
@@ -21,7 +20,6 @@ import {
     setTransparentSidenav,
     setWhiteSidenav,
     setFixedNavbar,
-    setSidenavColor,
     setDarkMode,
 } from "context";
 
@@ -34,20 +32,11 @@ function Configurator() {
     const {
         openConfigurator,
         fixedNavbar,
-        sidenavColor,
         transparentSidenav,
         whiteSidenav,
         darkMode,
     } = controller;
     const [disabled, setDisabled] = useState(false);
-    const sidenavColors = [
-        "primary",
-        "dark",
-        "info",
-        "success",
-        "warning",
-        "error",
-    ];
     const { t } = useTranslation();
 
     const [lang, setLang] = useState(false);
@@ -183,76 +172,7 @@ function Configurator() {
                     close
                 </Icon>
             </MDBox>
-
-            <Divider />
-
             <MDBox pt={0.5} pb={3} px={3}>
-                <MDBox>
-                    <MDTypography variant="h6">Sidenav Colors</MDTypography>
-
-                    <MDBox mb={0.5}>
-                        {sidenavColors.map((color) => (
-                            <IconButton
-                                key={color}
-                                sx={({
-                                    borders: { borderWidth },
-                                    palette: { white, dark, background },
-                                    transitions,
-                                }) => ({
-                                    width: "24px",
-                                    height: "24px",
-                                    padding: 0,
-                                    border: `${borderWidth[1]} solid ${
-                                        darkMode
-                                            ? background.sidenav
-                                            : white.main
-                                    }`,
-                                    borderColor: () => {
-                                        let borderColorValue =
-                                            sidenavColor === color && dark.main;
-
-                                        if (
-                                            darkMode &&
-                                            sidenavColor === color
-                                        ) {
-                                            borderColorValue = white.main;
-                                        }
-
-                                        return borderColorValue;
-                                    },
-                                    transition: transitions.create(
-                                        "border-color",
-                                        {
-                                            easing: transitions.easing.sharp,
-                                            duration:
-                                                transitions.duration.shorter,
-                                        }
-                                    ),
-                                    backgroundImage: ({
-                                        functions: { linearGradient },
-                                        palette: { gradients },
-                                    }) =>
-                                        linearGradient(
-                                            gradients[color].main,
-                                            gradients[color].state
-                                        ),
-
-                                    "&:not(:last-child)": {
-                                        mr: 1,
-                                    },
-
-                                    "&:hover, &:focus, &:active": {
-                                        borderColor: darkMode
-                                            ? white.main
-                                            : dark.main,
-                                    },
-                                })}
-                                onClick={() => setSidenavColor(dispatch, color)}
-                            />
-                        ))}
-                    </MDBox>
-                </MDBox>
-
                 <MDBox mt={3} lineHeight={1}>
                     <MDTypography variant="h6">Sidenav Type</MDTypography>
                     <MDTypography variant="button" color="text">

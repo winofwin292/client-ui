@@ -14,7 +14,7 @@
         "username":"Username",
         "password":"Password",
         "remember":"Remember me",
-        "haveAccount":"Don&apos;t have an account?",
+        "haveAccount":"Don't have an account?",
         "signUp":"Sign up",
         "footer":{
             "makeBy":"make by",
@@ -23,5 +23,9 @@
     },
     "home":{
         "name":"Home Page"
+    },
+    "adminSideBar":{
+        "overview":"Overview",
+        "userMana": "Manage Users"
     }
 }

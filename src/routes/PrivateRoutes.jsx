@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { getAllowedRoutes, isLoggedIn } from "../utils";
 import { PrivateRoutesConfig } from "../config/index";
-import { TopNav } from "../components/common";
+import { TopNav } from "pages/Home/components/TopNav";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
