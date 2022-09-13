@@ -1,108 +1,73 @@
 import React, { memo } from "react";
 
+const reviews = [
+    {
+        name: "Bonnie Green",
+        course: "Học viên khóa 1",
+        review: "Học hỏi được rất nhiều kỹ năng từ khóa học. Làm quen thêm được nhiều bạn mới.",
+        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png",
+        descAvt: "Bonnie Green",
+    },
+    {
+        name: "Jese Leos",
+        course: "Học viên khóa 2",
+        review: "Giáo viên thân thiện, nhiệt tình. Trang thiết bị đầy đủ để phục vụ cho việc học tập.",
+        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png",
+        descAvt: "Jese Leos",
+    },
+    {
+        name: "Michael Gouch",
+        course: "Học viên khóa 3",
+        review: "Học được rất nhiều kỹ năng từ khóa học, không chỉ riêng ngoại ngữ. Môi trường tốt.",
+        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png",
+        descAvt: "Michael Gouch",
+    },
+    {
+        name: "Sofia Mcguire",
+        course: "Học viên khóa 4",
+        review: "Cảm thấy rất tự tin vào khả năng ngoại ngữ của bản thân sau khi hoàn tất khóa học.",
+        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png",
+        descAvt: "Sofia Mcguire",
+    },
+];
+
 function ReviewSection() {
     return (
         <section className="bg-white dark:bg-gray-900">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-6">
-                <div className="mx-auto mb-8 max-w-screen-sm lg:mb-16">
-                    <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-                        Our team
+            <div className="py-8 px-6 mx-auto max-w-screen-xl lg:py-4 lg:px-6 ">
+                <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
+                    <h2 className="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">
+                        Đánh giá từ học viên
                     </h2>
-                    <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
-                        Explore the whole collection of open-source web
-                        components and elements built with the utility classes
-                        from Tailwind
+                    <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
+                        Đã có hơn 1000 học viên hoàn thành khóa học và nhận được
+                        chứng chỉ từ trung tâm
                     </p>
                 </div>
-                <div className="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-                            alt="Bonnie Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Bonnie Green</a>
-                        </h3>
-                        <p>CEO/Co-founder</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png"
-                            alt="Helene Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Helene Engels</a>
-                        </h3>
-                        <p>CTO/Co-founder</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
-                            alt="Jese Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Jese Leos</a>
-                        </h3>
-                        <p>SEO & Marketing</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png"
-                            alt="Joseph Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Joseph Mcfall</a>
-                        </h3>
-                        <p>Sales</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
-                            alt="Sofia Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Lana Byrd</a>
-                        </h3>
-                        <p>Web Designer</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/thomas-lean.png"
-                            alt="Leslie Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Leslie Livingston</a>
-                        </h3>
-                        <p>Graphic Designer</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png"
-                            alt="Michael Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Michael Gough</a>
-                        </h3>
-                        <p>React Developer</p>
-                    </div>
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                        <img
-                            className="mx-auto mb-4 w-36 h-36 rounded-full"
-                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png"
-                            alt="Neil Avatar"
-                        />
-                        <h3 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <a href="/">Neil Sims</a>
-                        </h3>
-                        <p>Vue.js Developer</p>
-                    </div>
+                <div className="grid gap-8 mb-6 lg:mb-4 md:grid-cols-2">
+                    {reviews.map((item, index) => (
+                        <div
+                            key={index}
+                            className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700"
+                        >
+                            <img
+                                className="w-2/6 rounded-lg sm:rounded-none sm:rounded-l-lg"
+                                src={item.img}
+                                alt={item.descAvt}
+                            />
+                            <div className="p-5">
+                                <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                    {item.name}
+                                </h3>
+                                <span className="text-gray-500 dark:text-gray-400">
+                                    {item.course}
+                                </span>
+                                <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
+                                    &quot;{item.review}&quot;
+                                </p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

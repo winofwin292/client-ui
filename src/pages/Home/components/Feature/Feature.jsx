@@ -8,25 +8,25 @@ import {
 
 const features = [
     {
-        name: "Competitive exchange rates",
+        name: "Đội ngũ gióa viên giàu kinh nghiệm",
         description:
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
         icon: GlobeAltIcon,
     },
     {
-        name: "No hidden fees",
+        name: "Môi trường thân thiện, năng động",
         description:
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
         icon: ScaleIcon,
     },
     {
-        name: "Transfers are instant",
+        name: "Cơ sở vật chất hiện đại",
         description:
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
         icon: BoltIcon,
     },
     {
-        name: "Mobile notifications",
+        name: "Đa dạng khóa học cho từng nhu cầu",
         description:
             "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
         icon: ChatBubbleBottomCenterTextIcon,
@@ -35,14 +35,14 @@ const features = [
 
 function Feature() {
     return (
-        <div className="bg-white py-12">
+        <div className="bg-white py-6">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="lg:text-center">
                     <h2 className="text-lg font-semibold text-indigo-600">
                         Transactions
                     </h2>
                     <p className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-                        A better way to send money
+                        Nơi tốt nhất để đầu tư cho tương lai
                     </p>
                     <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
                         Lorem ipsum dolor sit amet consect adipisicing elit.
