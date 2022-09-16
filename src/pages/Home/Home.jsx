@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { TopNav } from "pages/Home/components/TopNav";
 import { CarouselImage } from "pages/Home/components/CarouselImage";
 import { SocialProof } from "pages/Home/components/SocialProof";
@@ -8,6 +8,7 @@ import { CourseSection } from "pages/Home/components/CourseSection";
 import { ReviewSection } from "pages/Home/components/ReviewSection";
 import { CallToAction } from "pages/Home/components/CallToAction";
 import { Footer } from "pages/Home/components/Footer";
+import { ContactDialog } from "pages/Home/components/ContactDialog";
 
 import { isLoggedIn } from "utils";
 
@@ -17,41 +18,15 @@ import { useMaterialUIController, setLayout } from "context";
 //i18next translate
 import { useTranslation } from "react-i18next";
 
-const navOptions = [
-    { title: "Trang chủ", path: "/" },
-    {
-        title: "Giới thiệu",
-        path: "/",
-        children: [
-            { title: "Giới thiệu chung", path: "/" },
-            { title: "Đội ngũ giáo viên", path: "/" },
-        ],
-    },
-    {
-        title: "Chương trình đào tạo",
-        path: "/",
-        children: [
-            { title: "Trẻ em", path: "/" },
-            { title: "Người lớn", path: "/" },
-            { title: "Doanh nghiệp", path: "/" },
-        ],
-    },
-    { title: "Cửa hàng", path: "/shop" },
-    { title: "Hệ thống quản lý", path: "/login" },
-];
-
-const navigation = [
-    { name: "Product", href: "#" },
-    { name: "Features", href: "#" },
-    { name: "Marketplace", href: "#" },
-    { name: "Company", href: "#" },
-];
-
 function Home() {
     //controller có thể lấy layout phục vụ cho chức năng thêm
     // eslint-disable-next-line
     const [controller, dispatch] = useMaterialUIController();
     // const { direction, layout, openConfigurator, darkMode } = controller;
+    const [cTDState, setCTDState] = useState({
+        isOpen: false,
+        subject: "",
+    });
 
     const { t } = useTranslation();
 
@@ -60,17 +35,14 @@ function Home() {
     }, [dispatch]);
 
     return (
-        <div style={{ backgroundColor: "white" }}>
-            {!isLoggedIn() && <TopNav routes={navOptions} prefix={""} />}
-            {/* <BasicPage title={t("home.name")} icon={<HomeIcon />} /> */}
-            {/* <h1>Home Page</h1>
-            <div style={{ height: "1000px" }}></div> */}
-            <div className="relative overflow-hidden bg-white">
-                <div className="mx-auto max-w-7xl">
-                    <div className="relative bg-white pb-8 sm:pb-8 md:pb-10 lg:w-full lg:max-w-2xl lg:pb-12 xl:pb-16">
+        <>
+            <TopNav />
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900">
+                <div className="mx-auto max-w-7xl bg-white dark:bg-gray-900">
+                    <div className="relative bg-white dark:bg-gray-900 pb-8 sm:pb-8 md:pb-10 lg:w-full lg:max-w-2xl lg:pb-12 xl:pb-16">
                         <main className="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                             <div className="sm:text-center lg:text-left">
-                                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                                <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
                                     <span className="block xl:inline">
                                         Chào mừng bạn đến với
                                     </span>{" "}
@@ -103,11 +75,12 @@ function Home() {
             <Feature />
             <SocialProof />
             <TeacherSection />
-            <CourseSection />
+            <CourseSection setCTDState={setCTDState} />
             <ReviewSection />
-            <CallToAction />
+            <CallToAction setCTDState={setCTDState} />
             <Footer />
-        </div>
+            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+        </>
     );
 }
 

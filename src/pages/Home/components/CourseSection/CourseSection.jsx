@@ -13,7 +13,6 @@ const course = [
             "Premium support: 6 months",
             "Free updates: 6 months",
         ],
-        link: "/",
     },
     {
         name: "Company",
@@ -27,7 +26,6 @@ const course = [
             "Premium support: 24 months",
             "Free updates: 24 months",
         ],
-        link: "/",
     },
     {
         name: "Enterprise",
@@ -41,7 +39,6 @@ const course = [
             "Premium support: 36 months",
             "Free updates: 36 months",
         ],
-        link: "/",
     },
 ];
 
@@ -62,7 +59,15 @@ function IconCheck() {
     );
 }
 
-function CourseSection() {
+function CourseSection(props) {
+    const handleOpenCTD = (e) => {
+        const subject = e.target.parentNode.firstChild.innerText;
+        props.setCTDState({
+            isOpen: true,
+            subject: subject,
+        });
+    };
+
     return (
         <section className="bg-white dark:bg-gray-900">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
@@ -109,12 +114,12 @@ function CourseSection() {
                                     </li>
                                 ))}
                             </ul>
-                            <a
-                                href={item.link}
+                            <button
                                 className="text-white  bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-indigo-900"
+                                onClick={handleOpenCTD}
                             >
                                 Tham gia ngay
-                            </a>
+                            </button>
                         </div>
                     ))}
                 </div>
