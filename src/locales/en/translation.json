@@ -18,7 +18,9 @@
         "signUp":"Sign up",
         "footer":{
             "makeBy":"make by",
-            "about":"About Us"
+            "about":"About Us",
+            "darkTheme":"Dark",
+            "lightTheme":"Light"
         }
     },
     "home":{
@@ -26,6 +28,10 @@
     },
     "adminSideBar":{
         "overview":"Overview",
-        "userMana": "Manage Users"
+        "userMana":"Manage Users",
+        "homeMana":"Manage Home Page"
+    },
+    "userMana":{
+        "toolbarColumns": "Columns"
     }
 }

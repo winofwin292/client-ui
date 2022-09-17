@@ -18,7 +18,9 @@
         "signUp":"Đăng ký",
         "footer":{
             "makeBy":"thực hiện bởi",
-            "about":"Về chúng tôi"
+            "about":"Về chúng tôi",
+            "darkTheme":"Tối",
+            "lightTheme":"Sáng"
         }
     },
     "home":{
@@ -26,6 +28,10 @@
     },
     "adminSideBar":{
         "overview":"Tổng quan",
-        "userMana": "Quản lý người dùng"
+        "userMana":"Quản lý người dùng",
+        "homeMana":"Quản lý trang chủ"
+    },
+    "userMana":{
+        "toolbarColumns":"Cột"
     }
 }

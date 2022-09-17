@@ -12,44 +12,22 @@ import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardN
 import Footer from "components/MDComponents/examples/Footer";
 import DataTable from "components/MDComponents/examples/Tables/DataTable";
 
+import UserDataGrid from "pages/ManagerUser/components/UserDataGrid/UserDataGrid";
+
 // Data
-import authorsTableData from "pages/ManagerUser/data/authorsTableData";
 import projectsTableData from "pages/ManagerUser/data/projectsTableData";
 
 function ManagerUser() {
-    const { columns, rows } = authorsTableData();
     const { columns: pColumns, rows: pRows } = projectsTableData();
 
     return (
         <DashboardLayout>
             <DashboardNavbar />
-            <MDBox pt={6} pb={3}>
+            <MDBox pt={2} pb={3}>
                 <Grid container spacing={6}>
                     <Grid item xs={12}>
                         <Card>
-                            <MDBox
-                                mx={2}
-                                mt={-3}
-                                py={3}
-                                px={2}
-                                variant="gradient"
-                                bgColor="info"
-                                borderRadius="lg"
-                                coloredShadow="info"
-                            >
-                                <MDTypography variant="h6" color="white">
-                                    Authors Table
-                                </MDTypography>
-                            </MDBox>
-                            <MDBox pt={3}>
-                                <DataTable
-                                    table={{ columns, rows }}
-                                    isSorted={false}
-                                    entriesPerPage={false}
-                                    showTotalEntries={false}
-                                    noEndBorder
-                                />
-                            </MDBox>
+                            <UserDataGrid />
                         </Card>
                     </Grid>
                     <Grid item xs={12}>

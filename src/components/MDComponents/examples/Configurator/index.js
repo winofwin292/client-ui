@@ -82,7 +82,10 @@ function Configurator() {
         setTransparentSidenav(dispatch, false);
     };
     const handleFixedNavbar = () => setFixedNavbar(dispatch, !fixedNavbar);
-    const handleDarkMode = () => setDarkMode(dispatch, !darkMode);
+    const handleDarkMode = () => {
+        setDarkMode(dispatch, !darkMode);
+        localStorage.setItem("darkTheme", !darkMode);
+    };
 
     function handleChangeLanguage() {
         const currLang = localStorage.getItem("lang");

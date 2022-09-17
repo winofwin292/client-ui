@@ -1,17 +1,4 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+import React, { memo, useEffect, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -27,12 +14,37 @@ import MDTypography from "components/MDComponents/MDTypography";
 // Material Dashboard 2 React base styles
 import typography from "assets/theme/base/typography";
 
+// Material Dashboard 2 React context
+import { useMaterialUIController, setDarkMode } from "context";
+
 //i18next translate
 import { useTranslation } from "react-i18next";
+import i18n from "translation/i18n";
 
 function Footer({ light }) {
     const { size } = typography;
+    const [controller, dispatch] = useMaterialUIController();
+    const { darkMode } = controller;
+    const [lang, setLang] = useState(false);
+
     const { t } = useTranslation();
+
+    useEffect(() => {
+        const currLang = localStorage.getItem("lang");
+        setLang(currLang);
+    }, []);
+
+    const handleChangeLang = (e) => {
+        const newLang = e.target.value;
+        setLang(newLang);
+        i18n.changeLanguage(newLang);
+        localStorage.setItem("lang", newLang);
+    };
+
+    const handleChangeTheme = () => {
+        setDarkMode(dispatch, !darkMode);
+        localStorage.setItem("darkTheme", !darkMode);
+    };
 
     return (
         <MDBox position="absolute" width="100%" bottom={0} py={4}>
@@ -99,6 +111,32 @@ function Footer({ light }) {
                                 </MDTypography>
                             </Link>
                         </MDBox>
+                        <MDBox component="li" px={1} lineHeight={1}>
+                            <select
+                                name="lang"
+                                id="lang"
+                                onChange={(e) => handleChangeLang(e)}
+                                value={lang}
+                            >
+                                <option value="vi">Tiếng Việt</option>
+                                <option value="en">English</option>
+                            </select>
+                        </MDBox>
+                        <MDBox component="li" px={1} lineHeight={1}>
+                            <select
+                                name="theme"
+                                id="theme"
+                                value={darkMode}
+                                onChange={handleChangeTheme}
+                            >
+                                <option value="false">
+                                    {t("login.footer.lightTheme")}
+                                </option>
+                                <option value="true">
+                                    {t("login.footer.darkTheme")}
+                                </option>
+                            </select>
+                        </MDBox>
                     </MDBox>
                 </MDBox>
             </Container>
@@ -116,4 +154,4 @@ Footer.propTypes = {
     light: PropTypes.bool,
 };
 
-export default Footer;
+export default memo(Footer);

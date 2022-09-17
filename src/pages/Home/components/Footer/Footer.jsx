@@ -1,6 +1,20 @@
 import React, { memo } from "react";
 
+//i18next translate
+import { useTranslation } from "react-i18next";
+import i18n from "translation/i18n";
+
 function Footer() {
+    //use for translate
+    // eslint-disable-next-line
+    const { t } = useTranslation();
+
+    const handleChangeToVNI = () => {
+        i18n.changeLanguage("vi");
+    };
+    const handleChangeToENG = () => {
+        i18n.changeLanguage("en");
+    };
     return (
         <footer className="p-4 bg-white sm:p-6 dark:bg-gray-900">
             <div className="mx-auto max-w-screen-xl">
@@ -69,18 +83,24 @@ function Footer() {
                         </div>
                         <div>
                             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                                Legal
+                                Ngôn ngữ
                             </h2>
                             <ul className="text-gray-600 dark:text-gray-400">
                                 <li className="mb-4">
-                                    <a href="/" className="hover:underline">
-                                        Privacy Policy
-                                    </a>
+                                    <button
+                                        className="hover:underline"
+                                        onClick={handleChangeToVNI}
+                                    >
+                                        Tiếng Việt
+                                    </button>
                                 </li>
                                 <li>
-                                    <a href="/" className="hover:underline">
-                                        Terms &amp; Conditions
-                                    </a>
+                                    <button
+                                        className="hover:underline"
+                                        onClick={handleChangeToENG}
+                                    >
+                                        English
+                                    </button>
                                 </li>
                             </ul>
                         </div>
