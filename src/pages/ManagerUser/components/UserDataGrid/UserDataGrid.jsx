@@ -4,31 +4,20 @@ import { columns } from "pages/ManagerUser/components/UserDataGrid/column";
 import { rows } from "pages/ManagerUser/data/exampleData";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-//i18next translate
-import { useTranslation } from "react-i18next";
-
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
 
-const theme = createTheme(viVN);
+const theme = createTheme();
 
-const themeD = createTheme(
-    {
-        palette: {
-            mode: "dark",
-        },
+const themeD = createTheme({
+    palette: {
+        mode: "dark",
     },
-    viVN
-);
+});
 
 function UserDataGrid() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
-    const { t } = useTranslation();
-
-    const localeTextData = {
-        toolbarColumns: t("userMana.toolbarColumns"),
-    };
 
     return (
         <div style={{ height: 300, width: "100%" }}>
@@ -36,12 +25,11 @@ function UserDataGrid() {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    components={{ Toolbar: GridToolbar }}
-                    // localeText={localeTextData}
                     localeText={
                         viVN.components.MuiDataGrid.defaultProps.localeText
                     }
+                    experimentalFeatures={{ newEditingApi: true }}
+                    components={{ Toolbar: GridToolbar }}
                 />
             </ThemeProvider>
         </div>

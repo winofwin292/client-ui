@@ -44,7 +44,7 @@ function ContactForm(props) {
                     htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
-                    Họ và tên:
+                    Họ và tên: (<span className="text-red-600">*</span>)
                 </label>
                 <input
                     id="name"
@@ -60,7 +60,7 @@ function ContactForm(props) {
                     htmlFor="subject"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
-                    Số điện thoại:
+                    Số điện thoại: (<span className="text-red-600">*</span>)
                 </label>
                 <input
                     type="text"
@@ -77,7 +77,7 @@ function ContactForm(props) {
                     htmlFor="email"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
-                    Email:
+                    Email: (<span className="text-red-600">*</span>)
                 </label>
                 <input
                     type="email"

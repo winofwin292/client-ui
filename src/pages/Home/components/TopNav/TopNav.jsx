@@ -5,26 +5,27 @@ import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import {
     Bars3Icon,
-    ChartBarIcon,
-    CursorArrowRaysIcon,
     XMarkIcon,
+    BuildingLibraryIcon,
+    AcademicCapIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+
+import { useLocation } from "react-router-dom";
 
 const solutions = [
     {
         name: "Giới thiệu chung",
         description:
-            "Get a better understanding of where your traffic is coming from.",
-        href: "#",
-        icon: ChartBarIcon,
+            "Giới thiệu chung về chung trung tâm và các thông tin liên quan.",
+        href: "/introduction",
+        icon: BuildingLibraryIcon,
     },
     {
         name: "Đội ngũ giáo viên, nhân viên",
-        description:
-            "Speak directly to your customers in a more meaningful way.",
-        href: "#",
-        icon: CursorArrowRaysIcon,
+        description: "Thông tin về giáo viên, nhân viên của trung tâm.",
+        href: "/teacher-introduction",
+        icon: AcademicCapIcon,
     },
 ];
 
@@ -33,6 +34,9 @@ function classNames(...classes) {
 }
 
 function TopNav() {
+    const location = useLocation();
+    const path = location.pathname;
+
     return (
         <Popover className="relative bg-white dark:bg-gray-900">
             <div className="mx-auto max-w-8xl px-4 sm:px-6">
@@ -57,6 +61,15 @@ function TopNav() {
                         as="nav"
                         className="hidden space-x-10 md:flex"
                     >
+                        <a
+                            href="/"
+                            className={classNames(
+                                path === "/" ? "underline" : "",
+                                "text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            )}
+                        >
+                            Trang chủ
+                        </a>
                         <Popover className="relative">
                             {({ open }) => (
                                 <>
@@ -68,7 +81,18 @@ function TopNav() {
                                             "group inline-flex items-center rounded-md bg-white dark:bg-gray-900 text-base font-medium hover:text-gray-900 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-indigo-50 dark:focus:ring-offset-0 dark:focus:text-gray-100"
                                         )}
                                     >
-                                        <span>Giới thiệu</span>
+                                        <span
+                                            className={classNames(
+                                                path === "/introduction"
+                                                    ? "underline"
+                                                    : "",
+                                                path === "/teacher-introduction"
+                                                    ? "underline"
+                                                    : ""
+                                            )}
+                                        >
+                                            Giới thiệu
+                                        </span>
                                         <ChevronDownIcon
                                             className={classNames(
                                                 open
@@ -103,7 +127,15 @@ function TopNav() {
                                                                 aria-hidden="true"
                                                             />
                                                             <div className="ml-4">
-                                                                <p className="text-base font-medium text-gray-900 dark:text-gray-200 ">
+                                                                <p
+                                                                    className={classNames(
+                                                                        path ===
+                                                                            item.href
+                                                                            ? "underline"
+                                                                            : "",
+                                                                        "text-base font-medium text-gray-900 dark:text-gray-200 "
+                                                                    )}
+                                                                >
                                                                     {item.name}
                                                                 </p>
                                                                 <p className="mt-1 text-sm text-gray-500">
@@ -123,20 +155,31 @@ function TopNav() {
                         </Popover>
 
                         <a
-                            href="/"
-                            className="text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            href="/course-introduction"
+                            className={classNames(
+                                path === "/course-introduction"
+                                    ? "underline"
+                                    : "",
+                                "text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            )}
                         >
                             Khóa học
                         </a>
                         <a
-                            href="/"
-                            className="text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            href="/need-to-know"
+                            className={classNames(
+                                path === "/need-to-know" ? "underline" : "",
+                                "text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            )}
                         >
                             Học viên cần biết
                         </a>
                         <a
-                            href="/"
-                            className="text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            href="/shop"
+                            className={classNames(
+                                path === "/shop" ? "underline" : "",
+                                "text-base font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+                            )}
                         >
                             Cửa hàng tài liệu
                         </a>
@@ -197,7 +240,14 @@ function TopNav() {
                                                 className="h-6 w-6 flex-shrink-0 text-indigo-600"
                                                 aria-hidden="true"
                                             />
-                                            <span className="ml-3 text-base font-medium text-gray-900 dark:text-white">
+                                            <span
+                                                className={classNames(
+                                                    path === item.href
+                                                        ? "underline"
+                                                        : "",
+                                                    "ml-3 text-base font-medium text-gray-900 dark:text-white"
+                                                )}
+                                            >
                                                 {item.name}
                                             </span>
                                         </a>
@@ -205,24 +255,48 @@ function TopNav() {
                                 </nav>
                             </div>
                         </div>
-                        <div className="space-y-6 py-6 px-5  bg-white dark:bg-gray-900">
+                        <div className="space-y-6 py-6 px-5 bg-white dark:bg-gray-900">
                             <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                                 <a
                                     href="/"
-                                    className="text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    className={classNames(
+                                        location.pathname === "/"
+                                            ? "underline"
+                                            : "",
+                                        "text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    )}
+                                >
+                                    Trang chủ
+                                </a>
+                                <a
+                                    href="/course-introduction"
+                                    className={classNames(
+                                        path === "/course-introduction"
+                                            ? "underline"
+                                            : "",
+                                        "text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    )}
                                 >
                                     Khóa học
                                 </a>
 
                                 <a
-                                    href="/"
-                                    className="text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    href="/need-to-know"
+                                    className={classNames(
+                                        path === "/need-to-know"
+                                            ? "underline"
+                                            : "",
+                                        "text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    )}
                                 >
                                     Học viên cần biết
                                 </a>
                                 <a
-                                    href="/"
-                                    className="text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    href="/shop"
+                                    className={classNames(
+                                        path === "/shop" ? "underline" : "",
+                                        "text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
+                                    )}
                                 >
                                     Cửa hàng tài liệu
                                 </a>

@@ -10,15 +10,13 @@ import { CallToAction } from "pages/Home/components/CallToAction";
 import { Footer } from "pages/Home/components/Footer";
 import { ContactDialog } from "pages/Home/components/ContactDialog";
 
-import { isLoggedIn } from "utils";
-
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
 
 //i18next translate
 import { useTranslation } from "react-i18next";
 
-function Home() {
+function TeacherIntroduction() {
     //controller có thể lấy layout phục vụ cho chức năng thêm
     // eslint-disable-next-line
     const [controller, dispatch] = useMaterialUIController();
@@ -31,7 +29,7 @@ function Home() {
     const { t } = useTranslation();
 
     useEffect(() => {
-        setLayout(dispatch, "home");
+        setLayout(dispatch, "teacherIntroduction");
     }, [dispatch]);
 
     return (
@@ -57,7 +55,7 @@ function Home() {
                                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                                     <div className="rounded-md shadow">
                                         <a
-                                            href="/introduction"
+                                            href="/"
                                             className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-1 md:px-7 md:text-lg"
                                         >
                                             Giới thiệu &gt;&gt;&gt;
@@ -84,4 +82,4 @@ function Home() {
     );
 }
 
-export default memo(Home);
+export default memo(TeacherIntroduction);
