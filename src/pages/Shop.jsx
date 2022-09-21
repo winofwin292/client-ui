@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from "react";
-import { BasicPage } from "../components/common";
-import { TopNav } from "pages/Home/components/TopNav";
+import { BasicPage } from "components/common";
+import { TopNav } from "components/common/TopNav";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import { isLoggedIn } from "../utils";
 

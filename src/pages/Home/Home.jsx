@@ -1,14 +1,14 @@
 import React, { memo, useEffect, useState } from "react";
-import { TopNav } from "pages/Home/components/TopNav";
-import { CarouselImage } from "pages/Home/components/CarouselImage";
-import { SocialProof } from "pages/Home/components/SocialProof";
-import { Feature } from "pages/Home/components/Feature";
-import { TeacherSection } from "pages/Home/components/TeacherSection";
-import { CourseSection } from "pages/Home/components/CourseSection";
-import { ReviewSection } from "pages/Home/components/ReviewSection";
-import { CallToAction } from "pages/Home/components/CallToAction";
-import { Footer } from "pages/Home/components/Footer";
-import { ContactDialog } from "pages/Home/components/ContactDialog";
+import { TopNav } from "components/common/TopNav";
+import { CarouselImage } from "components/common/CarouselImage";
+import { SocialProof } from "components/common/SocialProof";
+import { Feature } from "components/common/Feature";
+import { TeacherSection } from "components/common/TeacherSection";
+import { CourseSection } from "components/common/CourseSection";
+import { ReviewSection } from "components/common/ReviewSection";
+import { CallToAction } from "components/common/CallToAction";
+import { Footer } from "components/common/Footer";
+import { ContactDialog } from "components/common/ContactDialog";
 
 import { isLoggedIn } from "utils";
 
