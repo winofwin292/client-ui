@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 
-function HeroSection() {
+function HeroSection(props) {
+    const videoId = props.videoId || "FT3ODSg1GFE";
     return (
         <section className="bg-white dark:bg-gray-900 mt-4">
             <div className="py-4 px-4 mx-auto max-w-screen-xl text-center lg:py-2 lg:px-6">
@@ -12,10 +13,12 @@ function HeroSection() {
                     innovation, and capital can unlock long-term value and drive
                     economic growth.
                 </p>
-                <div className="flex flex-col mb-4 lg:mb-8 space-y-2 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+                <div className="flex flex-col aspect-w-16 aspect-h-9 lg:aspect-none mb-4 lg:mb-8 space-y-2 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
                     <iframe
-                        className="w-full h-60 lg:w-2/3 lg:h-96"
-                        src="https://www.youtube-nocookie.com/embed/FT3ODSg1GFE"
+                        className="lg:w-2/3 lg:h-96"
+                        src={
+                            "https://www.youtube-nocookie.com/embed/" + videoId
+                        }
                         title="YouTube video player"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

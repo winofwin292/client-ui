@@ -10,10 +10,11 @@ import {
     CourseIntroduction,
     NeedToKnow,
 } from "pages";
-import Login from "../pages/Login/Login";
-import { getAllowedRoutes, isLoggedIn } from "../utils";
-import { PrivateRoutesConfig } from "../config/index";
-import { NotFound } from "../components/common";
+import Login from "pages/Login/Login";
+import { getAllowedRoutes, isLoggedIn } from "utils";
+import { PrivateRoutesConfig } from "config/index";
+import { NotFound } from "components/common";
+import { CourseDetail } from "components/common/CourseDetail";
 
 function CRoutes() {
     let allowedRoutes = [];
@@ -34,6 +35,10 @@ function CRoutes() {
                 <Route
                     path="/course-introduction"
                     element={<CourseIntroduction />}
+                />
+                <Route
+                    path="/course-introduction/:id"
+                    element={<CourseDetail />}
                 />
                 <Route path="/need-to-know" element={<NeedToKnow />} />
                 <Route path="/shop" element={<Shop />} />
