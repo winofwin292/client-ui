@@ -33,9 +33,14 @@ import { useMaterialUIController, setLayout } from "context";
 //i18next translate
 import { useTranslation } from "react-i18next";
 
+import userApi from "api/Users/useApi";
+import Cookies from "js-cookie";
+
 function Login() {
     // let navigate = useNavigate();
     const [rememberMe, setRememberMe] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     //controller có thể lấy layout phục vụ cho chức năng thêm
     // eslint-disable-next-line
     const [controller, dispatch] = useMaterialUIController();
@@ -49,11 +54,20 @@ function Login() {
 
     const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-    function handleClick() {
+    async function handleClick() {
         // localStorage.setItem("roles", JSON.stringify(selected));
-        localStorage.setItem("roles", JSON.stringify(["ADMIN"]));
+        // localStorage.setItem("roles", JSON.stringify(["ADMIN"]));
         // navigate("/app");
-        window.location.href = "/app";
+        // window.location.href = "/app";
+        const response = await userApi.login({
+            username,
+            password,
+        });
+        console.log(response);
+        const userData = await userApi.getProfile({
+            username: Cookies.get("username"),
+        });
+        console.log(userData);
     }
 
     return (
@@ -119,13 +133,20 @@ function Login() {
                 <MDBox pt={4} pb={3} px={3}>
                     <MDBox component="form" role="form">
                         <MDBox mb={2}>
-                            <MDInput label={t("login.signIn")} fullWidth />
+                            <MDInput
+                                label={t("login.signIn")}
+                                fullWidth
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
                         </MDBox>
                         <MDBox mb={2}>
                             <MDInput
                                 type="password"
                                 label={t("login.password")}
                                 fullWidth
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </MDBox>
                         <MDBox display="flex" alignItems="center" ml={-1}>
