@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useEffect } from "react";
 
 // react-router-dom components
@@ -50,6 +35,8 @@ import {
 //i18next translate
 import { useTranslation } from "react-i18next";
 
+import userApi from "api/Users/useApi";
+
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const [controller, dispatch] = useMaterialUIController();
     const {
@@ -62,7 +49,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const location = useLocation();
     const collapseName = location.pathname.replace("/", "");
     const { t } = useTranslation();
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     let textColor = "white";
 
@@ -101,9 +88,14 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         // eslint-disable-next-line
     }, [dispatch, location]);
 
-    function handleLogout() {
-        localStorage.removeItem("roles");
-        navigate("/");
+    async function handleLogout() {
+        const response = await userApi.logout();
+
+        if (response.status === 200) {
+            navigate("/");
+        } else {
+            console.log(response);
+        }
     }
 
     // Render all the routes from the routes.js (All the visible items on the Sidenav)

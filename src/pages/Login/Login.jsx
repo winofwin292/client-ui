@@ -2,7 +2,6 @@ import React, { memo, useState, useEffect } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -34,7 +33,6 @@ import { useMaterialUIController, setLayout } from "context";
 import { useTranslation } from "react-i18next";
 
 import userApi from "api/Users/useApi";
-import Cookies from "js-cookie";
 
 function Login() {
     // let navigate = useNavigate();
@@ -52,22 +50,24 @@ function Login() {
         setLayout(dispatch, "login");
     }, [dispatch]);
 
-    const handleSetRememberMe = () => setRememberMe(!rememberMe);
+    const handleSetRememberMe = async () => {
+        // const response = await userApi.getNewAccessToken();
+        // console.log(response);
+        setRememberMe(!rememberMe);
+    };
 
     async function handleClick() {
-        // localStorage.setItem("roles", JSON.stringify(selected));
-        // localStorage.setItem("roles", JSON.stringify(["ADMIN"]));
-        // navigate("/app");
-        // window.location.href = "/app";
         const response = await userApi.login({
             username,
             password,
         });
-        console.log(response);
-        const userData = await userApi.getProfile({
-            username: Cookies.get("username"),
-        });
-        console.log(userData);
+
+        if (response.status === 200) {
+            // navigate("/app");
+            window.location.href = "/app";
+        } else {
+            console.log(response);
+        }
     }
 
     return (

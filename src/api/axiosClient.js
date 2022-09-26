@@ -1,9 +1,8 @@
 import axios from "axios";
-// import StorageKeys from "~/constants/storage-keys";
+import Cookies from "js-cookie";
 
 //Cấu hình chung cho axios
 const axiosClient = axios.create({
-    //baseURL: 'http://192.168.2.176:8081/',
     // baseURL: "http://127.0.0.1:8081/",
     headers: {
         "content-type": "application/json",
@@ -37,7 +36,15 @@ axiosClient.interceptors.response.use(
     function (response) {
         return response;
     },
+    //kiểm tra lỗi xác thực
     function (error) {
+        const { status } = error.response;
+        if (status === 401 || status === 403) {
+            Cookies.remove("accessToken");
+            Cookies.remove("refreshToken");
+            Cookies.remove("userData");
+            window.location.href = "/login";
+        }
         return error.response;
     }
 );

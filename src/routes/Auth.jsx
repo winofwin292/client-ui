@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Navigate } from "react-router-dom";
-import { isLoggedIn } from "../utils";
-import PublicRoutes from "./PublicRoutes";
+import { isLoggedIn } from "utils";
+import PublicRoutes from "routes/PublicRoutes";
 
 /*
  * TODO: when user loggedIn he/she unable to goto public routes

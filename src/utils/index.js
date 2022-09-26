@@ -1,12 +1,18 @@
 import { intersection } from "lodash";
+import Cookies from "js-cookie";
+
+const getObjectFromCookieValue = (cookieName) => {
+    const data = Cookies.get(cookieName) || null;
+    if (data) {
+        return JSON.parse(data.slice(data.indexOf(":") + 1));
+    } else {
+        return null;
+    }
+};
 
 const isLoggedIn = () => {
-    /*
-     * Note:
-     *  This app assume if local storage have roles it means
-     *  user is authenticated you can update this logic as per your app.
-     */
-    return !!localStorage.getItem("roles");
+    // return !!localStorage.getItem("roles");
+    return !!getObjectFromCookieValue("userData");
 };
 
 const isArrayWithLength = (arr) => {
@@ -14,7 +20,7 @@ const isArrayWithLength = (arr) => {
 };
 
 const getAllowedRoutes = (routes) => {
-    const roles = JSON.parse(localStorage.getItem("roles"));
+    const roles = [getObjectFromCookieValue("userData")?.role] || [];
     return routes.filter(({ permission }) => {
         if (!permission) return true;
         else if (!isArrayWithLength(permission)) return true;
@@ -22,4 +28,9 @@ const getAllowedRoutes = (routes) => {
     });
 };
 
-export { isArrayWithLength, getAllowedRoutes, isLoggedIn };
+export {
+    isArrayWithLength,
+    getAllowedRoutes,
+    isLoggedIn,
+    getObjectFromCookieValue,
+};
