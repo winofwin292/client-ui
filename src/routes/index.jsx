@@ -15,6 +15,7 @@ import { getAllowedRoutes, isLoggedIn } from "utils";
 import { PrivateRoutesConfig } from "config/index";
 import { NotFound } from "components/common";
 import { CourseDetail } from "components/common/CourseDetail";
+import { ProductDetail } from "components/common/ProductDetail";
 
 function CRoutes() {
     let allowedRoutes = [];
@@ -42,6 +43,7 @@ function CRoutes() {
                 />
                 <Route path="/need-to-know" element={<NeedToKnow />} />
                 <Route path="/shop" element={<Shop />} />
+                <Route path="/shop/:id" element={<ProductDetail />} />
                 <Route path="/login" element={<Login />} />
             </Route>
             <Route path="app" element={<PrivateRoutes />}>
