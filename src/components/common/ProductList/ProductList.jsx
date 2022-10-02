@@ -3,15 +3,15 @@ import React, { memo } from "react";
 
 function ProductList(props) {
     const products = props.data;
-    const handleAddToCart = (e, id) => {
+    const handleAddToCart = (e, product) => {
         e.preventDefault();
-        console.log(id);
-        const item = {
-            name: "hhh",
-            id: 1,
+        const { desc, publishingYear, category, ...newProduct } = product;
+        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+            cart: [],
         };
-        localStorage.setItem("myCart", JSON.stringify(item));
-        console.table(JSON.parse(localStorage.getItem("myCart")));
+        currCart.cart.push(newProduct);
+        props.setCountCart((prev) => prev + 1);
+        localStorage.setItem("myCart", JSON.stringify(currCart));
     };
     return (
         <div className="bg-white dark:bg-gray-900">
@@ -51,15 +51,13 @@ function ProductList(props) {
                                     </p>
                                 </div>
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                    {product.price}
+                                    {product.price}&nbsp;VNĐ
                                 </p>
                             </div>
                             <div className="mt-4 flex justify-between">
                                 <button
-                                    onClick={(e) =>
-                                        handleAddToCart(e, product.id)
-                                    }
-                                    className="text-white text-center w-full bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                                    onClick={(e) => handleAddToCart(e, product)}
+                                    className="text-white text-center w-full bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 ml-2 mr-2 mb-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
                                 >
                                     + Giỏ hàng
                                 </button>

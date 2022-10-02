@@ -5,7 +5,7 @@ export const products = [
         imageSrc:
             "https://static.8cache.com/cover/o/eJzLyTDW1y0I9jRyNE4rKotI1g8rczbIqsgMCXX21HeEAt_ccn3vxKxSd1Of8vDA8izzisIK7_x8L4_KKpfi_AIXF9fU9HRn53z9YgNdz2QTIwCgFRvZ/1q84-2.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 150000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",
@@ -17,7 +17,7 @@ export const products = [
         imageSrc:
             "https://static.8cache.com/cover/o/eJzLyTDW1y0I9jRyNE4rKotI1g8rczbIqsgMCXX21HeEAt_ccn3vxKxSd1Of8vDA8izzisIK7_x8L4_KKpfi_AIXF9fU9HRn53z9YgNdz2QTIwCgFRvZ/1q84-2.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 160000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",
@@ -29,7 +29,7 @@ export const products = [
         imageSrc:
             "https://static.8cache.com/cover/o/eJzLyTDW183Ny8j3NvYOic_L1g8rczbICq7wNU731HeEAt_cYv3wiqRMi4BSp6wA33Inr3KvKM_gzDDHbNe0zPCKqtzgEkdn53z9ciNDU90MYyMjXc9kEyMAbUIdRg==/1q84-1.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 200000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",
@@ -41,7 +41,7 @@ export const products = [
         imageSrc:
             "https://static.8cache.com/cover/o/eJzLyTDW183Ny8j3NvYOic_L1g8rczbICq7wNU731HeEAt_cYv3wiqRMi4BSp6wA33Inr3KvKM_gzDDHbNe0zPCKqtzgEkdn53z9ciNDU90MYyMjXc9kEyMAbUIdRg==/1q84-1.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 100000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",
@@ -53,7 +53,7 @@ export const products = [
         imageSrc:
             "https://isach.info/images/story/cover/1q84__haruki_murakami.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 120000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",
@@ -65,7 +65,7 @@ export const products = [
         imageSrc:
             "https://isach.info/images/story/cover/1q84__haruki_murakami.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 180000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",
@@ -77,7 +77,7 @@ export const products = [
         imageSrc:
             "https://isach.info/images/story/cover/1q84__haruki_murakami.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 210000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         author: "Nguyễn Ngọc Quế",
         publishingYear: "2020",

@@ -1,143 +1,153 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
-import { ContactDialog } from "components/common/ContactDialog";
+import { ShopCart } from "components/common/ShopCart";
+
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+
+import ImageGallery from "react-image-gallery";
 
 //example data
 import { products } from "components/common/ProductList/productData";
 
-const productImg = {
-    images: [
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
-            alt: "Two each of gray, white, and black shirts laying flat.",
-        },
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
-            alt: "Model wearing plain black basic tee.",
-        },
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
-            alt: "Model wearing plain gray basic tee.",
-        },
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
-            alt: "Model wearing plain white basic tee.",
-        },
-    ],
-};
 const reviews = { href: "#", average: 4, totalCount: 117 };
+
+const images = [
+    {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+    },
+    {
+        original: "https://picsum.photos/id/1015/1000/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+    },
+    {
+        original: "https://picsum.photos/id/1019/1000/600/",
+        thumbnail: "https://picsum.photos/id/1019/250/150/",
+    },
+];
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-function ProductDetail() {
-    const [cTDState, setCTDState] = useState({
-        isOpen: false,
-        subject: "",
-    });
-
+function ProductDetail(props) {
     let { id } = useParams();
+    const [countCart, setCountCart] = useState(0);
+    const [cartOpen, setCartOpen] = useState(false);
     const product = products.find((item) => item.id.toString() === id);
 
-    const handleOpenCTD = () => {
-        setCTDState({
-            isOpen: true,
-            subject: "Đăng ký khóa " + product.name,
-        });
+    useEffect(() => {
+        const myCart = JSON.parse(localStorage.getItem("myCart")) || {
+            cart: [],
+        };
+        setCountCart(myCart.cart.length);
+        localStorage.setItem("myCart", JSON.stringify(myCart));
+    }, []);
+
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        const { desc, publishingYear, category, ...newProduct } = product;
+        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+            cart: [],
+        };
+        currCart.cart.push(newProduct);
+        setCountCart((prev) => prev + 1);
+        localStorage.setItem("myCart", JSON.stringify(currCart));
+    };
+
+    const handleOpenCart = () => {
+        setCartOpen(true);
     };
 
     return (
         <div className="bg-white dark:bg-gray-900">
             <TopNav />
-            <div className="pt-6">
-                <nav aria-label="Breadcrumb">
-                    <ol className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-                        <li>
-                            <div className="flex items-center">
+            <div className="pt-2 relative">
+                <nav
+                    aria-label="Top"
+                    className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+                >
+                    <div className="flex h-16 items-center">
+                        <ol className="flex max-w-2xl items-center space-x-2 lg:max-w-7xl">
+                            <li>
+                                <div className="flex items-center">
+                                    <a
+                                        href="/shop"
+                                        className="mr-2 text-sm font-medium text-gray-900 dark:text-white hover:text-gray-500 dark:hover:text-gray-300"
+                                    >
+                                        Cửa hàng tài liệu
+                                    </a>
+                                    <svg
+                                        width={16}
+                                        height={20}
+                                        viewBox="0 0 16 20"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        aria-hidden="true"
+                                        className="h-5 w-4 text-gray-300 dark:text-white"
+                                    >
+                                        <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+                                    </svg>
+                                </div>
+                            </li>
+                            <li className="text-sm">
                                 <a
-                                    href="/shop"
-                                    className="mr-2 text-sm font-medium text-gray-900 dark:text-white hover:text-gray-500 dark:hover:text-gray-300"
+                                    href={"/shop/" + product.id}
+                                    aria-current="page"
+                                    className="font-medium text-gray-500 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
                                 >
-                                    Cửa hàng tài liệu
+                                    {product.name}
                                 </a>
-                                <svg
-                                    width={16}
-                                    height={20}
-                                    viewBox="0 0 16 20"
-                                    fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true"
-                                    className="h-5 w-4 text-gray-300 dark:text-white"
+                            </li>
+                        </ol>
+                        <div className="ml-auto flex items-center text-gray-700 dark:text-white">
+                            {/* Cart */}
+                            <div className="ml-4 flow-root lg:ml-6">
+                                <button
+                                    onClick={handleOpenCart}
+                                    className="group -m-2 flex items-center p-2"
                                 >
-                                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                                </svg>
+                                    <ShoppingBagIcon
+                                        className="h-6 w-6 flex-shrink-0 text-gray-400 dark:text-white group-hover:text-gray-500"
+                                        aria-hidden="true"
+                                    />
+                                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 dark:text-white">
+                                        {countCart}
+                                    </span>
+                                    <span className="sr-only">
+                                        items in cart, view bag
+                                    </span>
+                                </button>
                             </div>
-                        </li>
-                        <li className="text-sm">
-                            <a
-                                href={"/course-introduction/" + product.id}
-                                aria-current="page"
-                                className="font-medium text-gray-500 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                            >
-                                {product.name}
-                            </a>
-                        </li>
-                    </ol>
+                        </div>
+                    </div>
                 </nav>
 
-                {/* Image gallery */}
-                <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-                    <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
-                        <img
-                            src={productImg.images[0].src}
-                            alt={productImg.images[0].alt}
-                            className="h-full w-full object-cover object-center"
-                        />
-                    </div>
-                    <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-                        <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
-                            <img
-                                src={productImg.images[1].src}
-                                alt={productImg.images[1].alt}
-                                className="h-full w-full object-cover object-center"
-                            />
-                        </div>
-                        <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
-                            <img
-                                src={productImg.images[2].src}
-                                alt={productImg.images[2].alt}
-                                className="h-full w-full object-cover object-center"
-                            />
-                        </div>
-                    </div>
-                    <div className="aspect-w-4 aspect-h-5 sm:overflow-hidden sm:rounded-lg lg:aspect-w-3 lg:aspect-h-4">
-                        <img
-                            src={productImg.images[3].src}
-                            alt={productImg.images[3].alt}
-                            className="h-full w-full object-cover object-center"
-                        />
-                    </div>
-                </div>
-
                 {/* Product info */}
-                <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
+                <div className="mx-auto max-w-2xl px-4 pt-4 pb-8 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-6 lg:pb-8">
                     <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-                        <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-white">
-                            {product.name}
-                        </h1>
+                        <ImageGallery
+                            items={images}
+                            showPlayButton={false}
+                            showFullscreenButton={false}
+                        />
                     </div>
 
                     {/* Options */}
                     <div className="mt-4 lg:row-span-3 lg:mt-0">
+                        <div className="lg:col-span-2 lg:pr-8 lg:mb-4">
+                            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-white">
+                                {product.name}
+                            </h1>
+                        </div>
                         <h2 className="sr-only dark:text-white">
                             Thông tin khóa học
                         </h2>
                         <p className="text-3xl tracking-tight text-gray-900 dark:text-white">
-                            {product.price}
+                            {product.price}&nbsp;VNĐ
                         </p>
 
                         {/* Reviews */}
@@ -178,65 +188,51 @@ function ProductDetail() {
                                 <div className="mt-4">
                                     <ul className="list-disc space-y-2 pl-4 text-sm">
                                         <li className="text-gray-600 dark:text-white">
-                                            Thời gian bắt đầu:&nbsp;
+                                            Tác giả:&nbsp;
                                             <span className="text-gray-800 font-bold dark:text-white">
-                                                {product.startAt}
+                                                {product.author}
                                             </span>
                                         </li>
                                         <li className="text-gray-600 dark:text-white">
-                                            Số buổi:&nbsp;
+                                            Năm xuất bản:&nbsp;
                                             <span className="text-gray-800 font-bold dark:text-white">
-                                                {product.trainingTime}
+                                                {product.publishingYear}
                                             </span>
-                                            &nbsp;buổi
-                                        </li>
-                                        <li className="text-gray-600 dark:text-white">
-                                            Số buổi mỗi tuần:&nbsp;
-                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                {product.lessonPerWeek}
-                                            </span>
-                                            &nbsp;buổi
-                                        </li>
-                                        <li className="text-gray-600 dark:text-white">
-                                            Số lượng học viên:&nbsp;
-                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                {product.studentNumber}
-                                            </span>
-                                            &nbsp;người
                                         </li>
                                     </ul>
                                 </div>
                             </div>
 
                             <button
-                                onClick={handleOpenCTD}
+                                onClick={(e) => handleAddToCart(e)}
                                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
-                                Đăng ký
+                                Thêm vào giỏ hàng
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="max-w-7xl px-4 pt-2 pb-4 sm:px-6 lg:px-8 lg:pt-2 lg:pb-4">
+                <div className="py-2 lg:pt-2 lg:pb-2 lg:ml-28">
+                    <div>
+                        <h3 className="sr-only">Mô tả</h3>
 
-                    <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pb-16 lg:pr-8">
-                        {/* Description and details */}
-                        <div>
-                            <h3 className="sr-only">Mô tả</h3>
-
-                            <div className="space-y-6">
-                                <p className="text-base text-gray-900 dark:text-white">
-                                    {product.desc}
-                                </p>
-                            </div>
+                        <div className="space-y-6">
+                            <p className="text-base text-gray-900 dark:text-white">
+                                {product.desc}
+                            </p>
                         </div>
+                    </div>
 
-                        <div className="mt-10">
-                            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                Điểm nổi bật của khóa học:
-                            </h3>
+                    <div className="mt-4">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                            Thông tin tài liệu:
+                        </h3>
 
-                            <div className="mt-4">
-                                <ul className="list-disc space-y-2 pl-4 text-sm">
-                                    {product.highlights.map((highlight) => (
+                        <div className="mt-4">
+                            <ul className="list-disc space-y-2 pl-4 text-sm">
+                                {/* {product.highlights.map((highlight) => (
                                         <li
                                             key={highlight}
                                             className="text-gray-400 dark:text-gray-400"
@@ -245,15 +241,18 @@ function ProductDetail() {
                                                 {highlight}
                                             </span>
                                         </li>
-                                    ))}
-                                </ul>
-                            </div>
+                                    ))} */}
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
             <Footer />
-            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ShopCart
+                cartOpen={cartOpen}
+                setCartOpen={setCartOpen}
+                setCountCart={setCountCart}
+            />
         </div>
     );
 }

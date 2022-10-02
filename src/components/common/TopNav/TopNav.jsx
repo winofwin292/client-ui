@@ -271,7 +271,7 @@ function TopNav() {
                                 <a
                                     href="/course-introduction"
                                     className={classNames(
-                                        path === "/course-introduction"
+                                        path.includes("course-introduction")
                                             ? "underline"
                                             : "",
                                         "text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
@@ -294,7 +294,9 @@ function TopNav() {
                                 <a
                                     href="/shop"
                                     className={classNames(
-                                        path === "/shop" ? "underline" : "",
+                                        path.includes("/shop")
+                                            ? "underline"
+                                            : "",
                                         "text-base font-medium dark:text-white text-gray-900 hover:text-gray-700"
                                     )}
                                 >

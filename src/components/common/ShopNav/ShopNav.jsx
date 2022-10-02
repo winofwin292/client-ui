@@ -54,6 +54,10 @@ function ShopNav(props) {
         buttonRef.current.click();
     };
 
+    const handleOpenCart = () => {
+        props.setCartOpen(true);
+    };
+
     return (
         <div className="bg-white dark:bg-gray-900">
             <header className="relative bg-white dark:bg-gray-900">
@@ -70,7 +74,7 @@ function ShopNav(props) {
                             onChange={setCondition}
                             multiple
                         >
-                            <div className="relative mt-1 z-50">
+                            <div className="relative mt-1 z-10">
                                 <Listbox.Button
                                     className="relative w-full cursor-default rounded-lg bg-white dark:bg-gray-700 py-2 pl-3 pr-10 text-left dark:text-white"
                                     ref={buttonRef}
@@ -150,8 +154,8 @@ function ShopNav(props) {
                             </div>
                             {/* Cart */}
                             <div className="ml-4 flow-root lg:ml-6">
-                                <a
-                                    href="/shop/"
+                                <button
+                                    onClick={handleOpenCart}
                                     className="group -m-2 flex items-center p-2"
                                 >
                                     <ShoppingBagIcon
@@ -159,12 +163,12 @@ function ShopNav(props) {
                                         aria-hidden="true"
                                     />
                                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 dark:text-white">
-                                        0
+                                        {props.countCart}
                                     </span>
                                     <span className="sr-only">
                                         items in cart, view bag
                                     </span>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
