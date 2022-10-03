@@ -6,3 +6,5 @@ export { default as Introduction } from "./Introduction/Introduction";
 export { default as TeacherIntroduction } from "./TeacherIntroduction/TeacherIntroduction";
 export { default as CourseIntroduction } from "./CourseIntroduction/CourseIntroduction";
 export { default as NeedToKnow } from "./NeedToKnow/NeedToKnow";
+export { default as ProductDetail } from "./ProductDetail/ProductDetail";
+export { default as ShopCart } from "./ShopCart/ShopCart";

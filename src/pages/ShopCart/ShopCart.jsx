@@ -1,34 +1,7 @@
 import React, { Fragment, useState, useEffect, memo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-
-const products = [
-    {
-        id: 1,
-        name: "Throwback Hip Bag",
-        href: "#",
-        color: "Salmon",
-        price: "$90.00",
-        quantity: 1,
-        imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-        imageAlt:
-            "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-    },
-    {
-        id: 2,
-        name: "Medium Stuff Satchel",
-        href: "#",
-        color: "Blue",
-        price: "$32.00",
-        quantity: 1,
-        imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-        imageAlt:
-            "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-    },
-    // More products...
-];
+import { formatterVND } from "utils";
 
 function ShopCart(props) {
     const [products, setProducts] = useState([]);
@@ -58,6 +31,11 @@ function ShopCart(props) {
             })
         );
         props.setCountCart((prev) => prev - 1);
+        const sumPrice = newProductList.reduce(
+            (acc, o) => acc + parseInt(o.price),
+            0
+        );
+        setSubtotal(sumPrice);
     };
 
     return (
@@ -92,16 +70,16 @@ function ShopCart(props) {
                                 leaveTo="translate-x-full"
                             >
                                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                                    <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                                    <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-gray-900 shadow-xl">
                                         <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                                             <div className="flex items-start justify-between">
-                                                <Dialog.Title className="text-lg font-medium text-gray-900">
+                                                <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                                                     Giỏ hàng
                                                 </Dialog.Title>
                                                 <div className="ml-3 flex h-7 items-center">
                                                     <button
                                                         type="button"
-                                                        className="-m-2 p-2 text-gray-400 hover:text-gray-500"
+                                                        className="-m-2 p-2 text-gray-400 hover:text-gray-500 dark:text-white"
                                                         onClick={() =>
                                                             props.setCartOpen(
                                                                 false
@@ -121,7 +99,7 @@ function ShopCart(props) {
                                             {/* Danh sách hàng */}
                                             <div className="mt-8">
                                                 <div className="flow-root">
-                                                    <ul className="-my-6 divide-y divide-gray-200">
+                                                    <ul className="-my-6 divide-y divide-gray-200 dark:divide-gray-600">
                                                         {products.length > 0 ? (
                                                             <>
                                                                 {products.map(
@@ -149,7 +127,7 @@ function ShopCart(props) {
 
                                                                             <div className="ml-4 flex flex-1 flex-col">
                                                                                 <div>
-                                                                                    <div className="flex justify-between text-base font-medium text-gray-900">
+                                                                                    <div className="flex justify-between text-base font-medium text-gray-900 dark:text-white">
                                                                                         {/* Chuyển hướng đến chi tiết sản phẩm */}
                                                                                         <h3>
                                                                                             <a
@@ -164,20 +142,19 @@ function ShopCart(props) {
                                                                                             </a>
                                                                                         </h3>
                                                                                         <p className="ml-4">
-                                                                                            {
+                                                                                            {formatterVND.format(
                                                                                                 product.price
-                                                                                            }
-                                                                                            &nbsp;VNĐ
+                                                                                            )}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <p className="mt-1 text-sm text-gray-500">
+                                                                                    <p className="mt-1 text-sm text-gray-500 dark:text-white">
                                                                                         {
                                                                                             product.author
                                                                                         }
                                                                                     </p>
                                                                                 </div>
                                                                                 <div className="flex flex-1 items-end justify-between text-sm">
-                                                                                    <p className="text-gray-500">
+                                                                                    <p className="text-gray-500 dark:text-white">
                                                                                         {/* {
                                                                                     product.author
                                                                                 } */}
@@ -186,7 +163,8 @@ function ShopCart(props) {
                                                                                     <div className="flex">
                                                                                         <button
                                                                                             type="button"
-                                                                                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                                                                                            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-white
+                                                                                            dark:hover:text-gray-500"
                                                                                             onClick={(
                                                                                                 e
                                                                                             ) =>
@@ -218,18 +196,28 @@ function ShopCart(props) {
                                             </div>
                                         </div>
 
-                                        <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
-                                            <div className="flex justify-between text-base font-medium text-gray-900">
+                                        <div className="border-t border-gray-200 dark:border-gray-600 py-6 px-4 sm:px-6">
+                                            <div className="flex justify-between text-base font-medium text-gray-900 dark:text-white">
                                                 <p>Tổng tiền</p>
-                                                <p>{subtotal}&nbsp;VNĐ</p>
+                                                <p>
+                                                    {formatterVND.format(
+                                                        subtotal
+                                                    )}
+                                                </p>
                                             </div>
-                                            <p className="mt-0.5 text-sm text-gray-500">
-                                                Phí vận chuyển và thuế sẽ được
+                                            <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-700">
+                                                - Phí vận chuyển và thuế sẽ được
                                                 cộng vào khi thanh toán.
+                                            </p>
+                                            <p className="mt-0.5 text-sm text-gray-700 dark:text-gray-500">
+                                                - Lưu ý: giỏ hàng chỉ lưu trên
+                                                thiết bị này, nếu bạn chuyển
+                                                sang thiết bị khác sẽ không thể
+                                                truy cập vào giỏ hàng đã lưu
                                             </p>
                                             <div className="mt-6">
                                                 <a
-                                                    href="/shop/"
+                                                    href="/shop/checkout"
                                                     className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                 >
                                                     Thanh toán

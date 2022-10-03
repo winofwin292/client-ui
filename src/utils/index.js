@@ -28,9 +28,15 @@ const getAllowedRoutes = (routes) => {
     });
 };
 
+const formatterVND = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+});
+
 export {
     isArrayWithLength,
     getAllowedRoutes,
     isLoggedIn,
     getObjectFromCookieValue,
+    formatterVND,
 };

@@ -4,7 +4,7 @@ import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ProductList } from "components/common/ProductList";
 import { ShopNav } from "components/common/ShopNav";
-import { ShopCart } from "components/common/ShopCart";
+import { ShopCart } from "pages/ShopCart";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";

@@ -38,5 +38,8 @@ module.exports = {
     plugins: [
         require("tw-elements/dist/plugin"),
         require("@tailwindcss/aspect-ratio"),
+        require("@tailwindcss/forms")({
+            strategy: "class", // only generate classes
+        }),
     ],
 };

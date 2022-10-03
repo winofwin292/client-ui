@@ -4,6 +4,8 @@ import React, { memo } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "translation/i18n";
 
+import { EnvelopeIcon, PhoneIcon, MapPinIcon } from "@heroicons/react/24/solid";
+
 function Footer() {
     //use for translate
     // eslint-disable-next-line
@@ -20,63 +22,100 @@ function Footer() {
             <div className="mx-auto max-w-screen-xl">
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">
-                        <a
-                            href="https://flowbite.com"
-                            className="flex items-center"
-                        >
+                        <a href="/" className="flex items-center">
                             <img
                                 src="https://flowbite.com/docs/images/logo.svg"
                                 className="mr-3 h-8"
                                 alt="FlowBite Logo"
                             />
                             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                                Trung Tâm ABC
+                                Trung tâm Anh ngữ ABC
+                            </span>
+                        </a>
+                        <a
+                            href="https://goo.gl/maps/5TEKaLHNi3YnCKgt8"
+                            className="flex items-center"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <MapPinIcon
+                                className="pt-2 pl-2 h-6"
+                                aria-hidden="true"
+                            />
+                            <span className="pt-2 pl-2 block self-center whitespace-nowrap dark:text-white">
+                                Địa chỉ: 411, Đường 30 Tháng 4, Hưng Lợi, Ninh
+                                Kiều, Cần Thơ, Việt Nam
+                            </span>
+                        </a>
+                        <a
+                            href="tel:+84395686926"
+                            className="flex items-center"
+                        >
+                            <PhoneIcon
+                                className="pt-2 pl-2 h-6"
+                                aria-hidden="true"
+                            />
+                            <span className="pt-2 pl-2 block self-center whitespace-nowrap dark:text-white">
+                                Điện thoại: 0395 686 926
+                            </span>
+                        </a>
+
+                        <a
+                            href="mailto:thangb1809294@student.ctu.edu.vn"
+                            className="flex items-center"
+                        >
+                            <EnvelopeIcon
+                                className="pt-2 pl-2 h-6"
+                                aria-hidden="true"
+                            />
+                            <span className="pt-2 pl-2 block self-center whitespace-nowrap dark:text-white">
+                                Email: thangb1809294@student.ctu.edu.vn
                             </span>
                         </a>
                     </div>
                     <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                         <div>
                             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                                Resources
+                                Giới thiệu
                             </h2>
                             <ul className="text-gray-600 dark:text-gray-400">
                                 <li className="mb-4">
                                     <a
-                                        href="https://flowbite.com"
+                                        href="/introduction"
                                         className="hover:underline"
                                     >
-                                        Flowbite
+                                        Giới thiệu chung
                                     </a>
                                 </li>
                                 <li>
                                     <a
-                                        href="https://tailwindcss.com/"
+                                        href="/teacher-introduction"
                                         className="hover:underline"
                                     >
-                                        Tailwind CSS
+                                        Đội ngũ giáo viên
                                     </a>
                                 </li>
                             </ul>
                         </div>
                         <div>
                             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                                Follow us
+                                Thông tin
                             </h2>
                             <ul className="text-gray-600 dark:text-gray-400">
                                 <li className="mb-4">
                                     <a
-                                        href="https://github.com/themesberg/flowbite"
+                                        href="/need-to-know"
                                         className="hover:underline "
                                     >
-                                        Github
+                                        FAQ
                                     </a>
                                 </li>
                                 <li>
                                     <a
-                                        href="https://discord.gg/4eeurUVvTy"
+                                        href="/course-introduction"
                                         className="hover:underline"
                                     >
-                                        Discord
+                                        Khóa học
                                     </a>
                                 </li>
                             </ul>

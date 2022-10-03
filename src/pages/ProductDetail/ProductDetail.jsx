@@ -3,11 +3,13 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
-import { ShopCart } from "components/common/ShopCart";
+import { ShopCart } from "pages/ShopCart";
 
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 import ImageGallery from "react-image-gallery";
+
+import { formatterVND } from "utils";
 
 //example data
 import { products } from "components/common/ProductList/productData";
@@ -114,7 +116,7 @@ function ProductDetail(props) {
                                         className="h-6 w-6 flex-shrink-0 text-gray-400 dark:text-white group-hover:text-gray-500"
                                         aria-hidden="true"
                                     />
-                                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 dark:text-white">
+                                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 dark:text-white dark:group-hover:text-gray-200">
                                         {countCart}
                                     </span>
                                     <span className="sr-only">
@@ -147,7 +149,7 @@ function ProductDetail(props) {
                             Thông tin khóa học
                         </h2>
                         <p className="text-3xl tracking-tight text-gray-900 dark:text-white">
-                            {product.price}&nbsp;VNĐ
+                            {formatterVND.format(product.price)}
                         </p>
 
                         {/* Reviews */}
