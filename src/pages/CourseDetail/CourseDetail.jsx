@@ -4,26 +4,29 @@ import { useParams } from "react-router-dom";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
+import { CustomAlert } from "components/common/CustomAlert";
+
+import { formatterVND, alertType } from "utils";
 
 //example data
-import { courses } from "../CourseList/courseData";
+import { courses } from "../../components/common/CourseList/courseData";
 
 const product = {
     images: [
         {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
+            src: "https://st.ielts-fighter.com/src/ielts-fighter/2021/07/15/ebook-30-ngay-chinh-phuc-6-5-ielts-1.jpg",
             alt: "Two each of gray, white, and black shirts laying flat.",
         },
         {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
+            src: "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
             alt: "Model wearing plain black basic tee.",
         },
         {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
+            src: "https://jolo.edu.vn/images/jolo-articles/4_bai_viet/exams-ielts-banner.jpg",
             alt: "Model wearing plain gray basic tee.",
         },
         {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
+            src: "https://www.aitutorsanta.com/vn/wp-content/uploads/sites/9/2021/08/paraphrasing.png",
             alt: "Model wearing plain white basic tee.",
         },
     ],
@@ -38,6 +41,11 @@ function CourseDetail() {
     const [cTDState, setCTDState] = useState({
         isOpen: false,
         subject: "",
+    });
+    const [notify, setNotify] = React.useState({
+        open: false,
+        type: alertType.SUCCESS,
+        msg: "",
     });
 
     let { id } = useParams();
@@ -137,7 +145,7 @@ function CourseDetail() {
                             Thông tin khóa học
                         </h2>
                         <p className="text-3xl tracking-tight text-gray-900 dark:text-white">
-                            {course.price}
+                            {formatterVND.format(course.price)}
                         </p>
 
                         {/* Reviews */}
@@ -253,7 +261,12 @@ function CourseDetail() {
                 </div>
             </div>
             <Footer />
-            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ContactDialog
+                cTDState={cTDState}
+                setCTDState={setCTDState}
+                setNotify={setNotify}
+            />
+            <CustomAlert data={notify} onClose={setNotify} />
         </div>
     );
 }

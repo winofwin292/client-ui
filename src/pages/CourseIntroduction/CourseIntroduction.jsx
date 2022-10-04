@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
-import { ContactDialog } from "components/common/ContactDialog";
 import { CourseList } from "components/common/CourseList";
 
 // Material Dashboard 2 React contexts
@@ -15,10 +14,6 @@ function CourseIntroduction() {
     // eslint-disable-next-line
     const [controller, dispatch] = useMaterialUIController();
     // const { direction, layout, openConfigurator, darkMode } = controller;
-    const [cTDState, setCTDState] = useState({
-        isOpen: false,
-        subject: "",
-    });
 
     const { t } = useTranslation();
 
@@ -31,7 +26,6 @@ function CourseIntroduction() {
             <TopNav />
             <CourseList />
             <Footer />
-            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
         </div>
     );
 }

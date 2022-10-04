@@ -76,6 +76,8 @@ function ContactDialog(props) {
                                         </p>
                                         <ContactForm
                                             subject={props.cTDState.subject}
+                                            setNotify={props.setNotify}
+                                            setCTDState={props.setCTDState}
                                         />
                                     </div>
                                 </section>

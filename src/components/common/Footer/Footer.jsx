@@ -34,7 +34,7 @@ function Footer() {
                         </a>
                         <a
                             href="https://goo.gl/maps/5TEKaLHNi3YnCKgt8"
-                            className="flex items-center"
+                            className="md:flex items-center hidden"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -42,9 +42,33 @@ function Footer() {
                                 className="pt-2 pl-2 h-6"
                                 aria-hidden="true"
                             />
-                            <span className="pt-2 pl-2 block self-center whitespace-nowrap dark:text-white">
+                            <span className="pt-2 pl-2 elf-center whitespace-nowrap dark:text-white">
                                 Địa chỉ: 411, Đường 30 Tháng 4, Hưng Lợi, Ninh
                                 Kiều, Cần Thơ, Việt Nam
+                            </span>
+                        </a>
+                        <a
+                            href="https://goo.gl/maps/5TEKaLHNi3YnCKgt8"
+                            className="flex items-center md:hidden"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <MapPinIcon
+                                className="pt-2 pl-2 h-6"
+                                aria-hidden="true"
+                            />
+                            <span className="pt-2 pl-2 elf-center whitespace-nowrap dark:text-white">
+                                Địa chỉ: 411, Đường 30 Tháng 4, Hưng Lợi,
+                            </span>
+                        </a>
+                        <a
+                            href="https://goo.gl/maps/5TEKaLHNi3YnCKgt8"
+                            className="flex items-center md:hidden"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <span className="pt-2 pl-2 elf-center whitespace-nowrap dark:text-white">
+                                Ninh Kiều, Cần Thơ, Việt Nam
                             </span>
                         </a>
                         <a

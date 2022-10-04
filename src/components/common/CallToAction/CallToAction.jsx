@@ -1,4 +1,7 @@
 import React, { memo } from "react";
+
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
+
 function CallToAction(props) {
     const handleOpenCTD = () => {
         props.setCTDState({
@@ -21,7 +24,15 @@ function CallToAction(props) {
                         className="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
                         onClick={handleOpenCTD}
                     >
-                        Để lại thông tin
+                        <div className="flex items-center">
+                            <InformationCircleIcon
+                                className="h-6"
+                                aria-hidden="true"
+                            />
+                            <span className="ml-2 self-center whitespace-nowrap dark:text-white">
+                                Để lại thông tin
+                            </span>
+                        </div>
                     </button>
                 </div>
             </div>

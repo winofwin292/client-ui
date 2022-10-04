@@ -37,7 +37,7 @@ function TeacherSection() {
                     </h2>
                     <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">
                         Đội ngũ giáo viên với nhiều năm kinh nghiệm trong việc
-                        giảng dạy ngoại ngữ
+                        giảng dạy ngoại ngữ.
                     </p>
                 </div>
                 <div className="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

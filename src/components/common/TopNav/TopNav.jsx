@@ -206,7 +206,7 @@ function TopNav() {
             >
                 <Popover.Panel
                     focus
-                    className="absolute  inset-x-0 z-10 top-0 origin-top-right transform p-2 transition md:hidden"
+                    className="absolute inset-x-0 z-10 top-0 origin-top-right transform p-2 transition md:hidden"
                 >
                     <div className="divide-y-2 divide-gray-50 rounded-lg bg-white dark:bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5">
                         <div className="px-5 pt-5 pb-6">

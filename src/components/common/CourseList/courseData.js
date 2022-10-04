@@ -3,9 +3,9 @@ export const courses = [
         id: 1,
         name: "Giao tiếp cơ bản",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1250000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -18,14 +18,15 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: true,
     },
     {
         id: 2,
         name: "Đọc viết cơ bản",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-02.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1550000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -38,14 +39,15 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: true,
     },
     {
         id: 3,
         name: "Giao tiếp nâng cao",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1250000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -58,14 +60,15 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: false,
     },
     {
         id: 4,
         name: "Đọc viết nâng cao",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-03.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1350000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -78,14 +81,15 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: true,
     },
     {
         id: 5,
         name: "Chứng chỉ TOEIC",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1500000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -98,14 +102,15 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: false,
     },
     {
         id: 6,
         name: "Chứng chỉ B2",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1250000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -118,14 +123,15 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: false,
     },
     {
         id: 7,
         name: "Chứng chỉ B1",
         imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg",
+            "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
         imageAlt: "Front of men's Basic Tee in black.",
-        price: "$35",
+        price: 1350000,
         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, assumenda! Reprehenderit laboriosam aut a molestiae possimus ex, perferendis tempore iure, facilis, impedit hic dicta nam vero quibusdam. Dolore, veritatis quia!",
         highlights: [
             "Đào tạo từ cơ bản đến nâng cao",
@@ -138,6 +144,7 @@ export const courses = [
         trainingTime: "60",
         lessonPerWeek: "3",
         entity: "Sinh viên",
+        showInLanding: false,
     },
     // More products...
 ];

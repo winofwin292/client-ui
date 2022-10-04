@@ -9,8 +9,9 @@ import { ReviewSection } from "components/common/ReviewSection";
 import { CallToAction } from "components/common/CallToAction";
 import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
+import { CustomAlert } from "components/common/CustomAlert";
 
-import { isLoggedIn } from "utils";
+import { isLoggedIn, alertType } from "utils";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -26,6 +27,11 @@ function Home() {
     const [cTDState, setCTDState] = useState({
         isOpen: false,
         subject: "",
+    });
+    const [notify, setNotify] = React.useState({
+        open: false,
+        type: alertType.SUCCESS,
+        msg: "",
     });
 
     const { t } = useTranslation();
@@ -47,7 +53,7 @@ function Home() {
                                         Chào mừng bạn đến với
                                     </span>{" "}
                                     <span className="block text-indigo-600 xl:inline">
-                                        Trung tâm ngoại ngữ ABC
+                                        Trung tâm anh ngữ ABC
                                     </span>
                                 </h1>
                                 <p className="mt-3 text-base text-gray-500 sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl lg:mx-0">
@@ -60,7 +66,7 @@ function Home() {
                                             href="/introduction"
                                             className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-1 md:px-7 md:text-lg"
                                         >
-                                            Giới thiệu &gt;&gt;&gt;
+                                            Giới thiệu vể trung tâm &rarr;
                                         </a>
                                     </div>
                                 </div>
@@ -75,11 +81,16 @@ function Home() {
             <Feature />
             <SocialProof />
             <TeacherSection />
-            <CourseSection setCTDState={setCTDState} />
+            <CourseSection />
             <ReviewSection />
             <CallToAction setCTDState={setCTDState} />
             <Footer />
-            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ContactDialog
+                cTDState={cTDState}
+                setCTDState={setCTDState}
+                setNotify={setNotify}
+            />
+            <CustomAlert data={notify} onClose={setNotify} />
         </>
     );
 }

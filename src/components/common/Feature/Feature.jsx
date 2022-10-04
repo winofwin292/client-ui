@@ -38,9 +38,9 @@ function Feature() {
         <div className="bg-white dark:bg-gray-900 py-6">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="lg:text-center">
-                    <h2 className="text-lg font-semibold text-indigo-600">
+                    {/* <h2 className="text-lg font-semibold text-indigo-600">
                         Transactions
-                    </h2>
+                    </h2> */}
                     <p className="mt-2 text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl dark:text-white">
                         Nơi tốt nhất để đầu tư cho tương lai
                     </p>

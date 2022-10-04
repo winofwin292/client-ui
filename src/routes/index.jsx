@@ -13,10 +13,10 @@ import {
 import Login from "pages/Login/Login";
 import { getAllowedRoutes, isLoggedIn } from "utils";
 import { PrivateRoutesConfig } from "config/index";
-import { NotFound } from "components/common";
-import { CourseDetail } from "components/common/CourseDetail";
+import { NotFound } from "components/common/NotFound";
+import { CourseDetail } from "pages/CourseDetail";
 import { ProductDetail } from "pages/ProductDetail";
-import { ShopCheckout } from "components/common/ShopCheckout";
+import { ShopCheckout } from "pages/ShopCheckout";
 
 function CRoutes() {
     let allowedRoutes = [];

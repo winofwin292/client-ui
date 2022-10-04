@@ -1,6 +1,8 @@
 import React, { memo } from "react";
 import { courses } from "./courseData";
 
+import { formatterVND } from "utils";
+
 function CourseList() {
     return (
         <div className="bg-white dark:bg-gray-900">
@@ -43,7 +45,7 @@ function CourseList() {
                                     </p>
                                 </div>
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                    {course.price}
+                                    {formatterVND.format(course.price)}
                                 </p>
                             </div>
                             <div className="mt-4 flex justify-between">

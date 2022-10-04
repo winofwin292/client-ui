@@ -1,5 +1,6 @@
 import React, { memo, useState } from "react";
 import validator from "validator";
+import { alertType } from "utils";
 
 function ContactForm(props) {
     const [name, setName] = useState("");
@@ -36,6 +37,16 @@ function ContactForm(props) {
         };
         //call api
         console.log(data);
+
+        props.setNotify({
+            open: true,
+            type: alertType.INFO,
+            msg: "Gửi thành công",
+        });
+        props.setCTDState({
+            isOpen: false,
+            subject: "",
+        });
     };
     return (
         <form className="space-y-4">
@@ -57,19 +68,20 @@ function ContactForm(props) {
             </div>
             <div>
                 <label
-                    htmlFor="subject"
+                    htmlFor="telephone"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                     Số điện thoại: (<span className="text-red-600">*</span>)
                 </label>
                 <input
                     type="text"
-                    id="subject"
+                    id="telephone"
                     className="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
                     placeholder="0901234567"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    autoComplete="tel"
                 />
             </div>
             <div>

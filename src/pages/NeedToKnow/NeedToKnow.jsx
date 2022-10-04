@@ -6,9 +6,12 @@ import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
 import { FAQ } from "components/common/FAQ";
 import { HeroSection } from "components/common/HeroSection";
+import { CustomAlert } from "components/common/CustomAlert";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
+
+import { alertType } from "utils";
 
 //i18next translate
 import { useTranslation } from "react-i18next";
@@ -22,11 +25,16 @@ function NeedToKnow() {
         isOpen: false,
         subject: "",
     });
+    const [notify, setNotify] = React.useState({
+        open: false,
+        type: alertType.SUCCESS,
+        msg: "",
+    });
 
     const { t } = useTranslation();
 
     useEffect(() => {
-        setLayout(dispatch, "courseIntroduction");
+        setLayout(dispatch, "needToKnow");
     }, [dispatch]);
 
     return (
@@ -37,7 +45,12 @@ function NeedToKnow() {
             <FAQ />
             <CallToAction setCTDState={setCTDState} />
             <Footer />
-            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ContactDialog
+                cTDState={cTDState}
+                setCTDState={setCTDState}
+                setNotify={setNotify}
+            />
+            <CustomAlert data={notify} onClose={setNotify} />
         </div>
     );
 }
