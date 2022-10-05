@@ -2,12 +2,18 @@ import React, { memo, useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Slide from "@mui/material/Slide";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+function TransitionUp(props) {
+    return <Slide {...props} direction="up" />;
+}
+
 function CustomAlert(props) {
+    const timeOutConst = props.timeOut || 3000;
     useEffect(() => {
         const timeId = setTimeout(() => {
             props.onClose({
@@ -15,12 +21,12 @@ function CustomAlert(props) {
                 type: props.data.type,
                 msg: "",
             });
-        }, 3000);
+        }, timeOutConst);
 
         return () => {
             clearTimeout(timeId);
         };
-    }, [props, props.data]);
+    }, [props, props.data, timeOutConst]);
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -37,8 +43,9 @@ function CustomAlert(props) {
         <Stack spacing={2} sx={{ width: "100%" }}>
             <Snackbar
                 open={props.data.open}
-                autoHideDuration={6000}
+                // autoHideDuration={6000}
                 onClose={handleClose}
+                TransitionComponent={TransitionUp}
             >
                 <Alert
                     onClose={handleClose}

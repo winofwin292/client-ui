@@ -34,6 +34,10 @@ function NeedToKnow() {
     const { t } = useTranslation();
 
     useEffect(() => {
+        document.title = "Câu hỏi thường gặp";
+    }, []);
+
+    useEffect(() => {
         setLayout(dispatch, "needToKnow");
     }, [dispatch]);
 

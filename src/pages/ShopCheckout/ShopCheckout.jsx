@@ -3,10 +3,12 @@ import { RadioGroup } from "@headlessui/react";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
+import { CustomAlert } from "components/common/CustomAlert";
 
 import { TrashIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import validator from "validator";
 
-import { formatterVND } from "utils";
+import { formatterVND, alertType } from "utils";
 
 const deliveryMethods = [
     {
@@ -45,6 +47,16 @@ function ShopCheckout() {
     const [district, setDistrict] = useState("");
     const [commune, setCommune] = useState("");
 
+    const [notify, setNotify] = React.useState({
+        open: false,
+        type: alertType.SUCCESS,
+        msg: "",
+    });
+
+    useEffect(() => {
+        document.title = "Thanh toán";
+    }, []);
+
     useEffect(() => {
         const currCart = JSON.parse(localStorage.getItem("myCart")) || {
             cart: [],
@@ -66,41 +78,93 @@ function ShopCheckout() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = {
-            firstName,
-            lastName,
-            phoneNumber,
-            email,
-            address,
-            city,
-            district,
-            commune,
-            products,
-            selectedDeliveryMethod,
-            subtotal,
-            total,
-        };
-        console.log(data);
+        if (
+            !firstName ||
+            !lastName ||
+            !phoneNumber ||
+            !email ||
+            !address ||
+            !city ||
+            !district ||
+            !commune
+        ) {
+            alert("Vui lòng điền thông tin vào biểu mẫu");
+            return;
+        }
+
+        if (!validator.isMobilePhone(phoneNumber, "vi-VN")) {
+            alert("Vui lòng nhập số điện thoại hợp lệ!");
+            setPhoneNumber("");
+            return;
+        }
+
+        if (!validator.isEmail(email)) {
+            alert("Vui lòng nhập email hợp lệ!");
+            setEmail("");
+            return;
+        }
+
+        try {
+            const data = {
+                firstName,
+                lastName,
+                phoneNumber,
+                email,
+                address,
+                city,
+                district,
+                commune,
+                products,
+                selectedDeliveryMethod,
+                subtotal,
+                total,
+            };
+            console.log(data);
+            setNotify({
+                open: true,
+                type: alertType.INFO,
+                msg: "Đặt hàng thành công",
+            });
+        } catch {
+            setNotify({
+                open: true,
+                type: alertType.INFO,
+                msg: "Lỗi khi đặt hàng",
+            });
+        }
     };
 
     const handleRemove = (e, index) => {
         e.preventDefault();
-        let newProductList = [...products];
-        newProductList.splice(index, 1);
-        localStorage.setItem(
-            "myCart",
-            JSON.stringify({
-                cart: newProductList,
-            })
-        );
+        try {
+            let newProductList = [...products];
+            newProductList.splice(index, 1);
+            localStorage.setItem(
+                "myCart",
+                JSON.stringify({
+                    cart: newProductList,
+                })
+            );
 
-        const sumPrice = newProductList.reduce(
-            (acc, o) => acc + parseInt(o.price),
-            0
-        );
-        setProducts(newProductList);
-        setSubtotal(sumPrice);
-        setTax(sumPrice / 10);
+            const sumPrice = newProductList.reduce(
+                (acc, o) => acc + parseInt(o.price),
+                0
+            );
+            setProducts(newProductList);
+            setSubtotal(sumPrice);
+            setTax(sumPrice / 10);
+            setNotify({
+                open: true,
+                type: alertType.INFO,
+                msg: "Đã xóa 1 sản phẩm khỏi giỏ hàng",
+            });
+        } catch {
+            setNotify({
+                open: true,
+                type: alertType.ERROR,
+                msg: "Lỗi: không xóa được sản phẩm",
+            });
+        }
         // setTotal(sumPrice + sumPrice / 10 + 30000);
     };
 
@@ -613,6 +677,7 @@ function ShopCheckout() {
             </main>
 
             <Footer />
+            <CustomAlert data={notify} onClose={setNotify} />
         </div>
     );
 }

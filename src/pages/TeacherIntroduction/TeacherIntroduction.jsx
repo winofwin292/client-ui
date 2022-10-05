@@ -34,6 +34,10 @@ function TeacherIntroduction() {
     const { t } = useTranslation();
 
     useEffect(() => {
+        document.title = "Giáo viên, Nhân viên";
+    }, []);
+
+    useEffect(() => {
         setLayout(dispatch, "teacherIntroduction");
     }, [dispatch]);
 

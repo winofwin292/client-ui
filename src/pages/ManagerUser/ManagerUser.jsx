@@ -1,3 +1,5 @@
+import React, { memo, useEffect } from "react";
+
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -19,6 +21,10 @@ import projectsTableData from "pages/ManagerUser/data/projectsTableData";
 
 function ManagerUser() {
     const { columns: pColumns, rows: pRows } = projectsTableData();
+
+    useEffect(() => {
+        document.title = "Quản lý người dùng";
+    }, []);
 
     return (
         <DashboardLayout>
@@ -64,4 +70,4 @@ function ManagerUser() {
     );
 }
 
-export default ManagerUser;
+export default memo(ManagerUser);

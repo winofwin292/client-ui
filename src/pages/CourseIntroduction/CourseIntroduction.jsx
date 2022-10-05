@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { CourseList } from "components/common/CourseList";
@@ -20,6 +20,10 @@ function CourseIntroduction() {
     useEffect(() => {
         setLayout(dispatch, "courseIntroduction");
     }, [dispatch]);
+
+    useEffect(() => {
+        document.title = "Khóa học";
+    }, []);
 
     return (
         <div className="bg-white dark:bg-gray-900">

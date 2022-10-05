@@ -1,17 +1,31 @@
 import React, { memo } from "react";
 // import { products } from "./productData";
+import { alertType } from "utils";
 
 function ProductList(props) {
     const products = props.data;
     const handleAddToCart = (e, product) => {
         e.preventDefault();
-        const { desc, publishingYear, category, ...newProduct } = product;
-        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-            cart: [],
-        };
-        currCart.cart.push(newProduct);
-        props.setCountCart((prev) => prev + 1);
-        localStorage.setItem("myCart", JSON.stringify(currCart));
+        try {
+            const { desc, publishingYear, category, ...newProduct } = product;
+            const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+                cart: [],
+            };
+            currCart.cart.push(newProduct);
+            props.setCountCart((prev) => prev + 1);
+            localStorage.setItem("myCart", JSON.stringify(currCart));
+            props.setNotify({
+                open: true,
+                type: alertType.SUCCESS,
+                msg: "Đã thêm 1 sản phẩm vào giỏ hàng",
+            });
+        } catch {
+            props.setNotify({
+                open: true,
+                type: alertType.ERROR,
+                msg: "Lỗi khi thêm sản phẩm",
+            });
+        }
     };
     return (
         <div className="bg-white dark:bg-gray-900">

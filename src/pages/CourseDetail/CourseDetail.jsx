@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import { TopNav } from "components/common/TopNav";
@@ -50,6 +50,10 @@ function CourseDetail() {
 
     let { id } = useParams();
     const course = courses.find((item) => item.id.toString() === id);
+
+    useEffect(() => {
+        document.title = course.name;
+    }, [course.name]);
 
     const handleOpenCTD = () => {
         setCTDState({

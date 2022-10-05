@@ -32,6 +32,10 @@ function Dashboard({ children }) {
         setLayout(dispatch, "dashboard");
     }, [dispatch]);
 
+    useEffect(() => {
+        document.title = "Hệ thống quản lý";
+    }, []);
+
     // Open sidenav when mouse enter on mini sidenav
     const handleOnMouseEnter = () => {
         if (miniSidenav && !onMouseEnter) {

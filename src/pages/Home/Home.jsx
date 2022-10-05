@@ -40,6 +40,10 @@ function Home() {
         setLayout(dispatch, "home");
     }, [dispatch]);
 
+    useEffect(() => {
+        document.title = "Trang chủ";
+    }, []);
+
     return (
         <>
             <TopNav />

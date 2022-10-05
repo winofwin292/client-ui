@@ -50,6 +50,10 @@ function Login() {
         setLayout(dispatch, "login");
     }, [dispatch]);
 
+    useEffect(() => {
+        document.title = "Đăng nhập";
+    }, []);
+
     const handleSetRememberMe = async () => {
         // const response = await userApi.getNewAccessToken();
         // console.log(response);

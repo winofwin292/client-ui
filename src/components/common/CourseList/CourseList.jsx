@@ -3,7 +3,7 @@ import { courses } from "./courseData";
 
 import { formatterVND } from "utils";
 
-function CourseList() {
+function CourseList(props) {
     return (
         <div className="bg-white dark:bg-gray-900">
             <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-12">

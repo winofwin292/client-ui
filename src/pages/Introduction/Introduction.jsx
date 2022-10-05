@@ -37,6 +37,10 @@ function Introduction() {
         setLayout(dispatch, "introduction");
     }, [dispatch]);
 
+    useEffect(() => {
+        document.title = "Giới thiệu chung";
+    }, []);
+
     return (
         <div className="bg-white dark:bg-gray-900">
             <TopNav />

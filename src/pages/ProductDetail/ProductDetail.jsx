@@ -4,12 +4,13 @@ import { useParams } from "react-router-dom";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ShopCart } from "pages/ShopCart";
+import { CustomAlert } from "components/common/CustomAlert";
 
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 import ImageGallery from "react-image-gallery";
 
-import { formatterVND } from "utils";
+import { formatterVND, alertType } from "utils";
 
 //example data
 import { products } from "components/common/ProductList/productData";
@@ -39,7 +40,16 @@ function ProductDetail(props) {
     let { id } = useParams();
     const [countCart, setCountCart] = useState(0);
     const [cartOpen, setCartOpen] = useState(false);
+    const [notify, setNotify] = React.useState({
+        open: false,
+        type: alertType.SUCCESS,
+        msg: "",
+    });
     const product = products.find((item) => item.id.toString() === id);
+
+    useEffect(() => {
+        document.title = product.name;
+    }, [product.name]);
 
     useEffect(() => {
         const myCart = JSON.parse(localStorage.getItem("myCart")) || {
@@ -51,13 +61,26 @@ function ProductDetail(props) {
 
     const handleAddToCart = (e) => {
         e.preventDefault();
-        const { desc, publishingYear, category, ...newProduct } = product;
-        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-            cart: [],
-        };
-        currCart.cart.push(newProduct);
-        setCountCart((prev) => prev + 1);
-        localStorage.setItem("myCart", JSON.stringify(currCart));
+        try {
+            const { desc, publishingYear, category, ...newProduct } = product;
+            const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+                cart: [],
+            };
+            currCart.cart.push(newProduct);
+            setCountCart((prev) => prev + 1);
+            localStorage.setItem("myCart", JSON.stringify(currCart));
+            setNotify({
+                open: true,
+                type: alertType.INFO,
+                msg: "Đã thêm 1 sản phẩm khỏi vào hàng",
+            });
+        } catch {
+            setNotify({
+                open: true,
+                type: alertType.ERROR,
+                msg: "Lỗi: không thêm được sản phẩm",
+            });
+        }
     };
 
     const handleOpenCart = () => {
@@ -255,6 +278,7 @@ function ProductDetail(props) {
                 setCartOpen={setCartOpen}
                 setCountCart={setCountCart}
             />
+            <CustomAlert data={notify} onClose={setNotify} />
         </div>
     );
 }

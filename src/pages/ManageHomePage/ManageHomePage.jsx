@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -21,6 +21,10 @@ import ManagePoster from "./components/ManagePoster/ManagePoster";
 
 function ManageHomePage() {
     const [value, setValue] = useState("1");
+
+    useEffect(() => {
+        document.title = "Quản lý trang chủ";
+    }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -64,4 +68,4 @@ function ManageHomePage() {
     );
 }
 
-export default ManageHomePage;
+export default memo(ManageHomePage);
