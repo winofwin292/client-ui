@@ -6,7 +6,8 @@ import { getObjectFromCookieValue } from "utils";
 function Loading() {
     useEffect(() => {
         const userRole = getObjectFromCookieValue("userData").role || "";
-        if (userRole === "ADMIN") window.location.href = "/app/dashboard/*";
+        if (userRole === "ADMIN" || userRole === "STAFF")
+            window.location.href = "/app/dashboard/*";
         else if (userRole === "TEACHER") window.location.href = "/app/teacher";
         else window.location.href = "/app/student";
     }, []);

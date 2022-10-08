@@ -50,6 +50,23 @@ const PrivateRoutesConfig = [
         ],
     },
     {
+        component: Dashboard,
+        path: "dashboard/*",
+        title: "Dashboard",
+        exact: true,
+        permission: [Roles.STAFF],
+        children: [
+            {
+                type: "collapse",
+                name: "adminSideBar.overview",
+                key: "overview",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "*",
+                component: <Overview />,
+            },
+        ],
+    },
+    {
         component: TeacherCourse,
         path: "teacher",
         title: "Giáo viên",

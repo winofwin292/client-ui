@@ -1,9 +1,26 @@
-import React, { memo } from "react";
-import { courses } from "./courseData";
+import React, { memo, useEffect, useState } from "react";
 
-import { formatterVND } from "utils";
+import { formatterVND, alertType } from "utils";
+
+import courseApi from "api/Course/courseApi";
 
 function CourseList(props) {
+    const [courses, setCourses] = useState([]);
+    useEffect(() => {
+        async function getData() {
+            const response = await courseApi.getAll();
+            if (response.status === 200) {
+                setCourses(response.data);
+            } else {
+                props.setNotify({
+                    open: true,
+                    type: alertType.ERROR,
+                    msg: "Không tải được dữ liệu",
+                });
+            }
+        }
+        getData();
+    }, [props]);
     return (
         <div className="bg-white dark:bg-gray-900">
             <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-12">
@@ -17,8 +34,8 @@ function CourseList(props) {
                             <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80 ">
                                 <a href={"/course-introduction/" + course.id}>
                                     <img
-                                        src={course.imageSrc}
-                                        alt={course.imageAlt}
+                                        src="https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg"
+                                        alt={course.name}
                                         className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                                     />
                                 </a>
@@ -41,7 +58,7 @@ function CourseList(props) {
                                         </a>
                                     </h3>
                                     <p className="mt-1 text-sm text-gray-500 dark:text-white">
-                                        Nhóm đối tượng: {course.entity}
+                                        Loại: {course.TypeOfContent.description}
                                     </p>
                                 </div>
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">

@@ -13,16 +13,16 @@ import { formatterVND, alertType } from "utils";
 const deliveryMethods = [
     {
         id: 1,
-        title: "GHN",
-        turnaround1: "1-2 ngày (nội ô)",
-        turnaround2: "3-5 ngày (ngoại tỉnh)",
+        name: "GHN",
+        turnaround1: "1-2 ngày",
+        turnaround2: "3-5 ngày",
         price: 30000,
     },
     {
         id: 2,
-        title: "GHTK",
-        turnaround1: "1-2 ngày (nội ô)",
-        turnaround2: "2-4 ngày (ngoại tỉnh)",
+        name: "GHTK",
+        turnaround1: "1-2 ngày",
+        turnaround2: "2-4 ngày",
         price: 40000,
     },
 ];
@@ -451,7 +451,7 @@ function ShopCheckout() {
                                                                         className="block text-sm font-medium text-gray-900 dark:text-gray-200"
                                                                     >
                                                                         {
-                                                                            deliveryMethod.title
+                                                                            deliveryMethod.name
                                                                         }
                                                                     </RadioGroup.Label>
                                                                     <RadioGroup.Description
@@ -461,6 +461,8 @@ function ShopCheckout() {
                                                                         {
                                                                             deliveryMethod.turnaround1
                                                                         }
+                                                                        &nbsp;(nội
+                                                                        ô)
                                                                     </RadioGroup.Description>
                                                                     <RadioGroup.Description
                                                                         as="span"
@@ -469,6 +471,8 @@ function ShopCheckout() {
                                                                         {
                                                                             deliveryMethod.turnaround2
                                                                         }
+                                                                        &nbsp;(ngoại
+                                                                        tỉnh)
                                                                     </RadioGroup.Description>
                                                                     <RadioGroup.Description
                                                                         as="span"

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Routes, Route } from "react-router-dom";
-import { NotFound } from "../components/common";
+import { NotFound } from "components/common";
 
 function MapAllowedRoutes({ routes, basePath, isAddNotFound }) {
     return (

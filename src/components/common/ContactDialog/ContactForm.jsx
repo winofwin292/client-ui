@@ -1,6 +1,7 @@
 import React, { memo, useState } from "react";
 import validator from "validator";
 import { alertType } from "utils";
+import requestContactApi from "api/RequestContact/requestContactApi";
 
 function ContactForm(props) {
     const [name, setName] = useState("");
@@ -8,7 +9,14 @@ function ContactForm(props) {
     const [email, setEmail] = useState("");
     const [note, setNote] = useState("");
 
-    const handleClick = (e) => {
+    const setDefaultState = () => {
+        setName("");
+        setPhone("");
+        setEmail("");
+        setNote("");
+    };
+
+    const handleClick = async (e) => {
         e.preventDefault();
 
         if (!name || !phone || !email) {
@@ -29,24 +37,32 @@ function ContactForm(props) {
         }
 
         const data = {
-            name,
+            full_name: name,
             phone,
             email,
             note,
             subject: props.subject,
         };
-        //call api
-        console.log(data);
+        const response = await requestContactApi.addRequestContact(data);
 
-        props.setNotify({
-            open: true,
-            type: alertType.INFO,
-            msg: "Gửi thành công",
-        });
-        props.setCTDState({
-            isOpen: false,
-            subject: "",
-        });
+        if (response.status === 200) {
+            props.setNotify({
+                open: true,
+                type: alertType.INFO,
+                msg: "Gửi thành công",
+            });
+            props.setCTDState({
+                isOpen: false,
+                subject: "",
+            });
+            setDefaultState();
+        } else {
+            props.setNotify({
+                open: true,
+                type: alertType.ERROR,
+                msg: "Đã xảy ra lỗi, vui lòng thử lại.",
+            });
+        }
     };
     return (
         <form className="space-y-4">
