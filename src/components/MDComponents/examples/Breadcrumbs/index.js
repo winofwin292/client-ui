@@ -27,11 +27,9 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDComponents/MDBox";
 import MDTypography from "components/MDComponents/MDTypography";
 
-function Breadcrumbs({ icon, title, route, light }) {
+function Breadcrumbs({ icon, route, light }) {
     const routes = route.slice(0, -1);
-    let pageTitle = title.replace("-", " ");
-
-    if (pageTitle === "*") pageTitle = "Overview";
+    let pageTitle = document.title;
 
     return (
         <MDBox mr={{ xs: 0, xl: 8 }}>
@@ -100,7 +98,6 @@ Breadcrumbs.defaultProps = {
 // Typechecking props for the Breadcrumbs
 Breadcrumbs.propTypes = {
     icon: PropTypes.node.isRequired,
-    title: PropTypes.string.isRequired,
     route: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
     light: PropTypes.bool,
 };

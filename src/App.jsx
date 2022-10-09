@@ -66,27 +66,21 @@ const App = () => {
     useEffect(() => {
         // Get new Token
         const getNewUserToken = async () => {
-            try {
-                const response = await userApi.getNewAccessToken();
+            const response = await userApi.getNewAccessToken();
 
-                if (response.status !== 200) {
-                    Cookies.remove("accessToken");
-                    Cookies.remove("refreshToken");
-                    Cookies.remove("userData");
-                    navigate("/");
-                }
-                console.log(response);
-            } catch (err) {
-                console.log(err);
+            if (response.status !== 200) {
+                Cookies.remove("accessToken");
+                Cookies.remove("refreshToken");
+                Cookies.remove("userData");
+                navigate("/");
             }
         };
-        // console.log(isLoggedIn());
 
         if (isLoggedIn()) {
             const interval = setInterval(
                 () => getNewUserToken(),
-                1000 * 60 * 9
-            ); //tự động làm mới token mỗi 9 phút
+                1000 * 60 * 8
+            ); //tự động làm mới token mỗi 8 phút
             intervalRef.current = interval;
             return () => clearInterval(interval);
         }

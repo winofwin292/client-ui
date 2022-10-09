@@ -33,7 +33,7 @@ function Dashboard({ children }) {
     }, [dispatch]);
 
     useEffect(() => {
-        document.title = "Hệ thống quản lý";
+        document.title = "Tổng quan";
     }, []);
 
     // Open sidenav when mouse enter on mini sidenav

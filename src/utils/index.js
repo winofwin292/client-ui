@@ -21,7 +21,6 @@ export const isArrayWithLength = (arr) => {
 
 export const getAllowedRoutes = (routes) => {
     const roles = [getObjectFromCookieValue("userData")?.role] || [];
-    console.log(roles);
     return routes.filter(({ permission }) => {
         if (!permission) return true;
         else if (!isArrayWithLength(permission)) return true;

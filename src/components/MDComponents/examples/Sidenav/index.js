@@ -51,6 +51,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
+    console.log(location.pathname);
+    console.log(collapseName);
+
     let textColor = "white";
 
     if (transparentSidenav || (whiteSidenav && !darkMode)) {
@@ -102,7 +105,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const renderRoutes = routes.map(
         ({ type, name, icon, title, noCollapse, key, href, path }) => {
             let returnValue;
-
+            console.log(key);
             if (type === "collapse") {
                 returnValue = href ? (
                     <Link

@@ -5,6 +5,7 @@ import { ManagerUser } from "pages/ManagerUser";
 import { Overview } from "pages/Dashboard/Overview";
 import { ManageHomePage } from "pages/ManageHomePage";
 import Loading from "components/common/Loading/Loading";
+import { ManagerRequestContact } from "pages/ManagerRequestContact";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -26,7 +27,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "adminSideBar.overview",
-                key: "overview",
+                key: "app/dashboard/*",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
                 component: <Overview />,
@@ -34,7 +35,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "adminSideBar.userMana",
-                key: "user",
+                key: "app/dashboard/user",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "user",
                 component: <ManagerUser />,
@@ -42,7 +43,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "adminSideBar.homeMana",
-                key: "manage-home-page",
+                key: "app/dashboard/manage-home-page",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "manage-home-page",
                 component: <ManageHomePage />,
@@ -59,10 +60,18 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "adminSideBar.overview",
-                key: "overview",
+                key: "app/dashboard/*",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
                 component: <Overview />,
+            },
+            {
+                type: "collapse",
+                name: "Yêu cầu liên hệ",
+                key: "app/dashboard/yeu-cau-lien-he",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "yeu-cau-lien-he",
+                component: <ManagerRequestContact />,
             },
         ],
     },

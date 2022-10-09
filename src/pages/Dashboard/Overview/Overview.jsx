@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo, useEffect } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -17,6 +17,9 @@ import Projects from "pages/Dashboard/Overview/components/Projects";
 import OrdersOverview from "pages/Dashboard/Overview/components/OrdersOverview";
 
 function Overview() {
+    useEffect(() => {
+        document.title = "Tổng quan";
+    }, []);
     return (
         <DashboardLayout>
             <DashboardNavbar />
