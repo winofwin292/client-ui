@@ -1,6 +1,13 @@
 import React, { useState, memo, useEffect } from "react";
 import { RadioGroup } from "@headlessui/react";
 
+import {
+    SelectProvince,
+    SelectDistrict,
+    SelectCommune,
+    getCommunePathWithType,
+} from "vn-ad";
+
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { CustomAlert } from "components/common/CustomAlert";
@@ -85,8 +92,11 @@ function ShopCheckout() {
             !email ||
             !address ||
             !city ||
+            city === "-1" ||
             !district ||
-            !commune
+            district === "-1" ||
+            !commune ||
+            commune === "-1"
         ) {
             alert("Vui lòng điền thông tin vào biểu mẫu");
             return;
@@ -111,9 +121,7 @@ function ShopCheckout() {
                 phoneNumber,
                 email,
                 address,
-                city,
-                district,
-                commune,
+                dc: getCommunePathWithType(commune),
                 products,
                 selectedDeliveryMethod,
                 subtotal,
@@ -222,7 +230,7 @@ function ShopCheckout() {
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-white">
                                     Thông tin liên hệ
                                 </h2>
-
+                                {/* email */}
                                 <div className="mt-4">
                                     <label
                                         htmlFor="email-address"
@@ -244,7 +252,7 @@ function ShopCheckout() {
                                         />
                                     </div>
                                 </div>
-
+                                {/* phoneNumber */}
                                 <div className="mt-4">
                                     <label
                                         htmlFor="email-address"
@@ -274,6 +282,7 @@ function ShopCheckout() {
                                 </h2>
 
                                 <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                                    {/* Họ */}
                                     <div>
                                         <label
                                             htmlFor="last-name"
@@ -296,7 +305,7 @@ function ShopCheckout() {
                                             />
                                         </div>
                                     </div>
-
+                                    {/* Tên */}
                                     <div>
                                         <label
                                             htmlFor="first-name"
@@ -319,7 +328,7 @@ function ShopCheckout() {
                                             />
                                         </div>
                                     </div>
-
+                                    {/* Địa chỉ */}
                                     <div className="sm:col-span-2">
                                         <label
                                             htmlFor="address"
@@ -351,16 +360,14 @@ function ShopCheckout() {
                                             Tỉnh / Thành phố
                                         </label>
                                         <div className="mt-1">
-                                            <input
+                                            <SelectProvince
                                                 type="text"
                                                 name="city"
                                                 id="city"
-                                                autoComplete="address-level1"
-                                                className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                                // autoComplete="address-level1"
+                                                className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                                                 value={city}
-                                                onChange={(e) =>
-                                                    setCity(e.target.value)
-                                                }
+                                                onChange={setCity}
                                             />
                                         </div>
                                     </div>
@@ -373,16 +380,15 @@ function ShopCheckout() {
                                             Quận / Huyện
                                         </label>
                                         <div className="mt-1">
-                                            <input
+                                            <SelectDistrict
                                                 type="text"
                                                 name="district"
                                                 id="district"
-                                                autoComplete="address-level2"
-                                                className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                                // autoComplete="address-level2"
+                                                className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                                                 value={district}
-                                                onChange={(e) =>
-                                                    setDistrict(e.target.value)
-                                                }
+                                                onChange={setDistrict}
+                                                province={city}
                                             />
                                         </div>
                                     </div>
@@ -395,17 +401,16 @@ function ShopCheckout() {
                                             Phường / Xã
                                         </label>
                                         <div className="mt-1">
-                                            <input
+                                            <SelectCommune
                                                 type="text"
                                                 name="commune"
                                                 id="commune"
                                                 // autoComplete="address-level3"
                                                 autoComplete="street-address"
-                                                className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                                className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                                                 value={commune}
-                                                onChange={(e) =>
-                                                    setCommune(e.target.value)
-                                                }
+                                                onChange={setCommune}
+                                                district={district}
                                             />
                                         </div>
                                     </div>

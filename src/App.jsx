@@ -77,6 +77,7 @@ const App = () => {
         };
 
         if (isLoggedIn()) {
+            getNewUserToken();
             const interval = setInterval(
                 () => getNewUserToken(),
                 1000 * 60 * 8

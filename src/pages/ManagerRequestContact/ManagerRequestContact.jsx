@@ -12,14 +12,9 @@ import DashboardLayout from "components/MDComponents/examples/LayoutContainers/D
 import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardNavbar";
 import Footer from "components/MDComponents/examples/Footer";
 
-import UserDataGrid from "pages/ManagerUser/components/UserDataGrid/UserDataGrid";
-
-// Data
-import projectsTableData from "pages/ManagerUser/data/projectsTableData";
+import RequestContactDG from "pages/ManagerRequestContact/components/RequestContactDG/RequestContactDG";
 
 function ManagerRequestContact() {
-    const { columns: pColumns, rows: pRows } = projectsTableData();
-
     useEffect(() => {
         document.title = "Yêu cầu liên hệ";
     }, []);
@@ -34,7 +29,7 @@ function ManagerRequestContact() {
                     </Grid>
                     <Grid item xs={12}>
                         <Card>
-                            <UserDataGrid />
+                            <RequestContactDG />
                         </Card>
                     </Grid>
                 </Grid>
