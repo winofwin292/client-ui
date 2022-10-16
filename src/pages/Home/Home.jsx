@@ -11,13 +11,13 @@ import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
 import { CustomAlert } from "components/common/CustomAlert";
 
-import { isLoggedIn, alertType } from "utils";
+import { alertType } from "utils";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
 
 //i18next translate
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
 function Home() {
     //controller có thể lấy layout phục vụ cho chức năng thêm
@@ -34,7 +34,7 @@ function Home() {
         msg: "",
     });
 
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
 
     useEffect(() => {
         setLayout(dispatch, "home");

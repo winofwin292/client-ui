@@ -1,9 +1,12 @@
 import React, { memo, useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import validator from "validator";
-import { alertType } from "utils";
+import { useSnackbar } from "notistack";
 import requestContactApi from "api/RequestContact/requestContactApi";
 
 function ContactForm(props) {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -46,10 +49,23 @@ function ContactForm(props) {
         const response = await requestContactApi.addRequestContact(data);
 
         if (response.status === 200) {
-            props.setNotify({
-                open: true,
-                type: alertType.INFO,
-                msg: "Gửi thành công",
+            enqueueSnackbar(response.data, {
+                variant: "success",
+                style: {
+                    borderColor: "#43a047",
+                    color: "#43a047",
+                },
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
             });
             props.setCTDState({
                 isOpen: false,
@@ -57,10 +73,19 @@ function ContactForm(props) {
             });
             setDefaultState();
         } else {
-            props.setNotify({
-                open: true,
-                type: alertType.ERROR,
-                msg: "Đã xảy ra lỗi, vui lòng thử lại.",
+            enqueueSnackbar(response.data, {
+                variant: "error",
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
             });
         }
     };
@@ -98,6 +123,7 @@ function ContactForm(props) {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     autoComplete="tel"
+                    maxLength="10"
                 />
             </div>
             <div>

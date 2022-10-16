@@ -11,7 +11,7 @@ import { CustomAlert } from "components/common/CustomAlert";
 import { useMaterialUIController, setLayout } from "context";
 
 //i18next translate
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
 import { alertType } from "utils";
 
@@ -32,7 +32,7 @@ function Shop() {
         msg: "",
     });
 
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
 
     useEffect(() => {
         document.title = "Cửa hàng tài liệu";

@@ -15,6 +15,9 @@ import themeDark from "assets/theme-dark";
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setDarkMode } from "context";
 
+//notistack
+import { SnackbarProvider } from "notistack";
+
 //i18next translate
 import i18n from "translation/i18n";
 
@@ -31,12 +34,6 @@ const App = () => {
     const navigate = useNavigate();
 
     const intervalRef = useRef();
-    // const getToken = useCallback(() => {
-    //     // Get new token if and only if existing token is available
-    //     if (localStorage.getItem("token") != null) {
-    //         getNewUserToken();
-    //     }
-    // }, []);
 
     // Setting the dir attribute for the body element
     useEffect(() => {
@@ -89,7 +86,9 @@ const App = () => {
 
     return (
         <ThemeProvider theme={darkMode ? themeDark : theme}>
-            <Routes />
+            <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+                <Routes />
+            </SnackbarProvider>
         </ThemeProvider>
     );
 };

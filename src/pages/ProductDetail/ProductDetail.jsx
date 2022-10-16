@@ -1,16 +1,21 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useCallback } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
+
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import UndoIcon from "@mui/icons-material/Undo";
+
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ShopCart } from "pages/ShopCart";
-import { CustomAlert } from "components/common/CustomAlert";
 
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 import ImageGallery from "react-image-gallery";
+import { useSnackbar } from "notistack";
 
-import { formatterVND, alertType } from "utils";
+import { formatterVND } from "utils";
 
 //example data
 import { products } from "components/common/ProductList/productData";
@@ -36,15 +41,11 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-function ProductDetail(props) {
+function ProductDetail() {
     let { id } = useParams();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [countCart, setCountCart] = useState(0);
     const [cartOpen, setCartOpen] = useState(false);
-    const [notify, setNotify] = React.useState({
-        open: false,
-        type: alertType.SUCCESS,
-        msg: "",
-    });
     const product = products.find((item) => item.id.toString() === id);
 
     useEffect(() => {
@@ -59,29 +60,115 @@ function ProductDetail(props) {
         localStorage.setItem("myCart", JSON.stringify(myCart));
     }, []);
 
-    const handleAddToCart = (e) => {
-        e.preventDefault();
-        try {
-            const { desc, publishingYear, category, ...newProduct } = product;
-            const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-                cart: [],
-            };
-            currCart.cart.push(newProduct);
-            setCountCart((prev) => prev + 1);
-            localStorage.setItem("myCart", JSON.stringify(currCart));
-            setNotify({
-                open: true,
-                type: alertType.INFO,
-                msg: "Đã thêm 1 sản phẩm khỏi vào hàng",
-            });
-        } catch {
-            setNotify({
-                open: true,
-                type: alertType.ERROR,
-                msg: "Lỗi: không thêm được sản phẩm",
-            });
-        }
-    };
+    const handleCancel = useCallback(
+        (e) => {
+            e.preventDefault();
+            try {
+                const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+                    cart: [],
+                };
+                currCart.cart.pop();
+                setCountCart((prev) => prev - 1);
+                localStorage.setItem("myCart", JSON.stringify(currCart));
+                enqueueSnackbar("Đã xóa 1 sản phẩm khỏi vào hàng", {
+                    variant: "warning",
+                    style: {
+                        borderColor: "#43a047",
+                        color: "#43a047",
+                    },
+                    action: (key) => (
+                        <IconButton
+                            size="small"
+                            onClick={() => closeSnackbar(key)}
+                            style={{
+                                color: "white",
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    ),
+                });
+            } catch {
+                enqueueSnackbar("Lỗi: không thể hoàn tác!", {
+                    variant: "error",
+                    action: (key) => (
+                        <IconButton
+                            size="small"
+                            onClick={() => closeSnackbar(key)}
+                            style={{
+                                color: "white",
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    ),
+                });
+            }
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
+
+    const handleAddToCart = useCallback(
+        (e) => {
+            e.preventDefault();
+            try {
+                const { desc, publishingYear, category, ...newProduct } =
+                    product;
+                const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+                    cart: [],
+                };
+                currCart.cart.push(newProduct);
+                setCountCart((prev) => prev + 1);
+                localStorage.setItem("myCart", JSON.stringify(currCart));
+                enqueueSnackbar("Đã thêm 1 sản phẩm khỏi vào hàng", {
+                    variant: "success",
+                    style: {
+                        borderColor: "#43a047",
+                        color: "#43a047",
+                    },
+                    action: (key) => (
+                        <>
+                            <IconButton
+                                size="small"
+                                onClick={(e) => handleCancel(e, id)}
+                                title={"Hoàn tác"}
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                <UndoIcon />
+                            </IconButton>
+                            <IconButton
+                                size="small"
+                                onClick={() => closeSnackbar(key)}
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </>
+                    ),
+                });
+            } catch {
+                enqueueSnackbar("Lỗi: không thêm được sản phẩm", {
+                    variant: "error",
+                    action: (key) => (
+                        <IconButton
+                            size="small"
+                            onClick={() => closeSnackbar(key)}
+                            style={{
+                                color: "white",
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    ),
+                });
+            }
+        },
+        [closeSnackbar, enqueueSnackbar, handleCancel, id, product]
+    );
 
     const handleOpenCart = () => {
         setCartOpen(true);
@@ -278,7 +365,6 @@ function ProductDetail(props) {
                 setCartOpen={setCartOpen}
                 setCountCart={setCountCart}
             />
-            <CustomAlert data={notify} onClose={setNotify} />
         </div>
     );
 }

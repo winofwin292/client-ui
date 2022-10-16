@@ -1,26 +1,42 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, useCallback } from "react";
+import { useSnackbar } from "notistack";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
-import { formatterVND, alertType } from "utils";
+import { formatterVND } from "utils";
 
 import courseApi from "api/Course/courseApi";
 
 function CourseList(props) {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [courses, setCourses] = useState([]);
-    useEffect(() => {
-        async function getData() {
-            const response = await courseApi.getAll();
-            if (response.status === 200) {
-                setCourses(response.data);
-            } else {
-                props.setNotify({
-                    open: true,
-                    type: alertType.ERROR,
-                    msg: "Không tải được dữ liệu",
-                });
-            }
+
+    const getData = useCallback(async () => {
+        const response = await courseApi.getAll();
+        if (response.status === 200) {
+            setCourses(response.data);
+        } else {
+            enqueueSnackbar(response.data, {
+                variant: "error",
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
         }
+    }, [closeSnackbar, enqueueSnackbar]);
+
+    useEffect(() => {
         getData();
-    }, [props]);
+    }, [getData]);
+
     return (
         <div className="bg-white dark:bg-gray-900">
             <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-12">

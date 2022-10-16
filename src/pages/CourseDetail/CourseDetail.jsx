@@ -8,9 +8,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
-import { CustomAlert } from "components/common/CustomAlert";
 
-import { formatterVND, alertType } from "utils";
+import { formatterVND } from "utils";
 
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
@@ -46,11 +45,6 @@ function CourseDetail() {
     const [cTDState, setCTDState] = useState({
         isOpen: false,
         subject: "",
-    });
-    const [notify, setNotify] = React.useState({
-        open: false,
-        type: alertType.SUCCESS,
-        msg: "",
     });
 
     let { id } = useParams();
@@ -398,12 +392,7 @@ function CourseDetail() {
                 )}
             </div>
             <Footer />
-            <ContactDialog
-                cTDState={cTDState}
-                setCTDState={setCTDState}
-                setNotify={setNotify}
-            />
-            <CustomAlert data={notify} onClose={setNotify} />
+            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
         </div>
     );
 }
