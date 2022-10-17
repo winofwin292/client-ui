@@ -34,13 +34,13 @@ function RequestContactDG() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    async function getData() {
+    const getData = useCallback(async () => {
         const response = await requestContactApi.getAll();
         if (response.status === 200) {
             setData(response.data);
             setLoading(false);
         }
-    }
+    }, []);
 
     const handleCancel = useCallback(
         async (e, id) => {
@@ -86,7 +86,7 @@ function RequestContactDG() {
                 });
             }
         },
-        [closeSnackbar, enqueueSnackbar]
+        [closeSnackbar, enqueueSnackbar, getData]
     );
 
     const handleChange = useCallback(
@@ -145,7 +145,7 @@ function RequestContactDG() {
                 });
             }
         },
-        [closeSnackbar, enqueueSnackbar, handleCancel]
+        [closeSnackbar, enqueueSnackbar, getData, handleCancel]
     );
 
     const columns = useMemo(
@@ -228,7 +228,7 @@ function RequestContactDG() {
 
     useEffect(() => {
         getData();
-    }, []);
+    }, [getData]);
 
     return (
         <div style={{ height: 500, width: "100%" }}>

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useCallback } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -50,26 +50,26 @@ function CourseDetail() {
     let { id } = useParams();
     const [course, setCourse] = useState(null);
     const navigate = useNavigate();
-    // const course = courses.find((item) => item.id.toString() === id);
 
-    // useEffect(() => {
-    //     document.title = course.name;
-    // }, [course.name]);
-
-    useEffect(() => {
-        async function getData(courseId) {
+    const getData = useCallback(
+        async (courseId) => {
             const data = {
                 courseId: parseInt(courseId),
             };
             const response = await courseApi.getCourse(data);
             if (response.status === 200) {
                 setCourse(response.data);
+                document.title = response.data.name;
             } else {
                 navigate("/404");
             }
-        }
+        },
+        [navigate]
+    );
+
+    useEffect(() => {
         getData(id);
-    }, [id, navigate]);
+    }, [getData, id]);
 
     const handleOpenCTD = () => {
         setCTDState({

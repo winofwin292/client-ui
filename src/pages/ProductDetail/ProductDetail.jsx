@@ -120,7 +120,7 @@ function ProductDetail() {
                 currCart.cart.push(newProduct);
                 setCountCart((prev) => prev + 1);
                 localStorage.setItem("myCart", JSON.stringify(currCart));
-                enqueueSnackbar("Đã thêm 1 sản phẩm khỏi vào hàng", {
+                enqueueSnackbar("Đã thêm 1 sản phẩm vào hàng", {
                     variant: "success",
                     style: {
                         borderColor: "#43a047",
@@ -130,7 +130,7 @@ function ProductDetail() {
                         <>
                             <IconButton
                                 size="small"
-                                onClick={(e) => handleCancel(e, id)}
+                                onClick={(e) => handleCancel(e)}
                                 title={"Hoàn tác"}
                                 style={{
                                     color: "white",
@@ -167,7 +167,7 @@ function ProductDetail() {
                 });
             }
         },
-        [closeSnackbar, enqueueSnackbar, handleCancel, id, product]
+        [closeSnackbar, enqueueSnackbar, handleCancel, product]
     );
 
     const handleOpenCart = () => {

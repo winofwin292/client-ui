@@ -9,9 +9,6 @@ import { ReviewSection } from "components/common/ReviewSection";
 import { CallToAction } from "components/common/CallToAction";
 import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
-import { CustomAlert } from "components/common/CustomAlert";
-
-import { alertType } from "utils";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -27,11 +24,6 @@ function Home() {
     const [cTDState, setCTDState] = useState({
         isOpen: false,
         subject: "",
-    });
-    const [notify, setNotify] = React.useState({
-        open: false,
-        type: alertType.SUCCESS,
-        msg: "",
     });
 
     // const { t } = useTranslation();
@@ -89,12 +81,7 @@ function Home() {
             <ReviewSection />
             <CallToAction setCTDState={setCTDState} />
             <Footer />
-            <ContactDialog
-                cTDState={cTDState}
-                setCTDState={setCTDState}
-                setNotify={setNotify}
-            />
-            <CustomAlert data={notify} onClose={setNotify} />
+            <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
         </>
     );
 }

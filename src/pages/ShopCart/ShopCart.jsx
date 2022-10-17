@@ -1,18 +1,18 @@
 import React, { Fragment, useState, useEffect, memo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { CustomAlert } from "components/common/CustomAlert";
 
-import { formatterVND, alertType } from "utils";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
+import { useSnackbar } from "notistack";
+
+import { formatterVND } from "utils";
 
 function ShopCart(props) {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [products, setProducts] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
-    const [notify, setNotify] = React.useState({
-        open: false,
-        type: alertType.SUCCESS,
-        msg: "",
-    });
 
     useEffect(() => {
         const currCart = JSON.parse(localStorage.getItem("myCart")) || {
@@ -44,16 +44,38 @@ function ShopCart(props) {
                 0
             );
             setSubtotal(sumPrice);
-            setNotify({
-                open: true,
-                type: alertType.INFO,
-                msg: "Đã xóa 1 sản phẩm khỏi giỏ hàng",
+            enqueueSnackbar("Đã xóa 1 sản phẩm khỏi giỏ hàng", {
+                variant: "success",
+                style: {
+                    borderColor: "#43a047",
+                    color: "#43a047",
+                },
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
             });
         } catch {
-            setNotify({
-                open: true,
-                type: alertType.ERROR,
-                msg: "Lỗi: không xóa được sản phẩm",
+            enqueueSnackbar("Lỗi: không xóa được sản phẩm", {
+                variant: "error",
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
             });
         }
     };
@@ -277,7 +299,6 @@ function ShopCart(props) {
                     </div>
                 </Dialog>
             </Transition.Root>
-            <CustomAlert data={notify} onClose={setNotify} />
         </>
     );
 }

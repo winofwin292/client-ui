@@ -5,15 +5,12 @@ import { Footer } from "components/common/Footer";
 import { ProductList } from "components/common/ProductList";
 import { ShopNav } from "components/common/ShopNav";
 import { ShopCart } from "pages/ShopCart";
-import { CustomAlert } from "components/common/CustomAlert";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
 
 //i18next translate
 // import { useTranslation } from "react-i18next";
-
-import { alertType } from "utils";
 
 import { products } from "components/common/ProductList/productData";
 
@@ -26,11 +23,6 @@ function Shop() {
     const [cartOpen, setCartOpen] = useState(false);
     const [data, setData] = useState(products);
     const dataRef = useRef(products);
-    const [notify, setNotify] = React.useState({
-        open: false,
-        type: alertType.SUCCESS,
-        msg: "",
-    });
 
     // const { t } = useTranslation();
 
@@ -56,19 +48,13 @@ function Shop() {
                 countCart={countCart}
                 setCartOpen={setCartOpen}
             />
-            <ProductList
-                data={data}
-                setCountCart={setCountCart}
-                setNotify={setNotify}
-            />
+            <ProductList data={data} setCountCart={setCountCart} />
             <Footer />
-            {/* <ContactDialog cTDState={cTDState} setCTDState={setCTDState} /> */}
             <ShopCart
                 cartOpen={cartOpen}
                 setCartOpen={setCartOpen}
                 setCountCart={setCountCart}
             />
-            <CustomAlert data={notify} onClose={setNotify} />
         </div>
     );
 }
