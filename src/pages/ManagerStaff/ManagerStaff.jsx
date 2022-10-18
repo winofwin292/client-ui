@@ -11,11 +11,11 @@ import DashboardLayout from "components/MDComponents/examples/LayoutContainers/D
 import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardNavbar";
 import Footer from "components/MDComponents/examples/Footer";
 
-import RequestContactDG from "pages/ManagerRequestContact/RequestContactDG";
+import ManagerStaffDG from "pages/ManagerStaff/ManagerStaffDG";
 
-function ManagerRequestContact() {
+function ManagerStaff() {
     useEffect(() => {
-        document.title = "Yêu cầu liên hệ";
+        document.title = "Quản lý nhân viên";
     }, []);
 
     return (
@@ -23,7 +23,7 @@ function ManagerRequestContact() {
             <DashboardNavbar />
             <MDBox pt={2} pb={3}>
                 <Grid container spacing={2}>
-                    <RequestContactDG />
+                    <ManagerStaffDG />
                 </Grid>
             </MDBox>
             <Footer />
@@ -31,4 +31,4 @@ function ManagerRequestContact() {
     );
 }
 
-export default memo(ManagerRequestContact);
+export default memo(ManagerStaff);

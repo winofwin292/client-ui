@@ -22,7 +22,6 @@ import SidenavCollapse from "components/MDComponents/examples/Sidenav/SidenavCol
 
 // Custom styles for the Sidenav
 import SidenavRoot from "components/MDComponents/examples/Sidenav/SidenavRoot";
-import sidenavLogoLabel from "components/MDComponents/examples/Sidenav/styles/sidenav";
 
 // Material Dashboard 2 React context
 import {
@@ -31,9 +30,6 @@ import {
     setTransparentSidenav,
     setWhiteSidenav,
 } from "context";
-
-//i18next translate
-import { useTranslation } from "react-i18next";
 
 import userApi from "api/Users/useApi";
 
@@ -48,7 +44,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     } = controller;
     const location = useLocation();
     const collapseName = location.pathname.replace("/", "");
-    const { t } = useTranslation();
     const navigate = useNavigate();
 
     let textColor = "white";
@@ -112,7 +107,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                         sx={{ textDecoration: "none" }}
                     >
                         <SidenavCollapse
-                            name={t(name)}
+                            name={name}
                             icon={icon}
                             active={key === collapseName}
                             noCollapse={noCollapse}
@@ -121,7 +116,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 ) : (
                     <NavLink key={key} to={path}>
                         <SidenavCollapse
-                            name={t(name)}
+                            name={name}
                             icon={icon}
                             active={key === collapseName}
                         />
@@ -173,7 +168,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 darkMode,
             }}
         >
-            <MDBox pt={3} pb={1} px={4} textAlign="center">
+            <MDBox pt={1} pb={1} px={4} textAlign="center">
                 <MDBox
                     display={{ xs: "block", xl: "none" }}
                     position="absolute"
@@ -187,41 +182,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                         <Icon sx={{ fontWeight: "bold" }}>close</Icon>
                     </MDTypography>
                 </MDBox>
-                <MDBox
-                    component={NavLink}
-                    to="/"
-                    display="flex"
-                    alignItems="center"
-                >
-                    {brand && (
-                        <MDBox
-                            component="img"
-                            src={brand}
-                            alt="Brand"
-                            width="2rem"
-                        />
-                    )}
-                    <MDBox
-                        width={!brandName && "100%"}
-                        sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
-                    >
-                        <MDTypography
-                            component="h6"
-                            variant="button"
-                            fontWeight="medium"
-                            color={textColor}
-                        >
-                            {brandName}
-                        </MDTypography>
-                    </MDBox>
-                </MDBox>
             </MDBox>
-            <Divider
-                light={
-                    (!darkMode && !whiteSidenav && !transparentSidenav) ||
-                    (darkMode && !transparentSidenav && whiteSidenav)
-                }
-            />
             <List>{renderRoutes}</List>
 
             <MDBox p={2} mt="auto">
@@ -231,7 +192,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                     fullWidth
                     onClick={handleLogout}
                 >
-                    Logout
+                    Đăng xuất
                 </MDButton>
             </MDBox>
         </SidenavRoot>

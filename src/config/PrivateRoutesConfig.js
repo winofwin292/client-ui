@@ -6,6 +6,7 @@ import { Overview } from "pages/Dashboard/Overview";
 import { ManageHomePage } from "pages/ManageHomePage";
 import Loading from "components/common/Loading/Loading";
 import { ManagerRequestContact } from "pages/ManagerRequestContact";
+import { ManagerStaff } from "pages/ManagerStaff";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -15,7 +16,6 @@ const PrivateRoutesConfig = [
         component: Loading,
         path: "",
         title: "Loading",
-        // exact: true,
     },
     {
         component: Dashboard,
@@ -26,11 +26,19 @@ const PrivateRoutesConfig = [
         children: [
             {
                 type: "collapse",
-                name: "adminSideBar.overview",
+                name: "Tổng quan",
                 key: "app/dashboard/*",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
                 component: <Overview />,
+            },
+            {
+                type: "collapse",
+                name: "Quản lý nhân viên",
+                key: "app/dashboard/manage-staff",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "manage-staff",
+                component: <ManagerStaff />,
             },
             {
                 type: "collapse",
@@ -42,7 +50,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "adminSideBar.homeMana",
+                name: "Quản lý trang chủ",
                 key: "app/dashboard/manage-home-page",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "manage-home-page",
@@ -59,7 +67,7 @@ const PrivateRoutesConfig = [
         children: [
             {
                 type: "collapse",
-                name: "adminSideBar.overview",
+                name: "Tổng quan",
                 key: "app/dashboard/*",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
