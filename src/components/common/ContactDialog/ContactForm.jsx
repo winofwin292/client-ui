@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useCallback } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import validator from "validator";
@@ -12,12 +12,12 @@ function ContactForm(props) {
     const [email, setEmail] = useState("");
     const [note, setNote] = useState("");
 
-    const setDefaultState = () => {
+    const setDefaultState = useCallback(() => {
         setName("");
         setPhone("");
         setEmail("");
         setNote("");
-    };
+    }, []);
 
     const handleClick = async (e) => {
         e.preventDefault();

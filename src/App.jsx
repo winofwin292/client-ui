@@ -23,10 +23,14 @@ import i18n from "translation/i18n";
 
 import Cookies from "js-cookie";
 
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+
 import Routes from "routes";
 import userApi from "api/Users/useApi";
 
 import { isLoggedIn } from "utils";
+import "moment/locale/vi";
 
 const App = () => {
     const [controller, dispatch] = useMaterialUIController();
@@ -87,7 +91,12 @@ const App = () => {
     return (
         <ThemeProvider theme={darkMode ? themeDark : theme}>
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-                <Routes />
+                <LocalizationProvider
+                    dateAdapter={AdapterMoment}
+                    adapterLocale="vi"
+                >
+                    <Routes />
+                </LocalizationProvider>
             </SnackbarProvider>
         </ThemeProvider>
     );

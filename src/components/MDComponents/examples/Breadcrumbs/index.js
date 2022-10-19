@@ -27,9 +27,11 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDComponents/MDBox";
 import MDTypography from "components/MDComponents/MDTypography";
 
+import { urls } from "routes/url";
+
 function Breadcrumbs({ icon, route, light }) {
     const routes = route.slice(0, -1);
-    let pageTitle = document.title;
+    let pageTitle = urls[route.at(-1)];
 
     return (
         <MDBox mr={{ xs: 0, xl: 8 }}>

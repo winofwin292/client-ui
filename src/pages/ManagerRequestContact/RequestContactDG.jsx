@@ -1,13 +1,18 @@
 import React, { memo, useState, useEffect, useMemo, useCallback } from "react";
-
+import PropTypes from "prop-types";
 import {
     DataGrid,
-    GridToolbar,
     viVN,
     GridActionsCellItem,
+    GridToolbarContainer,
+    GridToolbarColumnsButton,
+    GridToolbarFilterButton,
+    GridToolbarExport,
+    GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
@@ -27,12 +32,35 @@ import { useSnackbar } from "notistack";
 import requestContactApi from "api/RequestContact/requestContactApi";
 
 const theme = createTheme();
-
 const themeD = createTheme({
     palette: {
         mode: "dark",
     },
 });
+
+function EditToolbar(props) {
+    const { handleRefresh } = props;
+
+    return (
+        <GridToolbarContainer>
+            <Button
+                color="primary"
+                startIcon={<RefreshIcon />}
+                onClick={handleRefresh}
+            >
+                Làm mới dữ liệu
+            </Button>
+            <GridToolbarColumnsButton />
+            <GridToolbarDensitySelector />
+            <GridToolbarFilterButton />
+            <GridToolbarExport />
+        </GridToolbarContainer>
+    );
+}
+
+EditToolbar.propTypes = {
+    handleRefresh: PropTypes.func.isRequired,
+};
 
 function RequestContactDG() {
     const [controller] = useMaterialUIController();
@@ -280,13 +308,6 @@ function RequestContactDG() {
     return (
         <>
             <Grid item xs={12}>
-                <Card m={2}>
-                    <IconButton size="small" onClick={handleRefresh}>
-                        <RefreshIcon />
-                    </IconButton>
-                </Card>
-            </Grid>
-            <Grid item xs={12}>
                 <Card>
                     <div style={{ height: 500, width: "100%" }}>
                         <ThemeProvider theme={darkMode ? themeD : theme}>
@@ -298,8 +319,14 @@ function RequestContactDG() {
                                         .localeText
                                 }
                                 experimentalFeatures={{ newEditingApi: true }}
-                                components={{ Toolbar: GridToolbar }}
+                                components={{
+                                    Toolbar: EditToolbar,
+                                }}
+                                componentsProps={{
+                                    toolbar: { handleRefresh },
+                                }}
                                 loading={loading}
+                                density="compact"
                             />
                         </ThemeProvider>
                     </div>

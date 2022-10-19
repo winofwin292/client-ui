@@ -2,10 +2,10 @@ import axiosClient from "api/axiosClient";
 
 const userApi = {
     //Đăng kí
-    // register(data) {
-    //     const url = "/register";
-    //     return axiosClient.post(url, data);
-    // },
+    register(data) {
+        const url = "/auth/register";
+        return axiosClient.post(url, data);
+    },
     //Đăng nhập
     login(data) {
         const url = "/auth/login";
@@ -26,6 +26,14 @@ const userApi = {
     },
     getAllStaff(data) {
         const url = "/users/staff/get-all";
+        return axiosClient.get(url, data);
+    },
+    getAllTeacher(data) {
+        const url = "/users/teacher/get-all";
+        return axiosClient.get(url, data);
+    },
+    getAllStudent(data) {
+        const url = "/users/student/get-all";
         return axiosClient.get(url, data);
     },
     editUserInfo(data) {

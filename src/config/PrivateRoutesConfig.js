@@ -1,12 +1,13 @@
 import Roles from "./Roles";
 import { TeacherCourse, StudentCourse } from "pages";
 import { Dashboard } from "pages/Dashboard";
-import { ManagerUser } from "pages/ManagerUser";
 import { Overview } from "pages/Dashboard/Overview";
 import { ManageHomePage } from "pages/ManageHomePage";
 import Loading from "components/common/Loading/Loading";
 import { ManagerRequestContact } from "pages/ManagerRequestContact";
 import { ManagerStaff } from "pages/ManagerStaff";
+import { ManagerTeacher } from "pages/ManagerTeacher";
+import { ManagerStudent } from "pages/ManagerStudent";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -36,17 +37,25 @@ const PrivateRoutesConfig = [
                 type: "collapse",
                 name: "Quản lý nhân viên",
                 key: "app/dashboard/manage-staff",
-                icon: <Icon fontSize="small">assignment</Icon>,
+                icon: <Icon fontSize="small">badge</Icon>,
                 path: "manage-staff",
                 component: <ManagerStaff />,
             },
             {
                 type: "collapse",
-                name: "adminSideBar.userMana",
-                key: "app/dashboard/user",
-                icon: <Icon fontSize="small">assignment</Icon>,
-                path: "user",
-                component: <ManagerUser />,
+                name: "Quản lý giáo viên",
+                key: "app/dashboard/manage-teacher",
+                icon: <Icon fontSize="small">school</Icon>,
+                path: "manage-teacher",
+                component: <ManagerTeacher />,
+            },
+            {
+                type: "collapse",
+                name: "Quản lý học viên",
+                key: "app/dashboard/manage-student",
+                icon: <Icon fontSize="small">person</Icon>,
+                path: "manage-student",
+                component: <ManagerStudent />,
             },
             {
                 type: "collapse",

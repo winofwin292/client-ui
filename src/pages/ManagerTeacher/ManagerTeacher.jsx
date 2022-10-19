@@ -11,11 +11,11 @@ import DashboardLayout from "components/MDComponents/examples/LayoutContainers/D
 import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardNavbar";
 import Footer from "components/MDComponents/examples/Footer";
 
-import UserDataGrid from "pages/ManagerUser/components/UserDataGrid/UserDataGrid";
+import ManagerTeacherDG from "pages/ManagerTeacher/ManagerTeacherDG";
 
-function ManagerUser() {
+function ManagerTeacher() {
     useEffect(() => {
-        document.title = "Quản lý người dùng";
+        document.title = "Quản lý giáo viên";
     }, []);
 
     return (
@@ -23,7 +23,7 @@ function ManagerUser() {
             <DashboardNavbar />
             <MDBox pt={2} pb={3}>
                 <Grid container spacing={2}>
-                    <UserDataGrid />
+                    <ManagerTeacherDG />
                 </Grid>
             </MDBox>
             <Footer />
@@ -31,4 +31,4 @@ function ManagerUser() {
     );
 }
 
-export default memo(ManagerUser);
+export default memo(ManagerTeacher);

@@ -42,7 +42,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
-import AddStaff from "./AddStaff";
+import AddTeacher from "./AddTeacher";
 import userApi from "api/Users/useApi";
 
 const theme = createTheme();
@@ -80,7 +80,7 @@ function EditToolbar(props) {
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
             <GridToolbarExport />
-            <AddStaff
+            <AddTeacher
                 open={open}
                 setOpen={setOpen}
                 handleRefresh={handleRefresh}
@@ -93,7 +93,7 @@ EditToolbar.propTypes = {
     handleRefresh: PropTypes.func.isRequired,
 };
 
-function ManagerStaffDG() {
+function ManagerTeacherDG() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -108,7 +108,7 @@ function ManagerStaffDG() {
     const [resultCopy, setResultCopy] = useState("");
 
     const getData = useCallback(async () => {
-        const response = await userApi.getAllStaff();
+        const response = await userApi.getAllTeacher();
         if (response.status === 200) {
             setData(response.data);
             setLoading(false);
@@ -520,4 +520,4 @@ function ManagerStaffDG() {
     );
 }
 
-export default memo(ManagerStaffDG);
+export default memo(ManagerTeacherDG);

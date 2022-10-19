@@ -11,12 +11,7 @@ import MDTypography from "components/MDComponents/MDTypography";
 // Material Dashboard 2 React example components
 import DataTable from "components/MDComponents/examples/Tables/DataTable";
 
-// Data
-import authorsTableData from "pages/ManagerUser/data/authorsTableData";
-
 function ManagePoster() {
-    const { columns, rows } = authorsTableData();
-
     return (
         <MDBox pt={2} pb={1}>
             <Grid container spacing={6}>
@@ -36,15 +31,7 @@ function ManagePoster() {
                                 Authors Table
                             </MDTypography>
                         </MDBox>
-                        <MDBox pt={2}>
-                            <DataTable
-                                table={{ columns, rows }}
-                                isSorted={false}
-                                entriesPerPage={false}
-                                showTotalEntries={false}
-                                noEndBorder
-                            />
-                        </MDBox>
+                        <MDBox pt={2}>Table here</MDBox>
                     </Card>
                 </Grid>
             </Grid>
