@@ -29,6 +29,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockResetIcon from "@mui/icons-material/LockReset";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -43,6 +44,7 @@ import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
 import AddTeacher from "./AddTeacher";
+import CourseAssign from "./CourseAssign";
 import userApi from "api/Users/useApi";
 
 const theme = createTheme();
@@ -106,6 +108,12 @@ function ManagerTeacherDG() {
     const [username, setUsername] = useState("");
     const [resultDialog, setResultDialog] = useState(false);
     const [resultCopy, setResultCopy] = useState("");
+
+    const [assignState, setAssignState] = useState({
+        id: "",
+        name: "",
+        open: false,
+    });
 
     const getData = useCallback(async () => {
         const response = await userApi.getAllTeacher();
@@ -399,6 +407,22 @@ function ManagerTeacherDG() {
                             color="inherit"
                         />,
                         <GridActionsCellItem
+                            icon={<HistoryEduIcon />}
+                            label={"Gán khóa học"}
+                            onClick={(e) =>
+                                setAssignState({
+                                    id: params.id,
+                                    name:
+                                        params.row.first_name +
+                                        " " +
+                                        params.row.last_name,
+                                    open: true,
+                                })
+                            }
+                            title={"Gán khóa học cho giáo viên này"}
+                            showInMenu
+                        />,
+                        <GridActionsCellItem
                             icon={
                                 params.row.disabled ? (
                                     <LockOpenIcon />
@@ -514,6 +538,10 @@ function ManagerTeacherDG() {
                             </Button>
                         </DialogActions>
                     </Dialog>
+                    <CourseAssign
+                        assignState={assignState}
+                        setAssignState={setAssignState}
+                    />
                 </Card>
             </Grid>
         </>

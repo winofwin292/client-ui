@@ -8,9 +8,6 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDComponents/MDBox";
 import MDTypography from "components/MDComponents/MDTypography";
 
-// Material Dashboard 2 React example components
-import DataTable from "components/MDComponents/examples/Tables/DataTable";
-
 function ManagePoster() {
     return (
         <MDBox pt={2} pb={1}>
