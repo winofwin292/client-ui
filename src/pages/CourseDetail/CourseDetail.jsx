@@ -225,73 +225,29 @@ function CourseDetail() {
                                                         {course?.student_number}
                                                     </span>
                                                 </li>
-                                                {course.TypeOfContent.id ===
-                                                1 ? (
-                                                    <>
-                                                        {" "}
-                                                        <li className="text-gray-600 dark:text-white">
-                                                            Thời gian học:&nbsp;
-                                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                                {
-                                                                    course.training_time
-                                                                }
-                                                            </span>
-                                                            &nbsp;tháng
-                                                        </li>
-                                                        <li className="text-gray-600 dark:text-white">
-                                                            Số buổi:&nbsp;
-                                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                                {
-                                                                    course.total_lesson
-                                                                }
-                                                            </span>
-                                                            &nbsp;buổi
-                                                        </li>
-                                                        <li className="text-gray-600 dark:text-white">
-                                                            Số buổi mỗi
-                                                            tuần:&nbsp;
-                                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                                {
-                                                                    course.lesson_per_week
-                                                                }
-                                                            </span>
-                                                            &nbsp;buổi
-                                                        </li>
-                                                        <li className="text-gray-600 dark:text-white">
-                                                            Thời lượng mỗi buổi
-                                                            học:&nbsp;
-                                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                                {
-                                                                    course.time_per_lesson
-                                                                }
-                                                            </span>
-                                                            &nbsp;giờ
-                                                        </li>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        {" "}
-                                                        <li className="text-gray-600 dark:text-white">
-                                                            Nội dung bao
-                                                            gồm&nbsp;
-                                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                                {
-                                                                    course.number_of_topics
-                                                                }
-                                                            </span>
-                                                            &nbsp;chuyên đề
-                                                        </li>
-                                                        <li className="text-gray-600 dark:text-white">
-                                                            Mỗi chuyên đề&nbsp;
-                                                            <span className="text-gray-800 font-bold dark:text-white">
-                                                                {
-                                                                    course.time_per_topics
-                                                                }
-                                                            </span>
-                                                            &nbsp;giờ
-                                                        </li>
-                                                    </>
-                                                )}
+                                                <li className="text-gray-600 dark:text-white">
+                                                    Nội dung:&nbsp;
+                                                    <span className="text-gray-800 font-bold dark:text-white">
+                                                        {course.content}
+                                                    </span>
+                                                    &nbsp;
+                                                    {course.TypeOfContent.id ===
+                                                    1
+                                                        ? "buổi"
+                                                        : "chuyên đề"}
+                                                </li>
+                                                <li className="text-gray-600 dark:text-white">
+                                                    Thời lượng:&nbsp;
+                                                    <span className="text-gray-800 font-bold dark:text-white">
+                                                        {course.time}
+                                                    </span>
+                                                    &nbsp;giờ/
+                                                    {course.TypeOfContent.id ===
+                                                    1
+                                                        ? "buổi"
+                                                        : "chuyên đề"}
+                                                </li>
+
                                                 <li className="text-gray-600 dark:text-white">
                                                     Tổ chức lớp:&nbsp;
                                                     {course.CourseFormat.map(
@@ -311,6 +267,16 @@ function CourseDetail() {
                                                         )
                                                     )}
                                                 </li>
+                                                {course.other_info ? (
+                                                    <li className="text-gray-600 dark:text-white">
+                                                        Thông tin khác:&nbsp;
+                                                        <span className="text-gray-800 dark:text-white">
+                                                            {course.other_info}
+                                                        </span>
+                                                    </li>
+                                                ) : (
+                                                    ""
+                                                )}
                                             </ul>
                                         </div>
                                     </div>

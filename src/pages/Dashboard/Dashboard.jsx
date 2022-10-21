@@ -32,10 +32,6 @@ function Dashboard({ children }) {
         setLayout(dispatch, "dashboard");
     }, [dispatch]);
 
-    useEffect(() => {
-        document.title = "Tổng quan";
-    }, []);
-
     // Open sidenav when mouse enter on mini sidenav
     const handleOnMouseEnter = () => {
         if (miniSidenav && !onMouseEnter) {

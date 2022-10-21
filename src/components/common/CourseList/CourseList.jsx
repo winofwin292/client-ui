@@ -14,7 +14,7 @@ function CourseList(props) {
     const getData = useCallback(async () => {
         const response = await courseApi.getAll();
         if (response.status === 200) {
-            setCourses(response.data);
+            setCourses(response.data.filter((item) => item.is_show));
         } else {
             enqueueSnackbar(response.data, {
                 variant: "error",

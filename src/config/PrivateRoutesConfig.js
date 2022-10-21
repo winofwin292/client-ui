@@ -8,6 +8,7 @@ import { ManagerRequestContact } from "pages/ManagerRequestContact";
 import { ManagerStaff } from "pages/ManagerStaff";
 import { ManagerTeacher } from "pages/ManagerTeacher";
 import { ManagerStudent } from "pages/ManagerStudent";
+import { ManagerCourse } from "pages/ManagerCourse";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -56,6 +57,14 @@ const PrivateRoutesConfig = [
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-student",
                 component: <ManagerStudent />,
+            },
+            {
+                type: "collapse",
+                name: "Quản lý khóa học",
+                key: "app/dashboard/manage-course",
+                icon: <Icon fontSize="small">person</Icon>,
+                path: "manage-course",
+                component: <ManagerCourse />,
             },
             {
                 type: "collapse",

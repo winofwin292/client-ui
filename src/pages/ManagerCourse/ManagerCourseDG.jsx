@@ -27,14 +27,8 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockResetIcon from "@mui/icons-material/LockReset";
-
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContentText from "@mui/material/DialogContentText";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -42,8 +36,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
-import AddStudent from "./AddStudent";
-import userApi from "api/Users/useApi";
+import AddCourse from "./AddCourse";
+import courseApi from "api/Course/courseApi";
+
+import { formatterVND } from "utils";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -53,7 +49,7 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { handleRefresh } = props;
+    const { getData } = props;
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
@@ -65,7 +61,7 @@ function EditToolbar(props) {
             <Button
                 color="primary"
                 startIcon={<RefreshIcon />}
-                onClick={handleRefresh}
+                onClick={getData}
             >
                 Làm mới dữ liệu
             </Button>
@@ -80,20 +76,16 @@ function EditToolbar(props) {
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
             <GridToolbarExport />
-            <AddStudent
-                open={open}
-                setOpen={setOpen}
-                handleRefresh={handleRefresh}
-            />
+            <AddCourse open={open} setOpen={setOpen} getData={getData} />
         </GridToolbarContainer>
     );
 }
 
 EditToolbar.propTypes = {
-    handleRefresh: PropTypes.func.isRequired,
+    getData: PropTypes.func.isRequired,
 };
 
-function ManagerStudentDG() {
+function ManagerTeacherDG() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -102,13 +94,8 @@ function ManagerStudentDG() {
 
     const [rowModesModel, setRowModesModel] = React.useState({});
 
-    const [newPassword, setNewPassword] = useState("");
-    const [username, setUsername] = useState("");
-    const [resultDialog, setResultDialog] = useState(false);
-    const [resultCopy, setResultCopy] = useState("");
-
     const getData = useCallback(async () => {
-        const response = await userApi.getAllStudent();
+        const response = await courseApi.getAllAdmin();
         if (response.status === 200) {
             setData(response.data);
             setLoading(false);
@@ -168,7 +155,7 @@ function ManagerStudentDG() {
 
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await userApi.deleteUser({ id: id });
+            const response = await courseApi.deleteCourse({ id: id });
             if (response.status === 200) {
                 showNoti("Xóa thành công", "success");
                 getData();
@@ -198,12 +185,12 @@ function ManagerStudentDG() {
     const processRowUpdate = async (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
-        const response = await userApi.editUserInfo(updatedRow);
-        if (response.status === 200) {
-            showNoti("Cập nhật dữ liệu thành công", "success");
-        } else {
-            showNoti("Lỗi: không cập nhật được dữ liệu", "error");
-        }
+        // const response = await userApi.editUserInfo(updatedRow);
+        // if (response.status === 200) {
+        //     showNoti("Cập nhật dữ liệu thành công", "success");
+        // } else {
+        //     showNoti("Lỗi: không cập nhật được dữ liệu", "error");
+        // }
         // setData(data.map((row) => (row.id === newRow.id ? updatedRow : row)));
         getData();
         return updatedRow;
@@ -211,54 +198,34 @@ function ManagerStudentDG() {
 
     const handleResetPass = useCallback(
         async (e, params) => {
-            const response = await userApi.resetPassword({ id: params.id });
-            if (response.status === 200) {
-                setUsername(params.row.username);
-                setNewPassword(response.data.newPassword);
-                setResultDialog(true);
-            } else {
-                showNoti(response.data, "error");
-            }
+            // const response = await userApi.resetPassword({ id: params.id });
+            console.log(123);
+            // if (response.status === 200) {
+            //     setUsername(params.row.username);
+            //     setNewPassword(response.data.newPassword);
+            //     setResultDialog(true);
+            // } else {
+            //     showNoti(response.data, "error");
+            // }
         },
         [showNoti]
     );
 
-    const handleCloseResult = (e, reason) => {
-        if (reason && reason === "backdropClick") return;
-        setUsername("");
-        setNewPassword("");
-        setResultCopy("");
-        setResultDialog(false);
-    };
-
-    const handleCopy = useCallback(async () => {
-        try {
-            await navigator.clipboard.writeText(
-                "username: " + username + " - password: " + newPassword
-            );
-            setResultCopy("Đã copy nội dung");
-            console.log("Content copied to clipboard");
-        } catch (err) {
-            console.error("Failed to copy: ", err);
-            setResultCopy("Lỗi, không copy được nội dung");
-        }
-    }, [newPassword, username]);
-
     const handleChangeState = useCallback(
         async (e, params) => {
-            const response = await userApi.changeState({
-                id: params.id,
-                state: !params.row.disabled,
-            });
-            if (response.status === 200) {
-                showNoti("Chuyển trạng thái thành công", "success");
-                getData();
-            } else {
-                showNoti(
-                    "Lỗi: không chuyển được trạng thái của tài khoản",
-                    "error"
-                );
-            }
+            // const response = await userApi.changeState({
+            //     id: params.id,
+            //     state: !params.row.disabled,
+            // });
+            // if (response.status === 200) {
+            //     showNoti("Chuyển trạng thái thành công", "success");
+            //     getData();
+            // } else {
+            //     showNoti(
+            //         "Lỗi: không chuyển được trạng thái của tài khoản",
+            //         "error"
+            //     );
+            // }
         },
         [getData, showNoti]
     );
@@ -266,95 +233,118 @@ function ManagerStudentDG() {
     const columns = useMemo(
         () => [
             {
-                field: "first_name",
-                headerName: "Họ",
-                width: 100,
+                field: "name",
+                headerName: "Tên khóa học",
+                width: 180,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
             {
-                field: "last_name",
-                headerName: "Tên",
+                field: "price",
+                headerName: "Giá",
                 width: 100,
-                renderCell: RenderCellExpand,
-                editable: true,
-            },
-            {
-                field: "sex",
-                headerName: "Giới tính",
-                width: 80,
-                type: "boolean",
+                type: "number",
                 renderCell: (params) => {
                     if (params.value == null) {
                         return "";
                     }
 
-                    const valueFormatted = params.value ? "Nam" : "Nữ";
-                    return valueFormatted;
+                    return formatterVND.format(params.value);
                 },
                 editable: true,
             },
             {
-                field: "dob",
-                headerName: "Ngày sinh",
-                type: "date",
+                field: "student_number",
+                headerName: "Số lượng học viên",
+                width: 140,
+                type: "number",
+                editable: true,
+            },
+            {
+                field: "content",
+                headerName: "Nội dung",
+                type: "number",
                 width: 100,
-                valueFormatter: (params) => {
+                renderCell: (params) => {
                     if (params.value == null) {
                         return "";
                     }
-
-                    const valueFormatted = new Date(
-                        params.value
-                    ).toLocaleDateString("en-GB");
+                    const valueFormatted =
+                        params.row.typeOfContentId === 1
+                            ? "buổi"
+                            : params.row.typeOfContentId === 2
+                            ? "chuyên đề"
+                            : "";
+                    return params.value + " " + valueFormatted;
+                },
+                editable: true,
+            },
+            {
+                field: "time",
+                headerName: "Thời lượng",
+                type: "number",
+                width: 140,
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    const valueFormatted =
+                        params.row.typeOfContentId === 1
+                            ? "giờ/buổi"
+                            : params.row.typeOfContentId === 2
+                            ? "giờ/chuyên đề"
+                            : "";
+                    return params.value + " " + valueFormatted;
+                },
+                editable: true,
+            },
+            {
+                field: "typeOfContentId",
+                headerName: "Loại",
+                width: 100,
+                type: "singleSelect",
+                valueOptions: [
+                    { value: 1, label: "Khóa học" },
+                    { value: 2, label: "Chuyên đề" },
+                ],
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    const valueFormatted =
+                        params.value === 1
+                            ? "Khóa học"
+                            : params.value === 2
+                            ? "Chuyên đề"
+                            : "";
                     return valueFormatted;
                 },
                 editable: true,
             },
             {
-                field: "address",
-                headerName: "Địa chỉ",
-                width: 240,
-                renderCell: RenderCellExpand,
-                editable: true,
-            },
-            {
-                field: "email",
-                headerName: "Email",
+                field: "other_info",
+                headerName: "Thông tin khác",
                 width: 200,
                 renderCell: RenderCellExpand,
                 editable: true,
-                preProcessEditCellProps: (params) => {
-                    const hasError = !validator.isEmail(params.props.value);
-                    return { ...params.props, error: hasError };
-                },
             },
             {
-                field: "phone",
-                headerName: "Số điện thoại",
-                width: 120,
-                renderCell: RenderCellExpand,
-                editable: true,
-                preProcessEditCellProps: (params) => {
-                    const hasError = !validator.isMobilePhone(
-                        params.props.value,
-                        "vi-VN"
-                    );
-                    return { ...params.props, error: hasError };
-                },
-            },
-            {
-                field: "disabled",
-                headerName: "Trạng thái",
-                width: 120,
-                type: "boolean",
+                field: "is_show",
+                headerName: "Hiện/ẩn",
+                width: 100,
+                type: "singleSelect",
+                valueOptions: [
+                    { value: true, label: "Hiện" },
+                    { value: false, label: "Ẩn" },
+                ],
                 renderCell: (params) => {
                     if (params.value == null) {
                         return "";
                     }
-                    const valueFormatted = params.value ? "Khóa" : "Hoạt động";
+                    const valueFormatted = params.value ? "Hiện" : "Ẩn";
                     return valueFormatted;
                 },
+                editable: true,
             },
             {
                 field: "actions",
@@ -398,22 +388,32 @@ function ManagerStudentDG() {
                             color="inherit"
                         />,
                         <GridActionsCellItem
-                            icon={
-                                params.row.disabled ? (
-                                    <LockOpenIcon />
-                                ) : (
-                                    <LockIcon />
-                                )
-                            }
-                            label={params.row.disabled ? "Mở khóa" : "Khóa"}
-                            onClick={(e) => handleChangeState(e, params)}
-                            title={params.row.disabled ? "Mở khóa" : "Khóa"}
+                            icon={<HistoryEduIcon />}
+                            label={"Gán khóa học"}
+                            // onClick={(e) =>
+                            //     setAssignState({
+                            //         id: params.id,
+                            //         name:
+                            //             params.row.first_name +
+                            //             " " +
+                            //             params.row.last_name,
+                            //         open: true,
+                            //     })
+                            // }
+                            title={"Gán khóa học cho giáo viên này"}
+                            showInMenu
+                        />,
+                        <GridActionsCellItem
+                            icon={<LockIcon />}
+                            label={"Khóa"}
+                            // onClick={(e) => handleChangeState(e, params)}
+                            title={"Khóa"}
                             showInMenu
                         />,
                         <GridActionsCellItem
                             icon={<LockResetIcon />}
                             label="Đặt lại mật khẩu"
-                            onClick={(e) => handleResetPass(e, params)}
+                            // onClick={(e) => handleResetPass(e, params)}
                             title="Đặt lại mật khẩu"
                             showInMenu
                         />,
@@ -469,7 +469,7 @@ function ManagerStudentDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { handleRefresh },
+                                    toolbar: { getData },
                                 }}
                                 loading={loading}
                                 initialState={{
@@ -484,39 +484,10 @@ function ManagerStudentDG() {
                             />
                         </ThemeProvider>
                     </div>
-                    <Dialog
-                        open={resultDialog}
-                        onClose={handleCloseResult}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            {"Đặt lại mật khẩu thành công"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Tài khoản: {username}
-                            </DialogContentText>
-                            <DialogContentText id="alert-dialog-description">
-                                Mật khẩu mới: {newPassword}
-                            </DialogContentText>
-                            <Button onClick={handleCopy} autoFocus>
-                                Sao chép
-                            </Button>
-                            <DialogContentText id="alert-dialog-description">
-                                {resultCopy}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseResult} autoFocus>
-                                Đóng
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
                 </Card>
             </Grid>
         </>
     );
 }
 
-export default memo(ManagerStudentDG);
+export default memo(ManagerTeacherDG);

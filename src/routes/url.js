@@ -6,4 +6,5 @@ export const urls = {
     "yeu-cau-lien-he": "Yêu cầu liên hệ",
     "manage-teacher": "Quản lý giáo viên",
     "manage-student": "Quản lý học viên",
+    "manage-course": "Quản lý khóa học",
 };

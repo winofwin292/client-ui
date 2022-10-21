@@ -220,7 +220,6 @@ function ManagerTeacherDG() {
     const handleResetPass = useCallback(
         async (e, params) => {
             const response = await userApi.resetPassword({ id: params.id });
-            console.log(response);
             if (response.status === 200) {
                 setUsername(params.row.username);
                 setNewPassword(response.data.newPassword);
