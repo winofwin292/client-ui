@@ -1,6 +1,5 @@
 import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import validator from "validator";
 import { useSnackbar } from "notistack";
 import {
     DataGrid,
@@ -23,12 +22,12 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
-import LockIcon from "@mui/icons-material/Lock";
-import LockResetIcon from "@mui/icons-material/LockReset";
+import TypeSpecimenIcon from "@mui/icons-material/TypeSpecimen";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -37,6 +36,9 @@ import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
 import AddCourse from "./AddCourse";
+import ManagerPracticalContent from "./components/ManagerPracticalContent/ManagerPracticalContent";
+import ManagerPurposeOfCourse from "./components/ManagerPurposeOfCourse/ManagerPurposeOfCourse";
+import ManagerCourseFormat from "./components/ManagerCourseFormat/ManagerCourseFormat";
 import courseApi from "api/Course/courseApi";
 
 import { formatterVND } from "utils";
@@ -49,7 +51,7 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { getData } = props;
+    const { getData, handleRefresh } = props;
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
@@ -61,7 +63,7 @@ function EditToolbar(props) {
             <Button
                 color="primary"
                 startIcon={<RefreshIcon />}
-                onClick={getData}
+                onClick={handleRefresh}
             >
                 Làm mới dữ liệu
             </Button>
@@ -83,6 +85,7 @@ function EditToolbar(props) {
 
 EditToolbar.propTypes = {
     getData: PropTypes.func.isRequired,
+    handleRefresh: PropTypes.func.isRequired,
 };
 
 function ManagerTeacherDG() {
@@ -92,7 +95,25 @@ function ManagerTeacherDG() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [rowModesModel, setRowModesModel] = React.useState({});
+    const [rowModesModel, setRowModesModel] = useState({});
+
+    const [managerPracticalContent, setManagerPracticalContent] = useState({
+        open: false,
+        id: null,
+        name: "",
+    });
+
+    const [managerPurposeOfCourse, setManagerPurposeOfCourse] = useState({
+        open: false,
+        id: null,
+        name: "",
+    });
+
+    const [managerCourseFormat, setManagerCourseFormat] = useState({
+        open: false,
+        id: null,
+        name: "",
+    });
 
     const getData = useCallback(async () => {
         const response = await courseApi.getAllAdmin();
@@ -183,52 +204,25 @@ function ManagerTeacherDG() {
     );
 
     const processRowUpdate = async (newRow) => {
-        const updatedRow = { ...newRow, isNew: false };
+        const updatedRow = {
+            ...newRow,
+            isNew: false,
+        };
+        const data = {
+            ...newRow,
+            price: parseInt(newRow.price),
+        };
 
-        // const response = await userApi.editUserInfo(updatedRow);
-        // if (response.status === 200) {
-        //     showNoti("Cập nhật dữ liệu thành công", "success");
-        // } else {
-        //     showNoti("Lỗi: không cập nhật được dữ liệu", "error");
-        // }
+        const response = await courseApi.editCourse(data);
+        if (response.status === 200) {
+            showNoti("Cập nhật dữ liệu thành công", "success");
+        } else {
+            showNoti("Lỗi: không cập nhật được dữ liệu", "error");
+        }
         // setData(data.map((row) => (row.id === newRow.id ? updatedRow : row)));
         getData();
         return updatedRow;
     };
-
-    const handleResetPass = useCallback(
-        async (e, params) => {
-            // const response = await userApi.resetPassword({ id: params.id });
-            console.log(123);
-            // if (response.status === 200) {
-            //     setUsername(params.row.username);
-            //     setNewPassword(response.data.newPassword);
-            //     setResultDialog(true);
-            // } else {
-            //     showNoti(response.data, "error");
-            // }
-        },
-        [showNoti]
-    );
-
-    const handleChangeState = useCallback(
-        async (e, params) => {
-            // const response = await userApi.changeState({
-            //     id: params.id,
-            //     state: !params.row.disabled,
-            // });
-            // if (response.status === 200) {
-            //     showNoti("Chuyển trạng thái thành công", "success");
-            //     getData();
-            // } else {
-            //     showNoti(
-            //         "Lỗi: không chuyển được trạng thái của tài khoản",
-            //         "error"
-            //     );
-            // }
-        },
-        [getData, showNoti]
-    );
 
     const columns = useMemo(
         () => [
@@ -389,32 +383,41 @@ function ManagerTeacherDG() {
                         />,
                         <GridActionsCellItem
                             icon={<HistoryEduIcon />}
-                            label={"Gán khóa học"}
-                            // onClick={(e) =>
-                            //     setAssignState({
-                            //         id: params.id,
-                            //         name:
-                            //             params.row.first_name +
-                            //             " " +
-                            //             params.row.last_name,
-                            //         open: true,
-                            //     })
-                            // }
-                            title={"Gán khóa học cho giáo viên này"}
+                            label={"Nội dung thực hành"}
+                            onClick={(e) =>
+                                setManagerPracticalContent({
+                                    open: true,
+                                    id: params.id,
+                                    name: params.row.name,
+                                })
+                            }
+                            title={"Quản lý nội dung thực hành"}
                             showInMenu
                         />,
                         <GridActionsCellItem
-                            icon={<LockIcon />}
-                            label={"Khóa"}
-                            // onClick={(e) => handleChangeState(e, params)}
-                            title={"Khóa"}
+                            icon={<AssignmentTurnedInIcon />}
+                            label={"Mục tiêu khóa học"}
+                            onClick={(e) =>
+                                setManagerPurposeOfCourse({
+                                    open: true,
+                                    id: params.id,
+                                    name: params.row.name,
+                                })
+                            }
+                            title={"QUản lý mục tiêu khóa học"}
                             showInMenu
                         />,
                         <GridActionsCellItem
-                            icon={<LockResetIcon />}
-                            label="Đặt lại mật khẩu"
-                            // onClick={(e) => handleResetPass(e, params)}
-                            title="Đặt lại mật khẩu"
+                            icon={<TypeSpecimenIcon />}
+                            label="Hình thức"
+                            onClick={(e) =>
+                                setManagerCourseFormat({
+                                    open: true,
+                                    id: params.id,
+                                    name: params.row.name,
+                                })
+                            }
+                            title="Quản lý hình thức khóa học"
                             showInMenu
                         />,
                     ];
@@ -423,10 +426,8 @@ function ManagerTeacherDG() {
         ],
         [
             handleCancelClick,
-            handleChangeState,
             handleDeleteClick,
             handleEditClick,
-            handleResetPass,
             handleSaveClick,
             rowModesModel,
         ]
@@ -469,7 +470,7 @@ function ManagerTeacherDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { getData },
+                                    toolbar: { getData, handleRefresh },
                                 }}
                                 loading={loading}
                                 initialState={{
@@ -483,6 +484,22 @@ function ManagerTeacherDG() {
                                 density="compact"
                             />
                         </ThemeProvider>
+                        <ManagerPracticalContent
+                            managerPracticalContent={managerPracticalContent}
+                            setManagerPracticalContent={
+                                setManagerPracticalContent
+                            }
+                        />
+                        <ManagerPurposeOfCourse
+                            managerPurposeOfCourse={managerPurposeOfCourse}
+                            setManagerPurposeOfCourse={
+                                setManagerPurposeOfCourse
+                            }
+                        />
+                        <ManagerCourseFormat
+                            managerCourseFormat={managerCourseFormat}
+                            setManagerCourseFormat={setManagerCourseFormat}
+                        />
                     </div>
                 </Card>
             </Grid>

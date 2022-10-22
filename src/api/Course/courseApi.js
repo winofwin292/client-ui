@@ -13,7 +13,7 @@ const courseApi = {
         const url = "/course/get-course";
         return axiosClient.post(url, data);
     },
-    getCourseForAssign(data) {
+    getCourseForAssign() {
         const url = "/course/get-for-assign";
         return axiosClient.get(url);
     },

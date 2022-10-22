@@ -11,7 +11,6 @@ import { InputLabel } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-import validator from "validator";
 import { useSnackbar } from "notistack";
 
 import courseApi from "api/Course/courseApi";
@@ -98,6 +97,11 @@ function AddCourse(props) {
             return;
         }
 
+        if (format.length === 0) {
+            showNoti("Vui lòng chọn ít nhất 1 hình thức cho khóa học", "error");
+            return;
+        }
+
         const data = {
             name,
             price: parseInt(price),
@@ -107,7 +111,6 @@ function AddCourse(props) {
             other_info: otherInfo,
             typeOfContentId: type,
             format,
-            password: "KH",
             purposeOfCourses: purposeOfCourses.split(";"),
             practicalContents: practicalContents.split(";"),
         };
@@ -116,7 +119,7 @@ function AddCourse(props) {
             setDefaultState();
             props.getData();
             props.setOpen(false);
-            showNoti("Tạo thành công", "success");
+            showNoti("Tạo khóa học thành công", "success");
         } else {
             showNoti(response.data, "error");
         }

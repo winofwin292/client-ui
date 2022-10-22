@@ -102,7 +102,7 @@ function ManagerTeacherDG() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [rowModesModel, setRowModesModel] = React.useState({});
+    const [rowModesModel, setRowModesModel] = useState({});
 
     const [newPassword, setNewPassword] = useState("");
     const [username, setUsername] = useState("");
