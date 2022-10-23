@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -14,9 +14,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useSnackbar } from "notistack";
 
 import courseApi from "api/Course/courseApi";
+import formatApi from "api/Format/formatApi";
+import typeOfContentApi from "api/TypeOfContent/typeOfContentApi";
 
 function AddCourse(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const [dataFormat, setDataFormat] = useState([]);
+    const [dataType, setDataType] = useState([]);
+
     const [name, setName] = useState("");
     const [price, setPrice] = useState(0);
     const [student, setStudent] = useState(0);
@@ -60,6 +65,17 @@ function AddCourse(props) {
         setPracticalContents("");
         setPurposeOfCourses("");
     };
+
+    const getDataSelect = useCallback(async () => {
+        const responseFormat = await formatApi.getAll();
+        const responseType = await typeOfContentApi.getAll();
+        setDataFormat(responseFormat.data);
+        setDataType(responseType.data);
+    }, []);
+
+    useEffect(() => {
+        getDataSelect();
+    }, [getDataSelect]);
 
     const handleClose = (e, reason) => {
         if (reason && reason === "backdropClick") return;
@@ -180,8 +196,11 @@ function AddCourse(props) {
                         value={type}
                         onChange={(e) => setType(e.target.value)}
                     >
-                        <MenuItem value={1}>Khóa học</MenuItem>
-                        <MenuItem value={2}>Chuyên đề</MenuItem>
+                        {dataType.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>
+                                {item.description}
+                            </MenuItem>
+                        ))}
                     </Select>
 
                     <TextField
@@ -221,8 +240,11 @@ function AddCourse(props) {
                         multiple
                         onChange={(e) => setFormat(e.target.value)}
                     >
-                        <MenuItem value={1}>Trực tiếp</MenuItem>
-                        <MenuItem value={2}>Trực tuyến</MenuItem>
+                        {dataFormat.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>
+                                {item.description}
+                            </MenuItem>
+                        ))}
                     </Select>
 
                     <TextField

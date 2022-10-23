@@ -19,7 +19,12 @@ import formatApi from "api/Format/formatApi";
 function ManagerCourseFormat(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [format, setFormat] = useState([]);
-    const [data, setData] = useState([]);
+    const [dataSelect, setDataSelect] = useState([]);
+
+    const getFormat = useCallback(async () => {
+        const responseForSelect = await formatApi.getAll();
+        setDataSelect(responseForSelect.data);
+    }, []);
 
     const getData = useCallback(async () => {
         const response = await courseFormatApi.getAllByCourseId({
@@ -27,9 +32,6 @@ function ManagerCourseFormat(props) {
                 ? props.managerCourseFormat.id
                 : undefined,
         });
-
-        const responseForSelect = await formatApi.getAll();
-        console.log(responseForSelect);
 
         if (response.status === 200) {
             let tempArr = [];
@@ -67,6 +69,10 @@ function ManagerCourseFormat(props) {
     useEffect(() => {
         getData();
     }, [getData]);
+
+    useEffect(() => {
+        getFormat();
+    }, [getFormat]);
 
     const handleClose = (e, reason) => {
         if (reason && reason === "backdropClick") return;
@@ -137,8 +143,11 @@ function ManagerCourseFormat(props) {
                         multiple
                         onChange={(e) => setFormat(e.target.value)}
                     >
-                        <MenuItem value={1}>Trực tiếp</MenuItem>
-                        <MenuItem value={2}>Trực tuyến</MenuItem>
+                        {dataSelect.map((item, index) => (
+                            <MenuItem key={index} value={item.id}>
+                                {item.description}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </DialogContent>
                 <DialogActions>
