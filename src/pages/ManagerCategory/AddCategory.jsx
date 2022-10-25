@@ -48,7 +48,6 @@ function AddCategory(props) {
     const handleClose = (e, reason) => {
         if (reason && reason === "backdropClick") return;
         setDefaultState();
-        props.getData();
         props.setOpen(false);
     };
 
@@ -73,6 +72,7 @@ function AddCategory(props) {
         if (response.status === 200) {
             showNoti("Tạo thành công", "success");
             setDefaultState();
+            props.getData();
             props.setOpen(false);
         } else {
             showNoti(response.data, "error");

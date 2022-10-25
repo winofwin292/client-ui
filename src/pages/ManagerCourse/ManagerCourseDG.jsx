@@ -181,7 +181,7 @@ function ManagerTeacherDG() {
                 showNoti("Xóa thành công", "success");
                 getData();
             } else {
-                showNoti("Lỗi: không xóa được tài khoản", "error");
+                showNoti("Lỗi: không xóa được khóa học", "error");
             }
             // setData(data.filter((row) => row.id !== id));
         },
@@ -208,12 +208,13 @@ function ManagerTeacherDG() {
             ...newRow,
             isNew: false,
         };
-        const data = {
-            ...newRow,
-            price: parseInt(newRow.price),
-        };
+        // const data = {
+        //     ...newRow,
+        //     price: parseInt(newRow.price),
+        // };
+        const { id, ...data } = newRow;
 
-        const response = await courseApi.editCourse(data);
+        const response = await courseApi.editCourse({ id, data });
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {

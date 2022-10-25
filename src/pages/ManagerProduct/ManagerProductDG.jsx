@@ -22,9 +22,10 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -32,8 +33,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
-import AddCategory from "./AddCategory";
+import AddProduct from "./AddProduct";
+import ManagerProductImage from "./components/ManagerProductImage/ManagerProductImage";
+import productApi from "api/Product/productApi";
 import categoryApi from "api/Category/categoryApi";
+
+import { formatterVND } from "utils";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -43,7 +48,7 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { handleRefresh, getData } = props;
+    const { getData, handleRefresh } = props;
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
@@ -70,26 +75,34 @@ function EditToolbar(props) {
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
             <GridToolbarExport />
-            <AddCategory open={open} setOpen={setOpen} getData={getData} />
+            <AddProduct open={open} setOpen={setOpen} getData={getData} />
         </GridToolbarContainer>
     );
 }
 
 EditToolbar.propTypes = {
+    getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
 };
 
-function ManagerCategoryDG() {
+function ManagerProductDG() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [data, setData] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [rowModesModel, setRowModesModel] = useState({});
 
+    const [managerProductImage, setManagerProductImage] = useState({
+        open: false,
+        id: null,
+        name: "",
+    });
+
     const getData = useCallback(async () => {
-        const response = await categoryApi.getAll();
+        const response = await productApi.getAllAdmin();
         if (response.status === 200) {
             setData(response.data);
             setLoading(false);
@@ -149,12 +162,12 @@ function ManagerCategoryDG() {
 
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await categoryApi.delete({ id: id });
+            const response = await productApi.delete({ id: id });
             if (response.status === 200) {
                 showNoti("Xóa thành công", "success");
                 getData();
             } else {
-                showNoti("Lỗi: không xóa được loại hàng", "error");
+                showNoti("Lỗi: không xóa được sản phẩm", "error");
             }
             // setData(data.filter((row) => row.id !== id));
         },
@@ -177,11 +190,14 @@ function ManagerCategoryDG() {
     );
 
     const processRowUpdate = async (newRow) => {
-        const updatedRow = { ...newRow, isNew: false };
+        const updatedRow = {
+            ...newRow,
+            isNew: false,
+        };
 
         const { id, ...data } = newRow;
 
-        const response = await categoryApi.edit({ id, data });
+        const response = await productApi.edit({ id, data });
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {
@@ -196,23 +212,86 @@ function ManagerCategoryDG() {
         () => [
             {
                 field: "name",
-                headerName: "Tên loại",
-                width: 250,
+                headerName: "Tên khóa học",
+                width: 180,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
             {
-                field: "code",
-                headerName: "Mã loại",
-                width: 250,
+                field: "price",
+                headerName: "Giá",
+                width: 100,
+                type: "number",
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+
+                    return formatterVND.format(params.value);
+                },
+                editable: true,
+            },
+            {
+                field: "author",
+                headerName: "Tác giả",
+                width: 150,
                 renderCell: RenderCellExpand,
+                editable: true,
+            },
+            {
+                field: "publishing_year",
+                headerName: "Năm xuất bản",
+                width: 120,
+                type: "number",
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+
+                    return params.value.toString();
+                },
                 editable: true,
             },
             {
                 field: "description",
                 headerName: "Mô tả",
-                width: 600,
+                width: 300,
                 renderCell: RenderCellExpand,
+                editable: true,
+            },
+            {
+                field: "categoryId",
+                headerName: "Loại",
+                width: 140,
+                type: "singleSelect",
+                valueOptions: categories,
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    const valueFormatted = categories.find(
+                        (item) => item.value === params.value
+                    );
+                    return valueFormatted ? valueFormatted.label : "";
+                },
+                editable: true,
+            },
+            {
+                field: "is_show",
+                headerName: "Hiện/ẩn",
+                width: 100,
+                type: "singleSelect",
+                valueOptions: [
+                    { value: true, label: "Hiện" },
+                    { value: false, label: "Ẩn" },
+                ],
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    const valueFormatted = params.value ? "Hiện" : "Ẩn";
+                    return valueFormatted;
+                },
                 editable: true,
             },
             {
@@ -256,6 +335,19 @@ function ManagerCategoryDG() {
                             onClick={handleDeleteClick(params.id)}
                             color="inherit"
                         />,
+                        <GridActionsCellItem
+                            icon={<HistoryEduIcon />}
+                            label={"Hình ảnh sản phẩm"}
+                            onClick={(e) =>
+                                setManagerProductImage({
+                                    open: true,
+                                    id: params.id,
+                                    name: params.row.name,
+                                })
+                            }
+                            title={"Quản lý hình ảnh sản phẩm"}
+                            showInMenu
+                        />,
                     ];
                 },
             },
@@ -266,12 +358,29 @@ function ManagerCategoryDG() {
             handleEditClick,
             handleSaveClick,
             rowModesModel,
+            categories,
         ]
     );
+
+    const getCategories = useCallback(async () => {
+        const response = await categoryApi.getAll();
+        let data = [];
+        if (response.status === 200) {
+            data = response.data.map((item) => ({
+                value: item.id,
+                label: item.name,
+            }));
+            setCategories(data);
+        }
+    }, []);
 
     useEffect(() => {
         getData();
     }, [getData]);
+
+    useEffect(() => {
+        getCategories();
+    }, [getCategories]);
 
     const handleRefresh = () => {
         if (getData()) {
@@ -306,7 +415,7 @@ function ManagerCategoryDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { handleRefresh, getData },
+                                    toolbar: { getData, handleRefresh },
                                 }}
                                 loading={loading}
                                 initialState={{
@@ -320,6 +429,10 @@ function ManagerCategoryDG() {
                                 density="compact"
                             />
                         </ThemeProvider>
+                        <ManagerProductImage
+                            managerProductImage={managerProductImage}
+                            setManagerProductImage={setManagerProductImage}
+                        />
                     </div>
                 </Card>
             </Grid>
@@ -327,4 +440,4 @@ function ManagerCategoryDG() {
     );
 }
 
-export default memo(ManagerCategoryDG);
+export default memo(ManagerProductDG);

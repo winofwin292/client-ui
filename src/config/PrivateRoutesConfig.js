@@ -10,6 +10,7 @@ import { ManagerTeacher } from "pages/ManagerTeacher";
 import { ManagerStudent } from "pages/ManagerStudent";
 import { ManagerCourse } from "pages/ManagerCourse";
 import { ManagerCategory } from "pages/ManagerCategory";
+import { ManagerProduct } from "pages/ManagerProduct";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -74,6 +75,14 @@ const PrivateRoutesConfig = [
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-category",
                 component: <ManagerCategory />,
+            },
+            {
+                type: "collapse",
+                name: "Quản lý sản phẩm",
+                key: "app/dashboard/manage-product",
+                icon: <Icon fontSize="small">person</Icon>,
+                path: "manage-product",
+                component: <ManagerProduct />,
             },
             {
                 type: "collapse",

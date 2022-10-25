@@ -8,4 +8,5 @@ export const urls = {
     "manage-student": "Quản lý học viên",
     "manage-course": "Quản lý khóa học",
     "manage-category": "Quản lý loại hàng",
+    "manage-product": "Quản lý sản phẩm",
 };
