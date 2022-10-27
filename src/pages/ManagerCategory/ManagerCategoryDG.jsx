@@ -89,7 +89,7 @@ function ManagerCategoryDG() {
     const [rowModesModel, setRowModesModel] = useState({});
 
     const getData = useCallback(async () => {
-        const response = await categoryApi.getAll();
+        const response = await categoryApi.getAllAdmin();
         if (response.status === 200) {
             setData(response.data);
             setLoading(false);

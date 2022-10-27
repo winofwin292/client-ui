@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { InputLabel } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
@@ -12,7 +12,7 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -72,7 +72,7 @@ function AddProduct(props) {
     };
 
     const getDataSelect = useCallback(async () => {
-        const responseType = await categoryApi.getAll();
+        const responseType = await categoryApi.getAllAdmin();
         setDataType(responseType.data);
     }, []);
 
@@ -94,7 +94,10 @@ function AddProduct(props) {
                 uploaded.push(file);
                 if (uploaded.length === MAX_COUNT) setFileLimit(true);
                 if (uploaded.length > MAX_COUNT) {
-                    alert(`You can only add a maximum of ${MAX_COUNT} files`);
+                    showNoti(
+                        `Bạn chỉ có thể tải lên tối đa ${MAX_COUNT} ảnh`,
+                        "error"
+                    );
                     setFileLimit(false);
                     limitExceeded = true;
                     return true;
@@ -109,13 +112,21 @@ function AddProduct(props) {
 
     const handleFileEvent = (e) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files);
-        console.log(chosenFiles);
-        handleUploadFiles(chosenFiles);
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        const checkResult = chosenFiles.some(
+            (file) => !allowedExtensions.exec(file.name)
+        );
+
+        if (!checkResult) {
+            handleUploadFiles(chosenFiles);
+        } else {
+            showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
+            return;
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(uploadedFiles);
 
         if (!name) {
             showNoti("Vui lòng nhập tên của sản phẩm", "error");
@@ -155,15 +166,26 @@ function AddProduct(props) {
             description,
             categoryId,
         };
-        // const response = await productApi.add(data);
-        // if (response.status === 200) {
-        //     setDefaultState();
-        //     props.getData();
-        //     props.setOpen(false);
-        //     showNoti("Thêm sản phẩm thành công", "success");
-        // } else {
-        //     showNoti(response.data, "error");
-        // }
+
+        let formData = new FormData();
+
+        formData.append("data", JSON.stringify(data));
+        uploadedFiles.forEach((file) => formData.append("file", file));
+
+        const response = await productApi.add(formData);
+        if (response.status === 200) {
+            setDefaultState();
+            props.getData();
+            props.setOpen(false);
+            showNoti("Thêm sản phẩm thành công", "success");
+        } else {
+            showNoti(response.data, "error");
+        }
+    };
+
+    const handleDeleteImage = (e, name) => {
+        setUploadedFiles((prev) => prev.filter((item) => item.name !== name));
+        setFileLimit(false);
     };
 
     return (
@@ -277,11 +299,6 @@ function AddProduct(props) {
                         />
                     </Button>
 
-                    {/* <div className="uploaded-files-list">
-                        {uploadedFiles.map((file) => (
-                            <div>{URL.createObjectURL(file)}</div>
-                        ))}
-                    </div> */}
                     <ImageList
                         // sx={{ width: 500, height: 450 }}
                         sx={{ mt: 1 }}
@@ -309,11 +326,14 @@ function AddProduct(props) {
                                         <IconButton
                                             sx={{ color: "white" }}
                                             aria-label={`star ${file.name}`}
+                                            onClick={(e) =>
+                                                handleDeleteImage(e, file.name)
+                                            }
                                         >
-                                            <StarBorderIcon />
+                                            <ClearIcon />
                                         </IconButton>
                                     }
-                                    actionPosition="left"
+                                    actionPosition="right"
                                 />
                             </ImageListItem>
                         ))}

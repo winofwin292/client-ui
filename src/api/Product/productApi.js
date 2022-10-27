@@ -9,9 +9,15 @@ const productApi = {
         const url = "/product/get-all-admin";
         return axiosClient.get(url);
     },
+    getProduct(data) {
+        const url = "/product/get-product";
+        return axiosClient.post(url, data);
+    },
     add(data) {
         const url = "/product/add";
-        return axiosClient.post(url, data);
+        return axiosClient.post(url, data, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
     },
     edit(data) {
         const url = "/product/edit";

@@ -281,10 +281,6 @@ function ManagerPracticalContent(props) {
         getData();
     }, [getData]);
 
-    // useEffect(() => {
-    //     console.log("setData");
-    // });
-
     const handleRefresh = () => {
         if (getData()) {
             showNoti("Tải dữ liệu thành công", "success");

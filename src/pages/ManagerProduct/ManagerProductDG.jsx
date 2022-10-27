@@ -363,7 +363,7 @@ function ManagerProductDG() {
     );
 
     const getCategories = useCallback(async () => {
-        const response = await categoryApi.getAll();
+        const response = await categoryApi.getAllAdmin();
         let data = [];
         if (response.status === 200) {
             data = response.data.map((item) => ({

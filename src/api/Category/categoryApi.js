@@ -5,6 +5,10 @@ const categoryApi = {
         const url = "/category/get-all";
         return axiosClient.get(url);
     },
+    getAllAdmin() {
+        const url = "/category/get-all-admin";
+        return axiosClient.get(url);
+    },
     add(data) {
         const url = "/category/add";
         return axiosClient.post(url, data);

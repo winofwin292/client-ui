@@ -160,10 +160,14 @@ function ShopCart(props) {
                                                                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                                                     <img
                                                                                         src={
-                                                                                            product.imageSrc
+                                                                                            product
+                                                                                                .ProductImage[0]
+                                                                                                .url
                                                                                         }
                                                                                         alt={
-                                                                                            product.imageAlt
+                                                                                            product
+                                                                                                .ProductImage[0]
+                                                                                                .name
                                                                                         }
                                                                                         className="h-full w-full object-cover object-center"
                                                                                     />

@@ -1,4 +1,11 @@
-import React, { useState, memo, useRef, Fragment } from "react";
+import React, {
+    useState,
+    memo,
+    useRef,
+    Fragment,
+    useCallback,
+    useEffect,
+} from "react";
 import {
     MagnifyingGlassIcon,
     ShoppingBagIcon,
@@ -7,45 +14,37 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 import { Listbox, Transition } from "@headlessui/react";
 
-const categories = [
-    {
-        id: 1,
-        name: "Loại 1",
-    },
-    {
-        id: 2,
-        name: "Loại 2",
-    },
-    {
-        id: 3,
-        name: "Loại 3",
-    },
-    {
-        id: 4,
-        name: "Loại 4",
-    },
-    {
-        id: 5,
-        name: "Loại 5",
-    },
-];
+import categoryApi from "api/Category/categoryApi";
 
 function ShopNav(props) {
     const [condition, setCondition] = useState([]);
+    const [categories, setCategories] = useState([]);
     const buttonRef = useRef();
+
+    const getData = useCallback(async () => {
+        const response = await categoryApi.getAll();
+        if (response.status === 200) {
+            setCategories(response.data);
+            return true;
+        } else {
+            return false;
+        }
+    }, []);
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
 
     const handleFilter = (e) => {
         // e.preventDefault();
 
         let newData = [];
         if (condition.length === 0) {
-            newData.push(...props.dataRef.current);
+            newData.push(...props.dataRef);
         } else {
             condition.forEach((item) => {
                 newData.push(
-                    ...props.dataRef.current.filter(
-                        (obj) => obj.category === item
-                    )
+                    ...props.dataRef.filter((obj) => obj.Category.id === item)
                 );
             });
         }

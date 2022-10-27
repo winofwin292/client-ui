@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useCallback } from "react";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
@@ -9,10 +9,7 @@ import { ShopCart } from "pages/ShopCart";
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
 
-//i18next translate
-// import { useTranslation } from "react-i18next";
-
-import { products } from "components/common/ProductList/productData";
+import productApi from "api/Product/productApi";
 
 function Shop() {
     //controller có thể lấy layout phục vụ cho chức năng thêm
@@ -21,14 +18,29 @@ function Shop() {
 
     const [countCart, setCountCart] = useState(0);
     const [cartOpen, setCartOpen] = useState(false);
-    const [data, setData] = useState(products);
-    const dataRef = useRef(products);
+    const [data, setData] = useState([]);
+    const [dataFilter, setDataFilter] = useState([]);
 
     // const { t } = useTranslation();
+
+    const getData = useCallback(async () => {
+        const response = await productApi.getAll();
+        if (response.status === 200) {
+            setData(response.data);
+            setDataFilter(response.data);
+            return true;
+        } else {
+            return false;
+        }
+    }, []);
 
     useEffect(() => {
         document.title = "Cửa hàng tài liệu";
     }, []);
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
 
     useEffect(() => {
         setLayout(dispatch, "shop");
@@ -44,7 +56,7 @@ function Shop() {
             <TopNav />
             <ShopNav
                 setData={setData}
-                dataRef={dataRef}
+                dataRef={dataFilter}
                 countCart={countCart}
                 setCartOpen={setCartOpen}
             />

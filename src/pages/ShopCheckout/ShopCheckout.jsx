@@ -567,11 +567,17 @@ function ShopCheckout() {
                                             key={index}
                                             className="flex py-6 px-4 sm:px-6"
                                         >
-                                            <div className="flex-shrink-0">
+                                            <div className="flex-shrink-0 h-20 w-20 overflow-hidden rounded-md border border-gray-200">
                                                 <img
-                                                    src={product.imageSrc}
-                                                    alt={product.imageAlt}
-                                                    className="w-20 rounded-md"
+                                                    src={
+                                                        product.ProductImage[0]
+                                                            .url
+                                                    }
+                                                    alt={
+                                                        product.ProductImage[0]
+                                                            .name
+                                                    }
+                                                    className="h-full w-full object-cover object-center"
                                                 />
                                             </div>
 
