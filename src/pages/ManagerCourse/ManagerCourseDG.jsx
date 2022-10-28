@@ -208,10 +208,6 @@ function ManagerTeacherDG() {
             ...newRow,
             isNew: false,
         };
-        // const data = {
-        //     ...newRow,
-        //     price: parseInt(newRow.price),
-        // };
         const { id, ...data } = newRow;
 
         const response = await courseApi.editCourse({ id, data });
@@ -220,7 +216,6 @@ function ManagerTeacherDG() {
         } else {
             showNoti("Lỗi: không cập nhật được dữ liệu", "error");
         }
-        // setData(data.map((row) => (row.id === newRow.id ? updatedRow : row)));
         getData();
         return updatedRow;
     };

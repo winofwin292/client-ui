@@ -332,7 +332,7 @@ function ManagerProductImage(props) {
                         </ImageList>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Hủy</Button>
+                        <Button onClick={handleClose}>Đóng</Button>
                     </DialogActions>
                 </Dialog>
             </ThemeProvider>

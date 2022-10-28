@@ -11,64 +11,29 @@ function ProductList(props) {
     const products = props.data;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const handleCancel = useCallback(
-        (e) => {
-            e.preventDefault();
-            try {
-                const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-                    cart: [],
-                };
-                currCart.cart.pop();
-                props.setCountCart((prev) => prev - 1);
-                localStorage.setItem("myCart", JSON.stringify(currCart));
-                enqueueSnackbar("Đã xóa 1 sản phẩm khỏi vào hàng", {
-                    variant: "warning",
-                    style: {
-                        borderColor: "#43a047",
-                        color: "#43a047",
-                    },
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
-            } catch {
-                enqueueSnackbar("Lỗi: không thể hoàn tác!", {
-                    variant: "error",
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
-            }
-        },
-        [closeSnackbar, enqueueSnackbar, props]
-    );
-
     const handleAddToCart = useCallback(
         (e, product) => {
             e.preventDefault();
             try {
                 const { desc, publishingYear, category, ...newProduct } =
                     product;
+                newProduct.quantity = 1;
+                newProduct.price = parseInt(newProduct.price);
                 const currCart = JSON.parse(localStorage.getItem("myCart")) || {
                     cart: [],
                 };
-                currCart.cart.push(newProduct);
+                const productInCart = currCart.cart.find(
+                    (item) => item.id === newProduct.id
+                );
+
+                if (productInCart) {
+                    currCart.cart.forEach((item) => {
+                        if (item.id === newProduct.id) item.quantity++;
+                    });
+                } else {
+                    currCart.cart.push(newProduct);
+                }
+
                 props.setCountCart((prev) => prev + 1);
                 localStorage.setItem("myCart", JSON.stringify(currCart));
                 enqueueSnackbar("Đã thêm 1 sản phẩm vào hàng", {
@@ -78,27 +43,15 @@ function ProductList(props) {
                         color: "#43a047",
                     },
                     action: (key) => (
-                        <>
-                            <IconButton
-                                size="small"
-                                onClick={(e) => handleCancel(e)}
-                                title={"Hoàn tác"}
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                <UndoIcon />
-                            </IconButton>
-                            <IconButton
-                                size="small"
-                                onClick={() => closeSnackbar(key)}
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </>
+                        <IconButton
+                            size="small"
+                            onClick={() => closeSnackbar(key)}
+                            style={{
+                                color: "white",
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
                     ),
                 });
             } catch {
@@ -118,7 +71,7 @@ function ProductList(props) {
                 });
             }
         },
-        [closeSnackbar, enqueueSnackbar, handleCancel, props]
+        [closeSnackbar, enqueueSnackbar, props]
     );
     return (
         <div className="bg-white dark:bg-gray-900">

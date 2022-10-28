@@ -21,6 +21,7 @@ import validator from "validator";
 import { formatterVND } from "utils";
 
 import deliveryMethodApi from "api/DeliveryMethod/deliveryMethodApi";
+import orderApi from "api/Order/orderApi";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -83,7 +84,7 @@ function ShopCheckout() {
             cart: [],
         };
         const sumPrice = currCart.cart.reduce(
-            (acc, o) => acc + parseInt(o.price),
+            (acc, o) => acc + o.price * o.quantity,
             0
         );
         setProducts(currCart.cart);
@@ -96,7 +97,7 @@ function ShopCheckout() {
         setTotal(subtotal + tax + parseInt(selectedDeliveryMethod.price));
     }, [selectedDeliveryMethod, subtotal, tax]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!firstName || !lastName) {
             showNoti("Vui lòng điền đầy đủ họ tên vào biểu mẫu", "error");
@@ -150,28 +151,33 @@ function ShopCheckout() {
             return;
         }
 
-        try {
-            const data = {
-                firstName,
-                lastName,
-                phoneNumber,
-                email,
-                address,
-                dc: getCommunePathWithType(commune),
-                products,
-                selectedDeliveryMethod,
-                subtotal,
-                total,
-            };
-            console.log(data);
+        const data = {
+            first_name: firstName,
+            last_name: lastName,
+            phone: phoneNumber,
+            email,
+            address: address + ", " + getCommunePathWithType(commune),
+            sub_total: subtotal,
+            tax,
+            total,
+            commune_code: commune,
+            district_code: district,
+            province_code: city,
+            deliveryMethodsId: selectedDeliveryMethod.id,
+            orderStatusId: 1,
+            products,
+        };
 
+        const response = await orderApi.add(data);
+        console.log(response);
+        if (response.status === 200) {
             showNoti("Đặt hàng thành công", "success");
-        } catch {
+        } else {
             showNoti("Lỗi: không thể đặt hàng", "error");
         }
     };
 
-    const handleRemove = (e, index) => {
+    const handleRemove = (e, index, price, quantity) => {
         e.preventDefault();
         try {
             let newProductList = [...products];
@@ -183,17 +189,51 @@ function ShopCheckout() {
                 })
             );
 
-            const sumPrice = newProductList.reduce(
-                (acc, o) => acc + parseInt(o.price),
-                0
-            );
             setProducts(newProductList);
-            setSubtotal(sumPrice);
-            setTax(sumPrice / 10);
-            showNoti("Đã xóa 1 sản phẩm khỏi giỏ hàng", "success");
+            setSubtotal((prev) => prev - price * quantity);
+            setTax((subtotal - price * quantity) / 10);
+            showNoti("Đã xóa sản phẩm khỏi giỏ hàng", "success");
         } catch {
             showNoti("Lỗi: không xóa được sản phẩm", "error");
         }
+    };
+
+    const handleAdd = (e, id, price) => {
+        e.preventDefault();
+        let newProductList = [...products];
+        newProductList.forEach((product) => {
+            if (product.id === id) {
+                product.quantity++;
+            }
+        });
+        setProducts(newProductList);
+        localStorage.setItem(
+            "myCart",
+            JSON.stringify({
+                cart: newProductList,
+            })
+        );
+        setSubtotal((prev) => prev + price);
+        setTax((subtotal + price) / 10);
+    };
+
+    const handleSub = (e, id, price) => {
+        e.preventDefault();
+        let newProductList = [...products];
+        newProductList.forEach((product) => {
+            if (product.id === id) {
+                product.quantity--;
+            }
+        });
+        setProducts(newProductList);
+        localStorage.setItem(
+            "myCart",
+            JSON.stringify({
+                cart: newProductList,
+            })
+        );
+        setSubtotal((prev) => prev - price);
+        setTax((subtotal - price) / 10);
     };
 
     return (
@@ -607,7 +647,9 @@ function ShopCheckout() {
                                                             onClick={(e) =>
                                                                 handleRemove(
                                                                     e,
-                                                                    index
+                                                                    index,
+                                                                    product.price,
+                                                                    product.quantity
                                                                 )
                                                             }
                                                         >
@@ -630,44 +672,61 @@ function ShopCheckout() {
                                                         )}
                                                     </p>
 
-                                                    {/* <div className="ml-4">
-                                                        <label
-                                                            htmlFor="quantity"
-                                                            className="sr-only"
-                                                        >
-                                                            Quantity
-                                                        </label>
-                                                        <select
-                                                            id="quantity"
-                                                            name="quantity"
-                                                            className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                                        >
-                                                            <option value={1}>
-                                                                1
-                                                            </option>
-                                                            <option value={2}>
-                                                                2
-                                                            </option>
-                                                            <option value={3}>
-                                                                3
-                                                            </option>
-                                                            <option value={4}>
-                                                                4
-                                                            </option>
-                                                            <option value={5}>
-                                                                5
-                                                            </option>
-                                                            <option value={6}>
-                                                                6
-                                                            </option>
-                                                            <option value={7}>
-                                                                7
-                                                            </option>
-                                                            <option value={8}>
-                                                                8
-                                                            </option>
-                                                        </select>
-                                                    </div> */}
+                                                    <div className="ml-4">
+                                                        <div className=" custom-number-input w-24">
+                                                            <div className="flex flex-row h-8 w-full rounded-lg relative bg-transparent mt-1">
+                                                                <button
+                                                                    data-action="decrement"
+                                                                    className=" bg-white  text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none dark:bg-gray-300 border"
+                                                                    disabled={
+                                                                        product.quantity <=
+                                                                        1
+                                                                            ? true
+                                                                            : false
+                                                                    }
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
+                                                                        handleSub(
+                                                                            e,
+                                                                            product.id,
+                                                                            product.price
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <span className="m-auto text-2xl font-thin">
+                                                                        −
+                                                                    </span>
+                                                                </button>
+                                                                <input
+                                                                    type="number"
+                                                                    className="outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200 border-y"
+                                                                    name="custom-input-number"
+                                                                    value={
+                                                                        product.quantity
+                                                                    }
+                                                                    disabled
+                                                                ></input>
+                                                                <button
+                                                                    data-action="increment"
+                                                                    className="bg-white  text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer dark:bg-gray-300 border"
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
+                                                                        handleAdd(
+                                                                            e,
+                                                                            product.id,
+                                                                            product.price
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <span className="m-auto text-2xl font-thin">
+                                                                        +
+                                                                    </span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </li>

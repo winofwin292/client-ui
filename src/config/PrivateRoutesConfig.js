@@ -11,6 +11,7 @@ import { ManagerStudent } from "pages/ManagerStudent";
 import { ManagerCourse } from "pages/ManagerCourse";
 import { ManagerCategory } from "pages/ManagerCategory";
 import { ManagerProduct } from "pages/ManagerProduct";
+import { ManagerOrder } from "pages/ManagerOrder";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -83,6 +84,14 @@ const PrivateRoutesConfig = [
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-product",
                 component: <ManagerProduct />,
+            },
+            {
+                type: "collapse",
+                name: "Quản lý đơn hàng",
+                key: "app/dashboard/manage-order",
+                icon: <Icon fontSize="small">local_mall</Icon>,
+                path: "manage-order",
+                component: <ManagerOrder />,
             },
             {
                 type: "collapse",

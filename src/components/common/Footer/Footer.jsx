@@ -39,7 +39,7 @@ function Footer() {
                             rel="noopener noreferrer"
                         >
                             <MapPinIcon
-                                className="pt-2 pl-2 h-6"
+                                className="pt-2 pl-2 h-6 dark:text-white"
                                 aria-hidden="true"
                             />
                             <span className="pt-2 pl-2 elf-center whitespace-nowrap dark:text-white">
@@ -54,7 +54,7 @@ function Footer() {
                             rel="noopener noreferrer"
                         >
                             <MapPinIcon
-                                className="pt-2 pl-2 h-6"
+                                className="pt-2 pl-2 h-6 dark:text-white"
                                 aria-hidden="true"
                             />
                             <span className="pt-2 pl-2 elf-center whitespace-nowrap dark:text-white">
@@ -76,7 +76,7 @@ function Footer() {
                             className="flex items-center"
                         >
                             <PhoneIcon
-                                className="pt-2 pl-2 h-6"
+                                className="pt-2 pl-2 h-6 dark:text-white"
                                 aria-hidden="true"
                             />
                             <span className="pt-2 pl-2 block self-center whitespace-nowrap dark:text-white">
@@ -89,7 +89,7 @@ function Footer() {
                             className="flex items-center"
                         >
                             <EnvelopeIcon
-                                className="pt-2 pl-2 h-6"
+                                className="pt-2 pl-2 h-6 dark:text-white"
                                 aria-hidden="true"
                             />
                             <span className="pt-2 pl-2 block self-center whitespace-nowrap dark:text-white">

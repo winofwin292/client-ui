@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import UndoIcon from "@mui/icons-material/Undo";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
@@ -32,6 +31,7 @@ function ProductDetail() {
     const [productImages, setProductImages] = useState([]);
     const [cartOpen, setCartOpen] = useState(false);
     const [product, setProduct] = useState(null);
+    const [quantity, setQuantity] = useState(1);
     const navigate = useNavigate();
 
     const getData = useCallback(
@@ -62,48 +62,23 @@ function ProductDetail() {
         getData(id);
     }, [getData, id]);
 
-    // useEffect(() => {
-    //     document.title = product.name;
-    // }, [product.name]);
-
     useEffect(() => {
         const myCart = JSON.parse(localStorage.getItem("myCart")) || {
             cart: [],
         };
-        setCountCart(myCart.cart.length);
+        const count = myCart.cart.reduce(
+            (total, item) => (total += item.quantity),
+            0
+        );
+        setCountCart(count);
         localStorage.setItem("myCart", JSON.stringify(myCart));
     }, []);
 
-    const handleCancel = useCallback(
+    const handleAddToCart = useCallback(
         (e) => {
             e.preventDefault();
-            try {
-                const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-                    cart: [],
-                };
-                currCart.cart.pop();
-                setCountCart((prev) => prev - 1);
-                localStorage.setItem("myCart", JSON.stringify(currCart));
-                enqueueSnackbar("Đã xóa 1 sản phẩm khỏi vào hàng", {
-                    variant: "warning",
-                    style: {
-                        borderColor: "#43a047",
-                        color: "#43a047",
-                    },
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
-            } catch {
-                enqueueSnackbar("Lỗi: không thể hoàn tác!", {
+            if (quantity <= 0) {
+                enqueueSnackbar("Vui lòng nhập số lượng sản phẩm", {
                     variant: "error",
                     action: (key) => (
                         <IconButton
@@ -117,54 +92,51 @@ function ProductDetail() {
                         </IconButton>
                     ),
                 });
+                return;
             }
-        },
-        [closeSnackbar, enqueueSnackbar]
-    );
-
-    const handleAddToCart = useCallback(
-        (e) => {
-            e.preventDefault();
             try {
                 const { desc, publishingYear, category, ...newProduct } =
                     product;
+                newProduct.quantity = quantity;
+                newProduct.price = parseInt(newProduct.price);
                 const currCart = JSON.parse(localStorage.getItem("myCart")) || {
                     cart: [],
                 };
-                currCart.cart.push(newProduct);
-                setCountCart((prev) => prev + 1);
+                const productInCart = currCart.cart.find(
+                    (item) => item.id === newProduct.id
+                );
+
+                if (productInCart) {
+                    currCart.cart.forEach((item) => {
+                        if (item.id === newProduct.id)
+                            item.quantity += quantity;
+                    });
+                } else {
+                    currCart.cart.push(newProduct);
+                }
+
+                setCountCart((prev) => prev + quantity);
                 localStorage.setItem("myCart", JSON.stringify(currCart));
-                enqueueSnackbar("Đã thêm 1 sản phẩm vào hàng", {
+                enqueueSnackbar(`Đã thêm ${quantity} sản phẩm vào hàng`, {
                     variant: "success",
                     style: {
                         borderColor: "#43a047",
                         color: "#43a047",
                     },
                     action: (key) => (
-                        <>
-                            <IconButton
-                                size="small"
-                                onClick={(e) => handleCancel(e)}
-                                title={"Hoàn tác"}
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                <UndoIcon />
-                            </IconButton>
-                            <IconButton
-                                size="small"
-                                onClick={() => closeSnackbar(key)}
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </>
+                        <IconButton
+                            size="small"
+                            onClick={() => closeSnackbar(key)}
+                            style={{
+                                color: "white",
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
                     ),
                 });
-            } catch {
+            } catch (error) {
+                console.log(error);
                 enqueueSnackbar("Lỗi: không thêm được sản phẩm", {
                     variant: "error",
                     action: (key) => (
@@ -181,7 +153,7 @@ function ProductDetail() {
                 });
             }
         },
-        [closeSnackbar, enqueueSnackbar, handleCancel, product]
+        [closeSnackbar, enqueueSnackbar, product, quantity]
     );
 
     const handleOpenCart = () => {
@@ -336,6 +308,60 @@ function ProductDetail() {
                                                     </span>
                                                 </li>
                                             </ul>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-2 custom-number-input h-10 w-32">
+                                        <label
+                                            htmlFor="custom-input-number"
+                                            className="w-full text-gray-700 text-sm font-semibold dark:text-white"
+                                        >
+                                            Số lượng:
+                                        </label>
+                                        <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                            <button
+                                                data-action="decrement"
+                                                className=" bg-gray-100 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none dark:bg-gray-300"
+                                                disabled={
+                                                    quantity <= 1 ? true : false
+                                                }
+                                                onClick={(e) =>
+                                                    setQuantity((prev) =>
+                                                        prev - 1 < 0
+                                                            ? 0
+                                                            : prev - 1
+                                                    )
+                                                }
+                                            >
+                                                <span className="m-auto text-2xl font-thin">
+                                                    −
+                                                </span>
+                                            </button>
+                                            <input
+                                                type="number"
+                                                className="outline-none focus:outline-none text-center w-full bg-gray-100 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200"
+                                                name="custom-input-number"
+                                                min={1}
+                                                value={quantity}
+                                                onChange={(e) =>
+                                                    setQuantity(
+                                                        parseInt(e.target.value)
+                                                    )
+                                                }
+                                            ></input>
+                                            <button
+                                                data-action="increment"
+                                                className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer dark:bg-gray-300"
+                                                onClick={(e) =>
+                                                    setQuantity(
+                                                        (prev) => prev + 1
+                                                    )
+                                                }
+                                            >
+                                                <span className="m-auto text-2xl font-thin">
+                                                    +
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
 

@@ -19,14 +19,14 @@ function ShopCart(props) {
             cart: [],
         };
         const sumPrice = currCart.cart.reduce(
-            (acc, o) => acc + parseInt(o.price),
+            (acc, o) => acc + o.price * o.quantity,
             0
         );
         setProducts(currCart.cart);
         setSubtotal(sumPrice);
     }, [props.cartOpen]);
 
-    const handleRemove = (e, index) => {
+    const handleRemove = (e, index, price, quantity) => {
         e.preventDefault();
         try {
             let newProductList = [...products];
@@ -38,13 +38,9 @@ function ShopCart(props) {
                     cart: newProductList,
                 })
             );
-            props.setCountCart((prev) => prev - 1);
-            const sumPrice = newProductList.reduce(
-                (acc, o) => acc + parseInt(o.price),
-                0
-            );
-            setSubtotal(sumPrice);
-            enqueueSnackbar("Đã xóa 1 sản phẩm khỏi giỏ hàng", {
+            props.setCountCart((prev) => prev - quantity);
+            setSubtotal((prev) => prev - price * quantity);
+            enqueueSnackbar("Đã xóa sản phẩm khỏi giỏ hàng", {
                 variant: "success",
                 style: {
                     borderColor: "#43a047",
@@ -78,6 +74,42 @@ function ShopCart(props) {
                 ),
             });
         }
+    };
+
+    const handleAdd = (e, id, price) => {
+        let newProductList = [...products];
+        newProductList.forEach((product) => {
+            if (product.id === id) {
+                product.quantity++;
+            }
+        });
+        setProducts(newProductList);
+        localStorage.setItem(
+            "myCart",
+            JSON.stringify({
+                cart: newProductList,
+            })
+        );
+        props.setCountCart((prev) => prev + 1);
+        setSubtotal((prev) => prev + price);
+    };
+
+    const handleSub = (e, id, price) => {
+        let newProductList = [...products];
+        newProductList.forEach((product) => {
+            if (product.id === id) {
+                product.quantity--;
+            }
+        });
+        setProducts(newProductList);
+        localStorage.setItem(
+            "myCart",
+            JSON.stringify({
+                cart: newProductList,
+            })
+        );
+        props.setCountCart((prev) => prev - 1);
+        setSubtotal((prev) => prev - price);
     };
 
     return (
@@ -202,11 +234,59 @@ function ShopCart(props) {
                                                                                         </p>
                                                                                     </div>
                                                                                     <div className="flex flex-1 items-end justify-between text-sm">
-                                                                                        <p className="text-gray-500 dark:text-white">
-                                                                                            {/* {
-                                                                                    product.author
-                                                                                } */}
-                                                                                        </p>
+                                                                                        <div className=" custom-number-input w-24">
+                                                                                            <div className="flex flex-row h-8 w-full rounded-lg relative bg-transparent mt-1">
+                                                                                                <button
+                                                                                                    data-action="decrement"
+                                                                                                    className=" bg-white  text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none dark:bg-gray-300 border"
+                                                                                                    disabled={
+                                                                                                        product.quantity <=
+                                                                                                        1
+                                                                                                            ? true
+                                                                                                            : false
+                                                                                                    }
+                                                                                                    onClick={(
+                                                                                                        e
+                                                                                                    ) =>
+                                                                                                        handleSub(
+                                                                                                            e,
+                                                                                                            product.id,
+                                                                                                            product.price
+                                                                                                        )
+                                                                                                    }
+                                                                                                >
+                                                                                                    <span className="m-auto text-2xl font-thin">
+                                                                                                        −
+                                                                                                    </span>
+                                                                                                </button>
+                                                                                                <input
+                                                                                                    type="number"
+                                                                                                    className="outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200 border-y"
+                                                                                                    name="custom-input-number"
+                                                                                                    value={
+                                                                                                        product.quantity
+                                                                                                    }
+                                                                                                    disabled
+                                                                                                ></input>
+                                                                                                <button
+                                                                                                    data-action="increment"
+                                                                                                    className="bg-white  text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer dark:bg-gray-300 border"
+                                                                                                    onClick={(
+                                                                                                        e
+                                                                                                    ) =>
+                                                                                                        handleAdd(
+                                                                                                            e,
+                                                                                                            product.id,
+                                                                                                            product.price
+                                                                                                        )
+                                                                                                    }
+                                                                                                >
+                                                                                                    <span className="m-auto text-2xl font-thin">
+                                                                                                        +
+                                                                                                    </span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
 
                                                                                         <div className="flex">
                                                                                             <button
@@ -218,7 +298,9 @@ function ShopCart(props) {
                                                                                                 ) =>
                                                                                                     handleRemove(
                                                                                                         e,
-                                                                                                        index
+                                                                                                        index,
+                                                                                                        product.price,
+                                                                                                        product.quantity
                                                                                                     )
                                                                                                 }
                                                                                             >

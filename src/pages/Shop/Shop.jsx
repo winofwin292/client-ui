@@ -47,7 +47,13 @@ function Shop() {
         const myCart = JSON.parse(localStorage.getItem("myCart")) || {
             cart: [],
         };
-        setCountCart(myCart.cart.length);
+
+        const count = myCart.cart.reduce(
+            (total, item) => (total += item.quantity),
+            0
+        );
+        setCountCart(count);
+
         localStorage.setItem("myCart", JSON.stringify(myCart));
     }, [dispatch]);
 
