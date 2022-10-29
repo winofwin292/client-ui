@@ -28,9 +28,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+import OrderDetail from "./components/OrderDetail/OrderDetail";
+import ChangeState from "./components/ChangeState/ChangeState";
 import orderApi from "api/Order/orderApi";
-import deliveryMethodApi from "api/DeliveryMethod/deliveryMethodApi";
-import orderStatusApi from "api/OrderStatus/orderStatusApi";
 
 import { formatterVND } from "utils";
 
@@ -62,7 +62,6 @@ function EditToolbar(props) {
 }
 
 EditToolbar.propTypes = {
-    getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
 };
 
@@ -73,8 +72,17 @@ function ManagerOrderDG() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [deliveryMethods, setDeliveryMethods] = useState([]);
-    const [orderStatus, setOrderStatus] = useState([]);
+    const [orderDetail, setOrderDetail] = useState({
+        open: false,
+        id: null,
+    });
+
+    const [orderStatus, setOrderStatus] = useState({
+        open: false,
+        id: null,
+        orderStatusId: "",
+        info: "",
+    });
 
     const getData = useCallback(async () => {
         const response = await orderApi.getAllAdmin();
@@ -86,22 +94,6 @@ function ManagerOrderDG() {
             return false;
         }
     }, []);
-
-    const getSubData = useCallback(async () => {
-        const responseDelivery = await deliveryMethodApi.getAll();
-        const responseOrderStatus = await orderStatusApi.getAll();
-        if (
-            responseDelivery.status === 200 &&
-            responseOrderStatus.status === 200
-        ) {
-            setDeliveryMethods(responseDelivery.data);
-            setOrderStatus(responseOrderStatus.data);
-        }
-    }, []);
-
-    useEffect(() => {
-        getSubData();
-    }, [getSubData]);
 
     const showNoti = useCallback(
         (msg, type) => {
@@ -169,32 +161,26 @@ function ManagerOrderDG() {
                 },
             },
             {
-                field: "deliveryMethodsId",
+                field: "DeliveryMethods",
                 headerName: "Đơn vị vận chuyển",
                 width: 150,
                 renderCell: (params) => {
                     if (params.value == null) {
                         return "";
                     }
-                    const valueFormatted = deliveryMethods.find(
-                        (item) => item.id === params.value
-                    );
-                    return valueFormatted ? valueFormatted.name : "";
+                    return params.value.name;
                 },
             },
 
             {
-                field: "orderStatusId",
+                field: "OrderStatus",
                 headerName: "Trạng thái",
                 width: 100,
                 renderCell: (params) => {
                     if (params.value == null) {
                         return "";
                     }
-                    const valueFormatted = orderStatus.find(
-                        (item) => item.id === params.value
-                    );
-                    return valueFormatted ? valueFormatted.name : "";
+                    return params.value.name;
                 },
             },
             {
@@ -208,26 +194,33 @@ function ManagerOrderDG() {
                         <GridActionsCellItem
                             icon={<ShoppingCartIcon />}
                             label={"Chi tiết đơn hàng"}
-                            // onClick={(e) =>
-                            //     setManagerPracticalContent({
-                            //         open: true,
-                            //         id: params.id,
-                            //         name: params.row.name,
-                            //     })
-                            // }
+                            onClick={(e) =>
+                                setOrderDetail({
+                                    open: true,
+                                    id: params.id,
+                                })
+                            }
                             title={"Chi tiết đơn hàng"}
                             showInMenu
                         />,
                         <GridActionsCellItem
                             icon={<ShoppingCartCheckoutIcon />}
                             label={"Chuyển trạng thái"}
-                            // onClick={(e) =>
-                            //     setManagerPracticalContent({
-                            //         open: true,
-                            //         id: params.id,
-                            //         name: params.row.name,
-                            //     })
-                            // }
+                            onClick={(e) =>
+                                setOrderStatus({
+                                    open: true,
+                                    id: params.id,
+                                    orderStatusId: parseInt(
+                                        params.row.OrderStatus.id
+                                    ),
+                                    info:
+                                        params.row.last_name +
+                                        " " +
+                                        params.row.first_name +
+                                        " - " +
+                                        params.row.phone,
+                                })
+                            }
                             title={"Chuyển trạng thái đơn hàng"}
                             showInMenu
                         />,
@@ -235,7 +228,7 @@ function ManagerOrderDG() {
                 },
             },
         ],
-        [deliveryMethods, orderStatus]
+        []
     );
 
     useEffect(() => {
@@ -267,7 +260,7 @@ function ManagerOrderDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { getData, handleRefresh },
+                                    toolbar: { handleRefresh },
                                 }}
                                 loading={loading}
                                 initialState={{
@@ -280,6 +273,15 @@ function ManagerOrderDG() {
                                 density="compact"
                             />
                         </ThemeProvider>
+                        <OrderDetail
+                            orderDetail={orderDetail}
+                            setOrderDetail={setOrderDetail}
+                        />
+                        <ChangeState
+                            orderStatus={orderStatus}
+                            setOrderStatus={setOrderStatus}
+                            getData={getData}
+                        />
                     </div>
                 </Card>
             </Grid>

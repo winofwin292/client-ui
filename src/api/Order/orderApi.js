@@ -9,8 +9,16 @@ const orderApi = {
         const url = "/order/add";
         return axiosClient.post(url, data);
     },
+    getByIdAdmin(data) {
+        const url = "/order/get-by-id-admin";
+        return axiosClient.post(url, data);
+    },
     getById(data) {
         const url = "/order/get-by-id";
+        return axiosClient.post(url, data);
+    },
+    getByPhone(data) {
+        const url = "/order/get-by-phone";
         return axiosClient.post(url, data);
     },
     changeStatus(data) {

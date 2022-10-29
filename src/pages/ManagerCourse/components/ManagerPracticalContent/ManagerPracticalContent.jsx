@@ -104,9 +104,7 @@ function ManagerPracticalContent(props) {
 
     const getData = useCallback(async () => {
         const response = await practicalContentApi.getByCourseId({
-            courseId: props.managerPracticalContent.id
-                ? props.managerPracticalContent.id
-                : undefined,
+            courseId: props.managerPracticalContent.id,
         });
         if (response.status === 200) {
             setData(response.data);

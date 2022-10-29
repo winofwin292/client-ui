@@ -1,11 +1,4 @@
-import React, {
-    memo,
-    useState,
-    useCallback,
-    useMemo,
-    useEffect,
-    useRef,
-} from "react";
+import React, { memo, useState, useCallback, useMemo, useEffect } from "react";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,8 +10,6 @@ import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { DataGrid, viVN } from "@mui/x-data-grid";
-
-import ReactToPrint from "react-to-print";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
@@ -43,10 +34,8 @@ function OrderDetail(props) {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
 
-    const componentRef = useRef();
-
     const getData = useCallback(async () => {
-        const response = await orderApi.getByIdAdmin({
+        const response = await orderApi.getById({
             orderId: props.orderDetail.id,
         });
         if (response.status === 200 && response.data !== null) {
@@ -252,7 +241,7 @@ function OrderDetail(props) {
             <DialogTitle id="alert-dialog-title">
                 {"Chi tiết đơn hàng"}
             </DialogTitle>
-            <DialogContent ref={componentRef}>
+            <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                     <b>Thông tin đơn hàng:</b>
                 </DialogContentText>
@@ -308,10 +297,6 @@ function OrderDetail(props) {
                 </div>
             </DialogContent>
             <DialogActions>
-                <ReactToPrint
-                    trigger={() => <Button>In đơn hàng</Button>}
-                    content={() => componentRef.current}
-                />
                 <Button onClick={handleCloseManager} autoFocus>
                     Đóng
                 </Button>

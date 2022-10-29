@@ -137,6 +137,13 @@ function ShopNav(props) {
                             </div>
                         </Listbox>
 
+                        <a
+                            href={"/shop/tracking"}
+                            className="mt-1 ml-1 bg-white hover:bg-gray-100 text-gray-800 py-2 px-4 border border-gray-200 rounded-full dark:bg-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+                        >
+                            Tra cứu đơn hàng
+                        </a>
+
                         <div className="ml-auto flex items-center text-gray-700 dark:text-white">
                             Search
                             <div className="flex lg:ml-6">

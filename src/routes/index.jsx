@@ -17,6 +17,7 @@ import { NotFound } from "components/common/NotFound";
 import { CourseDetail } from "pages/CourseDetail";
 import { ProductDetail } from "pages/ProductDetail";
 import { ShopCheckout } from "pages/ShopCheckout";
+import { TrackingOrder } from "pages/TrackingOrder";
 
 function CRoutes() {
     let allowedRoutes = [];
@@ -46,6 +47,7 @@ function CRoutes() {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/shop/:id" element={<ProductDetail />} />
                 <Route path="/shop/checkout" element={<ShopCheckout />} />
+                <Route path="/shop/tracking" element={<TrackingOrder />} />
                 <Route path="/login" element={<Login />} />
             </Route>
             <Route path="app" element={<PrivateRoutes />}>

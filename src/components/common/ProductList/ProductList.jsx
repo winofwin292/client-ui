@@ -1,7 +1,6 @@
 import React, { memo, useCallback } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import UndoIcon from "@mui/icons-material/Undo";
 
 import { useSnackbar } from "notistack";
 

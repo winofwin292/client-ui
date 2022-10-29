@@ -104,9 +104,7 @@ function ManagerPurposeOfCourse(props) {
 
     const getData = useCallback(async () => {
         const response = await purposeOfCourseApi.getByCourseId({
-            courseId: props.managerPurposeOfCourse.id
-                ? props.managerPurposeOfCourse.id
-                : undefined,
+            courseId: props.managerPurposeOfCourse.id,
         });
         if (response.status === 200) {
             setData(response.data);

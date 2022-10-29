@@ -1,5 +1,6 @@
 import React, { useState, memo, useEffect, useCallback } from "react";
 import { RadioGroup } from "@headlessui/react";
+import { useNavigate } from "react-router-dom";
 
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -50,6 +51,8 @@ function ShopCheckout() {
     const [city, setCity] = useState("-1");
     const [district, setDistrict] = useState("-1");
     const [commune, setCommune] = useState("-1");
+
+    const navigate = useNavigate();
 
     const showNoti = (msg, type) => {
         return enqueueSnackbar(msg, {
@@ -172,6 +175,7 @@ function ShopCheckout() {
         console.log(response);
         if (response.status === 200) {
             showNoti("Đặt hàng thành công", "success");
+            navigate("/shop");
         } else {
             showNoti("Lỗi: không thể đặt hàng", "error");
         }

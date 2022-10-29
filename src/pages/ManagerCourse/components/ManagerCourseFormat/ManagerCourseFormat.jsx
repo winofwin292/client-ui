@@ -28,9 +28,7 @@ function ManagerCourseFormat(props) {
 
     const getData = useCallback(async () => {
         const response = await courseFormatApi.getAllByCourseId({
-            courseId: props.managerCourseFormat.id
-                ? props.managerCourseFormat.id
-                : undefined,
+            courseId: props.managerCourseFormat.id,
         });
 
         if (response.status === 200) {
