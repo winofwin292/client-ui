@@ -92,6 +92,7 @@ function ManagerCategoryDG() {
         const response = await categoryApi.getAllAdmin();
         if (response.status === 200) {
             setData(response.data);
+            console.log(response.data);
             setLoading(false);
             return true;
         } else {

@@ -41,13 +41,6 @@ export const removeAccents = (str) => {
         .replace(/Đ/g, "D");
 };
 
-export const alertType = {
-    SUCCESS: "success",
-    ERROR: "error",
-    WARNING: "warning",
-    INFO: "info",
-};
-
 export const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };

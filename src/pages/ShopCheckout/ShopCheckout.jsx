@@ -292,7 +292,7 @@ function ShopCheckout() {
                         <div>
                             <div>
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                                    Thông tin liên hệ
+                                    Thông tin liên hệ:
                                 </h2>
                                 {/* email */}
                                 <div className="mt-4">
@@ -300,7 +300,8 @@ function ShopCheckout() {
                                         htmlFor="email-address"
                                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                     >
-                                        Địa chỉ email
+                                        Địa chỉ email: (
+                                        <span className="text-red-500">*</span>)
                                     </label>
                                     <div className="mt-1">
                                         <input
@@ -309,6 +310,7 @@ function ShopCheckout() {
                                             name="email-address"
                                             autoComplete="email"
                                             className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                            placeholder="Nhập địa chỉ email"
                                             value={email}
                                             onChange={(e) =>
                                                 setEmail(e.target.value)
@@ -322,7 +324,8 @@ function ShopCheckout() {
                                         htmlFor="email-address"
                                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                     >
-                                        Số điện thoại
+                                        Số điện thoại:(
+                                        <span className="text-red-500">*</span>)
                                     </label>
                                     <div className="mt-1">
                                         <input
@@ -331,6 +334,7 @@ function ShopCheckout() {
                                             name="number-phone"
                                             autoComplete="tel"
                                             className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                            placeholder="Nhập số điện thoại"
                                             value={phoneNumber}
                                             onChange={(e) =>
                                                 setPhoneNumber(e.target.value)
@@ -343,7 +347,7 @@ function ShopCheckout() {
 
                             <div className="mt-10 border-t border-gray-200 dark:border-gray-500 pt-10">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                                    Thông tin nhận hàng
+                                    Thông tin nhận hàng:
                                 </h2>
 
                                 <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
@@ -353,7 +357,11 @@ function ShopCheckout() {
                                             htmlFor="last-name"
                                             className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                         >
-                                            Họ
+                                            Họ: (
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                            )
                                         </label>
                                         <div className="mt-1">
                                             <input
@@ -363,6 +371,7 @@ function ShopCheckout() {
                                                 // autoComplete="family-name"
                                                 autoComplete="given-name"
                                                 className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                                placeholder="Nhập họ, lót"
                                                 value={lastName}
                                                 onChange={(e) =>
                                                     setLastName(e.target.value)
@@ -376,7 +385,11 @@ function ShopCheckout() {
                                             htmlFor="first-name"
                                             className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                         >
-                                            Tên
+                                            Tên:(
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                            )
                                         </label>
                                         <div className="mt-1">
                                             <input
@@ -386,6 +399,7 @@ function ShopCheckout() {
                                                 // autoComplete="given-name"
                                                 autoComplete="family-name"
                                                 className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                                placeholder="Nhập tên"
                                                 value={firstName}
                                                 onChange={(e) =>
                                                     setFirstName(e.target.value)
@@ -399,7 +413,11 @@ function ShopCheckout() {
                                             htmlFor="address"
                                             className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                         >
-                                            Địa chỉ
+                                            Địa chỉ:(
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                            )
                                         </label>
                                         <div className="mt-1">
                                             <input
@@ -409,6 +427,7 @@ function ShopCheckout() {
                                                 // autoComplete="street-address"
                                                 autoComplete="address-level3"
                                                 className="form-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                                placeholder="Số nhà, đường, ấp, tổ, khu dân cư,..."
                                                 value={address}
                                                 onChange={(e) =>
                                                     setAddress(e.target.value)
@@ -422,7 +441,11 @@ function ShopCheckout() {
                                             htmlFor="city"
                                             className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                         >
-                                            Tỉnh / Thành phố
+                                            Tỉnh / Thành phố:(
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                            )
                                         </label>
                                         <div className="mt-1">
                                             <SelectProvince
@@ -442,7 +465,11 @@ function ShopCheckout() {
                                             htmlFor="district"
                                             className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                         >
-                                            Quận / Huyện
+                                            Quận / Huyện: (
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                            )
                                         </label>
                                         <div className="mt-1">
                                             <SelectDistrict
@@ -463,7 +490,11 @@ function ShopCheckout() {
                                             htmlFor="commune"
                                             className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                                         >
-                                            Phường / Xã
+                                            Phường / Xã:(
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                            )
                                         </label>
                                         <div className="mt-1">
                                             <SelectCommune
@@ -488,7 +519,8 @@ function ShopCheckout() {
                                     onChange={setSelectedDeliveryMethod}
                                 >
                                     <RadioGroup.Label className="text-lg font-medium text-gray-900 dark:text-white">
-                                        Phương thức vận chuyển
+                                        Phương thức vận chuyển:(
+                                        <span className="text-red-500">*</span>)
                                     </RadioGroup.Label>
 
                                     <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
@@ -598,7 +630,7 @@ function ShopCheckout() {
                         {/* Order summary */}
                         <div className="mt-10 lg:mt-0">
                             <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                                Tổng quan đơn hàng
+                                Tổng quan đơn hàng:
                             </h2>
 
                             <div className="mt-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-500 rounded-lg shadow-sm">

@@ -137,28 +137,7 @@ function ShopNav(props) {
                             </div>
                         </Listbox>
 
-                        <a
-                            href={"/shop/tracking"}
-                            className="mt-1 ml-1 bg-white hover:bg-gray-100 text-gray-800 py-2 px-4 border border-gray-200 rounded-full dark:bg-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
-                        >
-                            Tra cứu đơn hàng
-                        </a>
-
                         <div className="ml-auto flex items-center text-gray-700 dark:text-white">
-                            Search
-                            <div className="flex lg:ml-6">
-                                <a
-                                    href="/shop/"
-                                    className="p-2 text-gray-400 dark:text-white hover:text-gray-500"
-                                >
-                                    <span className="sr-only">Search</span>
-                                    <MagnifyingGlassIcon
-                                        className="h-6 w-6"
-                                        aria-hidden="true"
-                                    />
-                                </a>
-                            </div>
-                            {/* Cart */}
                             <div className="ml-4 flow-root lg:ml-6">
                                 <button
                                     onClick={handleOpenCart}
@@ -168,7 +147,7 @@ function ShopNav(props) {
                                         className="h-6 w-6 flex-shrink-0 text-gray-400 dark:text-white group-hover:text-gray-500"
                                         aria-hidden="true"
                                     />
-                                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 dark:text-white dark:group-hover:text-gray-200">
+                                    <span className="ml-2 mt-1 text-sm font-medium text-gray-700 group-hover:text-gray-800 dark:text-white dark:group-hover:text-gray-200">
                                         {props.countCart}
                                     </span>
                                     <span className="sr-only">
@@ -176,6 +155,15 @@ function ShopNav(props) {
                                     </span>
                                 </button>
                             </div>
+                            <div className="flex lg:ml-6">
+                                <a
+                                    href={"/shop/tracking"}
+                                    className="mt-1 bg-white hover:bg-gray-100 text-gray-800 py-2 px-4 border border-gray-200 rounded-full dark:bg-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+                                >
+                                    Tra cứu đơn hàng
+                                </a>
+                            </div>
+                            {/* Cart */}
                         </div>
                     </div>
                     {/* </div> */}

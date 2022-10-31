@@ -18,6 +18,7 @@ import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardN
 import Footer from "components/MDComponents/examples/Footer";
 
 import ManagePoster from "./components/ManagePoster/ManagePoster";
+import ManageReview from "./components/ManageReview/ManageReview";
 
 function ManageHomePage() {
     const [value, setValue] = useState("1");
@@ -45,20 +46,22 @@ function ManageHomePage() {
                                 <Tab
                                     icon={<PhoneIcon />}
                                     iconPosition="start"
-                                    label="end"
+                                    label="Đánh giá"
                                     value="1"
                                 />
                                 <Tab
                                     icon={<FavoriteIcon />}
                                     iconPosition="start"
-                                    label="end"
+                                    label="Hình ảnh"
                                     value="2"
                                 />
                             </TabList>
                             <TabPanel value="1">
+                                <ManageReview />
+                            </TabPanel>
+                            <TabPanel value="2">
                                 <ManagePoster />
                             </TabPanel>
-                            <TabPanel value="2">Item Two</TabPanel>
                         </TabContext>
                     </Grid>
                 </Grid>
