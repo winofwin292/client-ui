@@ -1,4 +1,6 @@
-import React, { memo } from "react";
+import React, { memo, useState, useCallback } from "react";
+
+import reviewApi from "api/Review/reviewApi";
 
 const reviews = [
     {
@@ -32,6 +34,19 @@ const reviews = [
 ];
 
 function ReviewSection() {
+    const [reviews, setReviews] = useState([]);
+
+    const getData = useCallback(async () => {
+        const response = await reviewApi.getAll();
+        if (response.status === 200) {
+            setReviews(response.data);
+        }
+    }, []);
+
+    useState(() => {
+        getData();
+    }, [getData]);
+
     return (
         <section className="bg-white dark:bg-gray-900">
             <div className="py-8 px-6 mx-auto max-w-screen-xl lg:py-4 lg:px-6 ">
@@ -51,19 +66,23 @@ function ReviewSection() {
                             className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700"
                         >
                             <img
-                                className="w-2/6 rounded-lg sm:rounded-none sm:rounded-l-lg"
-                                src={item.img}
-                                alt={item.descAvt}
+                                className="w-1/3 rounded-lg sm:rounded-none sm:rounded-l-lg"
+                                style={{ aspectRatio: "1 / 1" }}
+                                src={item.image_url}
+                                alt={item.name}
                             />
                             <div className="p-5">
                                 <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                                     {item.name}
                                 </h3>
                                 <span className="text-gray-500 dark:text-gray-400">
-                                    {item.course}
+                                    {item.info}
                                 </span>
-                                <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
-                                    &quot;{item.review}&quot;
+                                <p
+                                    className="line-clamp-3 mt-3 mb-4 font-light text-gray-500 dark:text-gray-400"
+                                    title={item.content}
+                                >
+                                    &quot;{item.content}&quot;
                                 </p>
                             </div>
                         </div>

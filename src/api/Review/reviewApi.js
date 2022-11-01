@@ -13,6 +13,10 @@ const reviewApi = {
         const url = "/review/add";
         return axiosClient.post(url, data);
     },
+    changeAvatar(data) {
+        const url = "/review/change-avatar";
+        return axiosClient.post(url, data);
+    },
     edit(data) {
         const url = "/review/edit";
         return axiosClient.post(url, data);

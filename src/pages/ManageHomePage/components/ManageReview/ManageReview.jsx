@@ -26,6 +26,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import TypeSpecimenIcon from "@mui/icons-material/TypeSpecimen";
+import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -195,7 +196,7 @@ function ManageReview() {
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {
-            showNoti("Lỗi: không cập nhật được dữ liệu", "error");
+            showNoti(response.data, "error");
         }
 
         getData();
@@ -288,30 +289,19 @@ function ManageReview() {
                             color="inherit"
                         />,
                         <GridActionsCellItem
-                            icon={<TypeSpecimenIcon />}
+                            icon={<ImageSearchIcon />}
                             label="Xem ảnh"
                             onClick={(e) =>
                                 setViewAvatar({
                                     open: true,
-                                    url: params.row.url,
+                                    url: params.row.image_url,
                                     name: params.row.name,
+                                    id: params.id,
+                                    key: params.row.aws_key,
                                 })
                             }
                             title="Xem ảnh đại diện"
                             color="inherit"
-                        />,
-                        <GridActionsCellItem
-                            icon={<TypeSpecimenIcon />}
-                            label="Cập nhật ảnh đại diện"
-                            // onClick={(e) =>
-                            //     setManagerCourseFormat({
-                            //         open: true,
-                            //         id: params.id,
-                            //         name: params.row.name,
-                            //     })
-                            // }
-                            title="Cập nhật ảnh đại diện của người đánh giá"
-                            showInMenu
                         />,
                     ];
                 },
@@ -342,7 +332,7 @@ function ManageReview() {
         <>
             <Grid item xs={12}>
                 <Card>
-                    <div style={{ height: 550, width: "100%" }}>
+                    <div style={{ height: 500, width: "100%" }}>
                         <ThemeProvider theme={darkMode ? themeD : theme}>
                             <DataGrid
                                 rows={data}
