@@ -73,11 +73,17 @@ function ViewAvatar(props) {
             open: false,
             url: "",
             name: "",
+            id: "",
+            key: "",
         });
     };
 
     useEffect(() => {
-        setImageUrl(props.viewAvatar.url);
+        setImageUrl(
+            props.viewAvatar.url
+                ? props.viewAvatar.url + `?${new Date().getTime()}`
+                : props.viewAvatar.url
+        );
     }, [props.viewAvatar.url]);
 
     useEffect(() => {
@@ -93,11 +99,11 @@ function ViewAvatar(props) {
             (file) => !allowedExtensions.exec(file.name)
         );
 
-        if (!checkResult) {
+        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 2)) {
             setUploadedFile(chosenFiles[0]);
             setSaveState(false);
         } else {
-            showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
+            showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 2MB", "error");
         }
         e.target.files = null;
         return;
@@ -128,10 +134,15 @@ function ViewAvatar(props) {
 
         const response = await reviewApi.changeAvatar(formData);
         if (response.status === 200) {
-            showNoti("Thêm hình ảnh thành công", "success");
+            setImageUrl("../../loading.png");
+            setTimeout(
+                () =>
+                    setImageUrl(response.data.url + `?${new Date().getTime()}`),
+                2000
+            );
             setSaveState(true);
-            setImageUrl(response.data.url);
             setUploadedFile(null);
+            showNoti("Sửa hình ảnh thành công", "success");
         } else {
             showNoti(response.data, "error");
         }
@@ -158,12 +169,12 @@ function ViewAvatar(props) {
                                 <ImageListItem>
                                     <img
                                         src={imageUrl}
-                                        alt=""
+                                        alt={imageUrl}
                                         style={{
                                             height: "300px",
                                             width: "300px",
                                         }}
-                                        loading="lazy"
+                                        // loading="lazy"
                                         onError={async ({ currentTarget }) => {
                                             currentTarget.onerror = null;
                                             const url = currentTarget.src;
@@ -189,7 +200,7 @@ function ViewAvatar(props) {
                         )}
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
-                            Cập nhật hình ảnh:
+                            Cập nhật hình ảnh: ( &lt;2MB )
                         </InputLabel>
                         <Button
                             variant="outlined"

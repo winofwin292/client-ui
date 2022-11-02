@@ -67,7 +67,11 @@ function ReviewSection() {
                         >
                             <img
                                 className="w-1/3 rounded-lg sm:rounded-none sm:rounded-l-lg"
-                                style={{ aspectRatio: "1 / 1" }}
+                                style={{
+                                    aspectRatio: "1 / 1",
+                                    objectFit: "cover",
+                                    objectPosition: "center",
+                                }}
                                 src={item.image_url}
                                 alt={item.name}
                             />

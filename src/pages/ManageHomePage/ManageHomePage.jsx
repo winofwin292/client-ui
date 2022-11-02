@@ -3,8 +3,8 @@ import React, { memo, useState, useEffect } from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
-import PhoneIcon from "@mui/icons-material/Phone";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
@@ -44,13 +44,13 @@ function ManageHomePage() {
                                 aria-label="icon position tabs example"
                             >
                                 <Tab
-                                    icon={<PhoneIcon />}
+                                    icon={<RateReviewIcon />}
                                     iconPosition="start"
                                     label="Đánh giá"
                                     value="1"
                                 />
                                 <Tab
-                                    icon={<FavoriteIcon />}
+                                    icon={<CollectionsIcon />}
                                     iconPosition="start"
                                     label="Hình ảnh"
                                     value="2"

@@ -89,15 +89,25 @@ function ProductList(props) {
                                 >
                                     <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80 ">
                                         <a href={"/shop/" + product.id}>
-                                            <img
-                                                src={
-                                                    product.ProductImage[0].url
-                                                }
-                                                alt={
-                                                    product.ProductImage[0].name
-                                                }
-                                                className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                                            />
+                                            {product.ProductImage.length > 0 ? (
+                                                <img
+                                                    src={
+                                                        product.ProductImage[0]
+                                                            .url
+                                                    }
+                                                    alt={
+                                                        product.ProductImage[0]
+                                                            .name
+                                                    }
+                                                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                                />
+                                            ) : (
+                                                <img
+                                                    src="./image-error.png"
+                                                    alt="error"
+                                                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                                />
+                                            )}
                                         </a>
                                     </div>
                                     <div className="mt-4 flex justify-between">

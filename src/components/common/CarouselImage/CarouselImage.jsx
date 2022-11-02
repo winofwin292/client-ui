@@ -26,6 +26,11 @@ function CarouselImage() {
                     data-bs-slide-to="2"
                     aria-label="Slide 1"
                 ></button>
+                <button
+                    data-bs-target="#carouselDarkVariant"
+                    data-bs-slide-to="3"
+                    aria-label="Slide 1"
+                ></button>
             </div>
 
             {/* <!-- Inner --> */}
@@ -55,6 +60,22 @@ function CarouselImage() {
                     />
                     <div className="carousel-caption hidden md:block absolute text-center">
                         <h5 className="text-xl">Second slide label</h5>
+                        <p>
+                            Some representative placeholder content for the
+                            second slide.
+                        </p>
+                    </div>
+                </div>
+
+                {/* <!-- Single item --> */}
+                <div className="carousel-item relative float-left w-full">
+                    <img
+                        src="https://i.imgur.com/qV5uuOz.jpg"
+                        className="block h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
+                        alt="Mountaintop"
+                    />
+                    <div className="carousel-caption hidden md:block absolute text-center">
+                        <h5 className="text-xl">f slide label</h5>
                         <p>
                             Some representative placeholder content for the
                             second slide.

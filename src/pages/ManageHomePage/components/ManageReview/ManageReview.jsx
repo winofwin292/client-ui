@@ -25,7 +25,6 @@ import CancelIcon from "@mui/icons-material/Close";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import TypeSpecimenIcon from "@mui/icons-material/TypeSpecimen";
 import ImageSearchIcon from "@mui/icons-material/ImageSearch";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -95,6 +94,8 @@ function ManageReview() {
         open: false,
         url: "",
         name: "",
+        id: "",
+        key: "",
     });
 
     const getData = useCallback(async () => {
@@ -166,7 +167,7 @@ function ManageReview() {
                 showNoti("Xóa thành công", "success");
                 getData();
             } else {
-                showNoti("Lỗi: không xóa được loại hàng", "error");
+                showNoti("Lỗi: không xóa được đánh giá", "error");
             }
         },
         [getData, showNoti]

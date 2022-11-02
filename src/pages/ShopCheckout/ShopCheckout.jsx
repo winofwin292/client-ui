@@ -102,18 +102,36 @@ function ShopCheckout() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!firstName || !lastName) {
-            showNoti("Vui lòng điền đầy đủ họ tên vào biểu mẫu", "error");
-            return;
-        }
 
-        if (!phoneNumber) {
-            showNoti("Số điện thoại chưa điền hoặc không hợp lệ", "error");
+        if (products.length <= 0) {
+            showNoti("Giỏ hàng trống, không thể thanh toán", "error");
             return;
         }
 
         if (!email) {
-            showNoti("Email chưa được điền hoặc không hợp lệ", "error");
+            showNoti("Email chưa được điền!", "error");
+            return;
+        }
+
+        if (!phoneNumber) {
+            showNoti("Số điện thoại chưa điền!", "error");
+            return;
+        }
+
+        if (!validator.isMobilePhone(phoneNumber, "vi-VN")) {
+            showNoti("Vui lòng nhập số điện thoại hợp lệ!", "error");
+            setPhoneNumber("");
+            return;
+        }
+
+        if (!validator.isEmail(email)) {
+            showNoti("Vui lòng nhập email hợp lệ!", "error");
+            setEmail("");
+            return;
+        }
+
+        if (!firstName || !lastName) {
+            showNoti("Vui lòng điền đầy đủ họ tên vào biểu mẫu", "error");
             return;
         }
 
@@ -134,18 +152,6 @@ function ShopCheckout() {
 
         if (!commune || commune === "-1") {
             showNoti("Vui lòng chọn xã/phường", "error");
-            return;
-        }
-
-        if (!validator.isMobilePhone(phoneNumber, "vi-VN")) {
-            showNoti("Vui lòng nhập số điện thoại hợp lệ!", "error");
-            setPhoneNumber("");
-            return;
-        }
-
-        if (!validator.isEmail(email)) {
-            showNoti("Vui lòng nhập email hợp lệ!", "error");
-            setEmail("");
             return;
         }
 
@@ -175,6 +181,12 @@ function ShopCheckout() {
         console.log(response);
         if (response.status === 200) {
             showNoti("Đặt hàng thành công", "success");
+            localStorage.setItem(
+                "myCart",
+                JSON.stringify({
+                    cart: [],
+                })
+            );
             navigate("/shop");
         } else {
             showNoti("Lỗi: không thể đặt hàng", "error");

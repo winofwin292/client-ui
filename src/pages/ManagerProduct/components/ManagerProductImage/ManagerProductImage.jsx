@@ -16,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import SaveIcon from "@mui/icons-material/Save";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import { useSnackbar } from "notistack";
 import productImageApi from "api/ProductImage/productImageApi";
@@ -94,6 +95,8 @@ function ManagerProductImage(props) {
     const handleClose = (e, reason) => {
         if (reason && reason === "backdropClick") return;
         setImages([]);
+        setUploadedFiles([]);
+        setFileLimit(false);
         props.setManagerProductImage({
             open: false,
             id: "",
@@ -122,6 +125,7 @@ function ManagerProductImage(props) {
         });
         if (!limitExceeded) {
             setUploadedFiles(uploaded);
+            setSaveState(false);
         }
     };
 
@@ -134,7 +138,6 @@ function ManagerProductImage(props) {
 
         if (!checkResult) {
             handleUploadFiles(chosenFiles);
-            setSaveState(false);
         } else {
             showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
             return;
@@ -168,6 +171,7 @@ function ManagerProductImage(props) {
             getData();
             showNoti("Thêm hình ảnh thành công", "success");
             setUploadedFiles([]);
+            setFileLimit(false);
             setClearFile(Date.now());
         } else {
             showNoti(response.data, "error");
@@ -200,61 +204,77 @@ function ManagerProductImage(props) {
                             Đang quản trị hình ảnh của sản phẩm:{" "}
                             <b>{props.managerProductImage.name}</b>{" "}
                         </DialogContentText>
-                        <ImageList
-                            // sx={{ width: 500, height: 450 }}
-                            sx={{ mt: 1 }}
-                            cols={3}
-                            rowHeight={164}
-                        >
-                            {images.map((image, index) => (
-                                <ImageListItem key={index}>
-                                    <img
-                                        src={image.url}
-                                        alt=""
-                                        style={{
-                                            height: "164px",
-                                            width: "164px",
-                                        }}
-                                        loading="lazy"
-                                        onError={async ({ currentTarget }) => {
-                                            currentTarget.onerror = null;
-                                            const url = currentTarget.src;
-                                            await sleep(3000);
-                                            currentTarget.src = url;
-                                        }}
-                                    />
-                                    <ImageListItemBar
-                                        sx={{
-                                            background:
-                                                "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
-                                                "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
-                                        }}
-                                        title={image.name}
-                                        position="top"
-                                        actionIcon={
-                                            <IconButton
-                                                sx={{ color: "white" }}
-                                                aria-label={`star ${image.name}`}
-                                                onClick={(e) =>
-                                                    handleDelete(
-                                                        e,
-                                                        image.id,
-                                                        image.aws_key
-                                                    )
+                        {images.length > 0 ? (
+                            <>
+                                <ImageList
+                                    // sx={{ width: 500, height: 450 }}
+                                    sx={{ mt: 1 }}
+                                    cols={3}
+                                    rowHeight={164}
+                                >
+                                    {images.map((image, index) => (
+                                        <ImageListItem key={index}>
+                                            <img
+                                                src={image.url}
+                                                alt=""
+                                                style={{
+                                                    height: "164px",
+                                                    width: "164px",
+                                                }}
+                                                loading="lazy"
+                                                onError={async ({
+                                                    currentTarget,
+                                                }) => {
+                                                    currentTarget.onerror =
+                                                        null;
+                                                    const url =
+                                                        currentTarget.src;
+                                                    await sleep(3000);
+                                                    currentTarget.src = url;
+                                                }}
+                                            />
+                                            <ImageListItemBar
+                                                sx={{
+                                                    background:
+                                                        "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
+                                                        "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+                                                }}
+                                                title={image.name}
+                                                position="top"
+                                                actionIcon={
+                                                    <IconButton
+                                                        sx={{ color: "white" }}
+                                                        aria-label={`star ${image.name}`}
+                                                        onClick={(e) =>
+                                                            handleDelete(
+                                                                e,
+                                                                image.id,
+                                                                image.aws_key
+                                                            )
+                                                        }
+                                                    >
+                                                        <ClearIcon
+                                                            style={{
+                                                                color: "white",
+                                                            }}
+                                                        />
+                                                    </IconButton>
                                                 }
-                                            >
-                                                <ClearIcon
-                                                    style={{ color: "white" }}
-                                                />
-                                            </IconButton>
-                                        }
-                                        actionPosition="right"
-                                    />
-                                </ImageListItem>
-                            ))}
-                        </ImageList>
+                                                actionPosition="right"
+                                            />
+                                        </ImageListItem>
+                                    ))}
+                                </ImageList>
+                            </>
+                        ) : (
+                            <DialogContentText id="alert-dialog-description">
+                                Không có hình ảnh cho sản phẩm này, vui lòng tải
+                                ảnh lên để có thể quản trị.
+                            </DialogContentText>
+                        )}
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
+                            <AddCircleOutlineIcon sx={{ mr: 1 }} />
                             Thêm mới hình ảnh: (tối đa 6 ảnh, có thể thêm số
                             lượng ảnh sau khi <br />
                             tạo sản phẩm ở công cụ Quản lý ảnh sản phẩm)
