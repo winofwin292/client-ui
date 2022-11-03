@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
@@ -17,8 +18,9 @@ import DashboardLayout from "components/MDComponents/examples/LayoutContainers/D
 import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardNavbar";
 import Footer from "components/MDComponents/examples/Footer";
 
-import ManagePoster from "./components/ManagePoster/ManagePoster";
-import ManageReview from "./components/ManageReview/ManageReview";
+import ManagerPoster from "./components/ManagerPoster/ManagerPoster";
+import ManagerReview from "./components/ManagerReview/ManagerReview";
+import ManagerShowCourse from "./components/ManagerShowCourse/ManagerShowCourse";
 
 function ManageHomePage() {
     const [value, setValue] = useState("1");
@@ -55,12 +57,21 @@ function ManageHomePage() {
                                     label="Hình ảnh"
                                     value="2"
                                 />
+                                <Tab
+                                    icon={<LibraryBooksIcon />}
+                                    iconPosition="start"
+                                    label="Khóa học"
+                                    value="3"
+                                />
                             </TabList>
                             <TabPanel value="1">
-                                <ManageReview />
+                                <ManagerReview />
                             </TabPanel>
                             <TabPanel value="2">
-                                <ManagePoster />
+                                <ManagerPoster />
+                            </TabPanel>
+                            <TabPanel value="3">
+                                <ManagerShowCourse />
                             </TabPanel>
                         </TabContext>
                     </Grid>

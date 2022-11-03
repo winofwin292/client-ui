@@ -41,7 +41,7 @@ function Home() {
             <TopNav />
             <div className="relative overflow-hidden bg-white dark:bg-gray-900">
                 <div className="mx-auto max-w-7xl bg-white dark:bg-gray-900">
-                    <div className="relative bg-white dark:bg-gray-900 pb-8 sm:pb-8 md:pb-10 lg:w-full lg:max-w-2xl lg:pb-12 xl:pb-16">
+                    <div className="relative bg-white dark:bg-gray-900 pb-8 sm:pb-8 md:pb-10 lg:w-full lg:max-w-2xl lg:pb-12 xl:pb-6">
                         <main className="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                             <div className="sm:text-center lg:text-left">
                                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">

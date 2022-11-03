@@ -25,7 +25,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 import { sleep } from "utils";
 
-import reviewApi from "api/Review/reviewApi";
+import posterApi from "api/Poster/posterApi";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -34,7 +34,7 @@ const themeD = createTheme({
     },
 });
 
-function ViewAvatar(props) {
+function ViewImage(props) {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -69,7 +69,7 @@ function ViewAvatar(props) {
         setImageUrl("");
         setUploadedFile(null);
         setSaveState(true);
-        props.setViewAvatar({
+        props.setViewImage({
             open: false,
             url: "",
             name: "",
@@ -80,11 +80,11 @@ function ViewAvatar(props) {
 
     useEffect(() => {
         setImageUrl(
-            props.viewAvatar.url
-                ? props.viewAvatar.url + `?${new Date().getTime()}`
-                : props.viewAvatar.url
+            props.viewImage.url
+                ? props.viewImage.url + `?${new Date().getTime()}`
+                : props.viewImage.url
         );
-    }, [props.viewAvatar.url]);
+    }, [props.viewImage.url]);
 
     useEffect(() => {
         if (!uploadedFile) {
@@ -99,11 +99,11 @@ function ViewAvatar(props) {
             (file) => !allowedExtensions.exec(file.name)
         );
 
-        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 2)) {
+        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 5)) {
             setUploadedFile(chosenFiles[0]);
             setSaveState(false);
         } else {
-            showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 2MB", "error");
+            showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB", "error");
         }
         e.target.files = null;
         return;
@@ -123,8 +123,8 @@ function ViewAvatar(props) {
         }
 
         const data = {
-            reviewId: props.viewAvatar.id,
-            aws_key: props.viewAvatar.key,
+            reviewId: props.viewImage.id,
+            aws_key: props.viewImage.key,
         };
 
         let formData = new FormData();
@@ -132,7 +132,7 @@ function ViewAvatar(props) {
         formData.append("data", JSON.stringify(data));
         formData.append("file", uploadedFile);
 
-        const response = await reviewApi.changeAvatar(formData);
+        const response = await posterApi.changeImage(formData);
         if (response.status === 200) {
             setImageUrl("../../loading.png");
             setTimeout(
@@ -152,13 +152,13 @@ function ViewAvatar(props) {
         <div>
             <ThemeProvider theme={darkMode ? themeD : theme}>
                 <Dialog
-                    open={props.viewAvatar.open}
+                    open={props.viewImage.open}
                     onClose={handleClose}
                     disableEscapeKeyDown
                     fullWidth
                     maxWidth="sm"
                 >
-                    <DialogTitle>Avatar</DialogTitle>
+                    <DialogTitle>Poster</DialogTitle>
                     <DialogContent>
                         {imageUrl ? (
                             <ImageList
@@ -188,19 +188,19 @@ function ViewAvatar(props) {
                                                 "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
                                                 "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
                                         }}
-                                        title={props.viewAvatar.name}
                                         position="top"
                                     />
                                 </ImageListItem>
                             </ImageList>
                         ) : (
                             <DialogContentText id="alert-dialog-description">
-                                Không có ảnh đại diện
+                                Không có ảnh
                             </DialogContentText>
                         )}
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
-                            Cập nhật hình ảnh: ( &lt;2MB )
+                            Cập nhật hình ảnh (hiển thị tốt nhất với ảnh tỷ lệ{" "}
+                            <b>16:9</b>): ( &lt;5MB )
                         </InputLabel>
                         <Button
                             variant="outlined"
@@ -282,4 +282,4 @@ function ViewAvatar(props) {
         </div>
     );
 }
-export default memo(ViewAvatar);
+export default memo(ViewImage);

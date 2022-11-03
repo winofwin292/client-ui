@@ -19,13 +19,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import { useSnackbar } from "notistack";
 
-import reviewApi from "api/Review/reviewApi";
+import posterApi from "api/Poster/posterApi";
 
-function AddReview(props) {
+function AddPoster(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const [name, setName] = useState("");
-    const [info, setInfo] = useState("");
     const [content, setContent] = useState("");
 
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -51,8 +49,6 @@ function AddReview(props) {
     );
 
     const setDefaultState = () => {
-        setName("");
-        setInfo("");
         setContent("");
         setUploadedFile(null);
     };
@@ -70,26 +66,16 @@ function AddReview(props) {
             (file) => !allowedExtensions.exec(file.name)
         );
 
-        if (!checkResult) {
+        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 5)) {
             setUploadedFile(chosenFiles[0]);
         } else {
-            showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
+            showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB", "error");
             return;
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!name) {
-            showNoti("Vui lòng nhập tên của người đánh giá", "error");
-            return;
-        }
-
-        if (!info) {
-            showNoti("Vui lòng nhập thông tin của người đánh giá", "error");
-            return;
-        }
 
         if (!content) {
             showNoti("Vui lòng nhập nội dung đánh giá", "error");
@@ -102,8 +88,6 @@ function AddReview(props) {
         }
 
         const data = {
-            name,
-            info,
             content,
         };
 
@@ -112,12 +96,12 @@ function AddReview(props) {
         formData.append("data", JSON.stringify(data));
         formData.append("file", uploadedFile);
 
-        const response = await reviewApi.add(formData);
+        const response = await posterApi.add(formData);
         if (response.status === 200) {
             setDefaultState();
             props.getData();
             props.setOpen(false);
-            showNoti("Thêm đánh giá thành công", "success");
+            showNoti("Thêm thành công", "success");
         } else {
             showNoti(response.data, "error");
         }
@@ -133,48 +117,29 @@ function AddReview(props) {
                 open={props.open}
                 onClose={handleClose}
                 disableEscapeKeyDown
+                fullWidth
+                maxWidth="sm"
             >
-                <DialogTitle>Thêm mới sản phẩm</DialogTitle>
+                <DialogTitle>Thêm mới</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Tên người đánh giá"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="info"
-                        label="Thông tin"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        placeholder="vd:Học viên khóa n, Nhân viên văn phòng, Sinh viên,..."
-                        value={info}
-                        onChange={(e) => setInfo(e.target.value)}
-                    />
-
                     <TextField
                         margin="dense"
                         id="content"
-                        label="Đánh giá"
+                        label="Nội dung"
                         type="text"
                         fullWidth
                         multiline
                         rows={4}
                         variant="standard"
+                        inputProps={{ maxLength: 200 }}
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                     />
 
                     {/* upload */}
                     <InputLabel sx={{ mt: 1 }} id="type-label">
-                        Ảnh người đánh giá:
+                        Ảnh cho poster (hiển thị tốt nhất với ảnh tỷ lệ{" "}
+                        <b>16:9</b>): ( &lt;5MB )
                     </InputLabel>
                     <Button
                         variant="outlined"
@@ -240,4 +205,4 @@ function AddReview(props) {
         </div>
     );
 }
-export default memo(AddReview);
+export default memo(AddPoster);

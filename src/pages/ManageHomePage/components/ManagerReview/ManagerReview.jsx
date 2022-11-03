@@ -81,7 +81,7 @@ EditToolbar.propTypes = {
     handleRefresh: PropTypes.func.isRequired,
 };
 
-function ManageReview() {
+function ManagerReview() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -216,7 +216,7 @@ function ManageReview() {
             {
                 field: "info",
                 headerName: "Vai trò/Chức vụ",
-                width: 150,
+                width: 180,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
@@ -379,4 +379,4 @@ function ManageReview() {
     );
 }
 
-export default memo(ManageReview);
+export default memo(ManagerReview);

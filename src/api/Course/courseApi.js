@@ -9,6 +9,14 @@ const courseApi = {
         const url = "/course/get-all-admin";
         return axiosClient.get(url);
     },
+    getAllLanding() {
+        const url = "/course/get-all-landing";
+        return axiosClient.get(url);
+    },
+    getAllLandingAdmin() {
+        const url = "/course/get-all-landing-admin";
+        return axiosClient.get(url);
+    },
     getCourse(data) {
         const url = "/course/get-course";
         return axiosClient.post(url, data);
@@ -27,6 +35,10 @@ const courseApi = {
     },
     deleteCourse(data) {
         const url = "/course/delete";
+        return axiosClient.post(url, data);
+    },
+    changeShowLanding(data) {
+        const url = "/course/change-show-landing";
         return axiosClient.post(url, data);
     },
 };

@@ -1,37 +1,6 @@
-import React, { memo, useState, useCallback } from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 
 import reviewApi from "api/Review/reviewApi";
-
-const reviews = [
-    {
-        name: "Bonnie Green",
-        course: "Học viên khóa 1",
-        review: "Học hỏi được rất nhiều kỹ năng từ khóa học. Làm quen thêm được nhiều bạn mới.",
-        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png",
-        descAvt: "Bonnie Green",
-    },
-    {
-        name: "Jese Leos",
-        course: "Học viên khóa 2",
-        review: "Giáo viên thân thiện, nhiệt tình. Trang thiết bị đầy đủ để phục vụ cho việc học tập.",
-        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png",
-        descAvt: "Jese Leos",
-    },
-    {
-        name: "Michael Gouch",
-        course: "Học viên khóa 3",
-        review: "Học được rất nhiều kỹ năng từ khóa học, không chỉ riêng ngoại ngữ. Môi trường tốt.",
-        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png",
-        descAvt: "Michael Gouch",
-    },
-    {
-        name: "Sofia Mcguire",
-        course: "Học viên khóa 4",
-        review: "Cảm thấy rất tự tin vào khả năng ngoại ngữ của bản thân sau khi hoàn tất khóa học.",
-        img: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png",
-        descAvt: "Sofia Mcguire",
-    },
-];
 
 function ReviewSection() {
     const [reviews, setReviews] = useState([]);
@@ -43,7 +12,7 @@ function ReviewSection() {
         }
     }, []);
 
-    useState(() => {
+    useEffect(() => {
         getData();
     }, [getData]);
 
