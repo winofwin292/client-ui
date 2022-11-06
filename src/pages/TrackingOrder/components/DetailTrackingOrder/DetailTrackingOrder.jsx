@@ -62,9 +62,7 @@ function OrderDetail(props) {
                 {
                     id: "DELIVERY",
                     label: "Phí vận chuyển",
-                    price: formatterVND.format(
-                        parseInt(temp.DeliveryMethods.price)
-                    ),
+                    price: formatterVND.format(parseInt(temp.expected_fee)),
                 },
                 {
                     id: "TOTAL",
@@ -254,11 +252,24 @@ function OrderDetail(props) {
                         {orderInfo.last_name + " " + orderInfo.first_name}
                         <br />- Điện thoại: {orderInfo.phone}
                         <br />- Email: {orderInfo.email}
-                        <br />- Địa chỉ: {orderInfo.address}
-                        <br />- Đơn vị vận chuyển:{" "}
-                        {orderInfo.DeliveryMethods.name}
+                        <br />- Địa chỉ: {orderInfo.address}, {orderInfo.ward},{" "}
+                        {orderInfo.district}, {orderInfo.province}
                         <br />- Trạng thái đơn hàng:{" "}
                         <b>{orderInfo.OrderStatus.name}</b>
+                        <br />- Mã GHN:{" "}
+                        <b>
+                            {orderInfo.order_code
+                                ? orderInfo.order_code
+                                : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
+                        </b>
+                        <br />- Ngày giao hàng dự kiến:{" "}
+                        <b>
+                            {orderInfo.expected_delivery_time
+                                ? new Date(
+                                      orderInfo.expected_delivery_time
+                                  ).toLocaleDateString("en-GB")
+                                : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
+                        </b>
                     </DialogContentText>
                 ) : (
                     ""

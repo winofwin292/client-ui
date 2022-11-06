@@ -203,7 +203,7 @@ function ManagerProductDG() {
         } else {
             showNoti("Lỗi: không cập nhật được dữ liệu", "error");
         }
-        // setData(data.map((row) => (row.id === newRow.id ? updatedRow : row)));
+
         getData();
         return updatedRow;
     };
@@ -212,15 +212,15 @@ function ManagerProductDG() {
         () => [
             {
                 field: "name",
-                headerName: "Tên khóa học",
-                width: 180,
+                headerName: "Tên sản phẩm",
+                width: 150,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
             {
                 field: "price",
                 headerName: "Giá",
-                width: 100,
+                width: 80,
                 type: "number",
                 renderCell: (params) => {
                     if (params.value == null) {
@@ -234,14 +234,14 @@ function ManagerProductDG() {
             {
                 field: "author",
                 headerName: "Tác giả",
-                width: 150,
+                width: 130,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
             {
                 field: "publishing_year",
-                headerName: "Năm xuất bản",
-                width: 120,
+                headerName: "Năm XB",
+                width: 70,
                 type: "number",
                 renderCell: (params) => {
                     if (params.value == null) {
@@ -255,8 +255,64 @@ function ManagerProductDG() {
             {
                 field: "description",
                 headerName: "Mô tả",
-                width: 300,
+                width: 220,
                 renderCell: RenderCellExpand,
+                editable: true,
+            },
+            {
+                field: "weight",
+                headerName: "Khối lượng",
+                width: 80,
+                type: "number",
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+
+                    return params.value.toString() + "g";
+                },
+                editable: true,
+            },
+            {
+                field: "length",
+                headerName: "Cao",
+                width: 60,
+                type: "number",
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+
+                    return params.value.toString() + "cm";
+                },
+                editable: true,
+            },
+            {
+                field: "width",
+                headerName: "Rộng",
+                width: 60,
+                type: "number",
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+
+                    return params.value.toString() + "cm";
+                },
+                editable: true,
+            },
+            {
+                field: "height",
+                headerName: "Dày",
+                width: 60,
+                type: "number",
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+
+                    return params.value.toString() + "cm";
+                },
                 editable: true,
             },
             {
@@ -279,7 +335,7 @@ function ManagerProductDG() {
             {
                 field: "is_show",
                 headerName: "Hiện/ẩn",
-                width: 100,
+                width: 80,
                 type: "singleSelect",
                 valueOptions: [
                     { value: true, label: "Hiện" },

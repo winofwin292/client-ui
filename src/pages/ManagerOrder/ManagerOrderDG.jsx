@@ -21,6 +21,9 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import PrintIcon from "@mui/icons-material/Print";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -29,7 +32,6 @@ import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
 import OrderDetail from "./components/OrderDetail/OrderDetail";
-import ChangeState from "./components/ChangeState/ChangeState";
 import orderApi from "api/Order/orderApi";
 
 import { formatterVND } from "utils";
@@ -77,13 +79,6 @@ function ManagerOrderDG() {
         id: null,
     });
 
-    const [orderStatus, setOrderStatus] = useState({
-        open: false,
-        id: null,
-        orderStatusId: "",
-        info: "",
-    });
-
     const getData = useCallback(async () => {
         const response = await orderApi.getAllAdmin();
         if (response.status === 200) {
@@ -115,6 +110,43 @@ function ManagerOrderDG() {
         [closeSnackbar, enqueueSnackbar]
     );
 
+    const handleChangeState = useCallback(
+        async (e, id, state) => {
+            // e.preventDefault();
+
+            const response = await orderApi.changeStatus({
+                orderId: id,
+                orderStatusId: state,
+            });
+
+            if (response.status === 200) {
+                getData();
+                showNoti("Cập nhật thành công", "success");
+            } else {
+                showNoti(response.data, "error");
+            }
+        },
+        [getData, showNoti]
+    );
+
+    const handleTransfer = useCallback(
+        async (e, id) => {
+            const response = await orderApi.transferToGHN({
+                id: id,
+            });
+
+            if (response.status === 200) {
+                // getData();
+                showNoti("Cập nhật thành công", "success");
+            } else {
+                showNoti(response.data, "error");
+            }
+        },
+        [getData, showNoti]
+    );
+
+    const handlePrint = useCallback(async (e, id) => {}, []);
+
     const columns = useMemo(
         () => [
             {
@@ -130,7 +162,7 @@ function ManagerOrderDG() {
                 renderCell: RenderCellExpand,
             },
             {
-                field: "address",
+                field: "full_address",
                 headerName: "Địa chỉ",
                 width: 230,
                 renderCell: RenderCellExpand,
@@ -161,14 +193,16 @@ function ManagerOrderDG() {
                 },
             },
             {
-                field: "DeliveryMethods",
-                headerName: "Đơn vị vận chuyển",
+                field: "expected_delivery_time",
+                headerName: "Ngày giao hàng dự kiến",
                 width: 150,
                 renderCell: (params) => {
                     if (params.value == null) {
                         return "";
                     }
-                    return params.value.name;
+                    return new Date(params.value.name).toLocaleDateString(
+                        "en-GB"
+                    );
                 },
             },
 
@@ -205,30 +239,70 @@ function ManagerOrderDG() {
                         />,
                         <GridActionsCellItem
                             icon={<ShoppingCartCheckoutIcon />}
-                            label={"Chuyển trạng thái"}
-                            onClick={(e) =>
-                                setOrderStatus({
-                                    open: true,
-                                    id: params.id,
-                                    orderStatusId: parseInt(
-                                        params.row.OrderStatus.id
-                                    ),
-                                    info:
-                                        params.row.last_name +
-                                        " " +
-                                        params.row.first_name +
-                                        " - " +
-                                        params.row.phone,
-                                })
-                            }
-                            title={"Chuyển trạng thái đơn hàng"}
+                            label={"Xác nhận đơn hàng"}
+                            onClick={(e) => handleChangeState(e, params.id, 2)}
+                            title={"Xác nhận đơn hàng"}
                             showInMenu
+                            sx={
+                                params.row.OrderStatus.id === 1
+                                    ? { display: "block" }
+                                    : { display: "none" }
+                            }
+                        />,
+                        <GridActionsCellItem
+                            icon={<ShoppingCartCheckoutIcon />}
+                            label={"Chuyển đơn hàng cho vận chuyển"}
+                            onClick={(e) => handleTransfer(e, params.id)}
+                            title={"Chuyển đơn hàng cho vận chuyển"}
+                            showInMenu
+                            sx={
+                                params.row.OrderStatus.id === 2
+                                    ? { display: "block" }
+                                    : { display: "none" }
+                            }
+                        />,
+                        <GridActionsCellItem
+                            icon={<PrintIcon />}
+                            label={"In phiếu của đơn vị vận chuyển"}
+                            onClick={(e) => handlePrint(e, params.id)}
+                            title={"In phiếu của đơn vị vận chuyển"}
+                            showInMenu
+                            sx={
+                                params.row.OrderStatus.id === 3
+                                    ? { display: "block" }
+                                    : { display: "none" }
+                            }
+                        />,
+                        <GridActionsCellItem
+                            icon={<PriceCheckIcon />}
+                            label={"Đánh dấu đã hoàn thành"}
+                            onClick={(e) => handleChangeState(e, params.id, 4)}
+                            title={"Đánh dấu đã hoàn thành"}
+                            showInMenu
+                            sx={
+                                params.row.OrderStatus.id === 3
+                                    ? { display: "block" }
+                                    : { display: "none" }
+                            }
+                        />,
+                        <GridActionsCellItem
+                            icon={<RemoveShoppingCartIcon />}
+                            label={"Hủy đơn hàng"}
+                            onClick={(e) => handleChangeState(e, params.id, 5)}
+                            title={"Hủy đơn hàng"}
+                            showInMenu
+                            sx={
+                                params.row.OrderStatus.id === 1 ||
+                                params.row.OrderStatus.id === 2
+                                    ? { display: "block" }
+                                    : { display: "none" }
+                            }
                         />,
                     ];
                 },
             },
         ],
-        []
+        [handleChangeState, handlePrint, handleTransfer]
     );
 
     useEffect(() => {
@@ -276,11 +350,6 @@ function ManagerOrderDG() {
                         <OrderDetail
                             orderDetail={orderDetail}
                             setOrderDetail={setOrderDetail}
-                        />
-                        <ChangeState
-                            orderStatus={orderStatus}
-                            setOrderStatus={setOrderStatus}
-                            getData={getData}
                         />
                     </div>
                 </Card>

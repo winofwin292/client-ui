@@ -34,6 +34,10 @@ function AddProduct(props) {
     const [price, setPrice] = useState(0);
     const [author, setAuthor] = useState("");
     const [publishingYear, setPublishingYear] = useState("");
+    const [weight, setWeight] = useState(0);
+    const [length, setLength] = useState(0);
+    const [width, setWidth] = useState(0);
+    const [height, setHeight] = useState(0);
     const [categoryId, setCategoryId] = useState("");
     const [description, setDescription] = useState("");
 
@@ -69,6 +73,10 @@ function AddProduct(props) {
         setDescription("");
         setUploadedFiles([]);
         setFileLimit(false);
+        setWeight(0);
+        setLength(0);
+        setWidth(0);
+        setHeight(0);
     };
 
     const getDataSelect = useCallback(async () => {
@@ -158,6 +166,35 @@ function AddProduct(props) {
             return;
         }
 
+        if (weight <= 0 && weight > 30000) {
+            showNoti(
+                "Vui lòng nhập khối lượng sản phẩm (nhỏ hơn 30000g)",
+                "error"
+            );
+            return;
+        }
+
+        if (length <= 0 && length > 150) {
+            showNoti(
+                "Vui lòng nhập chiều dài sản phẩm (nhỏ hơn 150cm)",
+                "error"
+            );
+            return;
+        }
+
+        if (width <= 0 && width > 150) {
+            showNoti(
+                "Vui lòng nhập chiều dài sản phẩm (nhỏ hơn 150cm)",
+                "error"
+            );
+            return;
+        }
+
+        if (height <= 0 && height > 150) {
+            showNoti("Vui lòng nhập độ dày sản phẩm (nhỏ hơn 150cm)", "error");
+            return;
+        }
+
         const data = {
             name,
             price: parseInt(price),
@@ -165,6 +202,10 @@ function AddProduct(props) {
             publishing_year: parseInt(publishingYear),
             description,
             categoryId,
+            weight,
+            length,
+            width,
+            height,
         };
 
         let formData = new FormData();
@@ -273,6 +314,54 @@ function AddProduct(props) {
                         variant="standard"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                    />
+
+                    <TextField
+                        margin="dense"
+                        id="weight"
+                        label="Khối lượng (gram) (<=30000g)"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                        inputProps={{ min: "0", max: "30000" }}
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                    />
+
+                    <TextField
+                        margin="dense"
+                        id="length"
+                        label="Chiều dài (cm) (<=150cm)"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                        inputProps={{ min: "0", max: "150" }}
+                        value={length}
+                        onChange={(e) => setLength(e.target.value)}
+                    />
+
+                    <TextField
+                        margin="dense"
+                        id="width"
+                        label="Chiều rộng (cm) (<=150cm)"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                        inputProps={{ min: "0", max: "150" }}
+                        value={width}
+                        onChange={(e) => setWidth(e.target.value)}
+                    />
+
+                    <TextField
+                        margin="dense"
+                        id="height"
+                        label="Độ dày (cm) (<=150cm)"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                        inputProps={{ min: "0", max: "150" }}
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
                     />
 
                     {/* upload */}

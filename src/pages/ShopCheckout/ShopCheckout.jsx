@@ -5,39 +5,33 @@ import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import { useSnackbar } from "notistack";
 import {
     SelectProvince,
     SelectDistrict,
     SelectCommune,
-    getCommunePathWithType,
+    getProvinceNameWithType,
+    getDistrictNameWithType,
+    getCommuneNameWithType,
 } from "vn-ad";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 
-import { TrashIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import validator from "validator";
 
 import { formatterVND } from "utils";
 
-import deliveryMethodApi from "api/DeliveryMethod/deliveryMethodApi";
 import orderApi from "api/Order/orderApi";
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
 
 function ShopCheckout() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [deliveryMethods, setDeliveryMethods] = useState([]);
-    const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState({
-        id: -1,
-        name: "",
-        turnaround_noi_thanh: "",
-        turnaround_ngoai_tinh: "",
-        price: "0",
-    });
+    const [shippingFee, setShippingFee] = useState(40000);
+    const [totalWeight, setTotalWeight] = useState(0);
     const [products, setProducts] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
     const [tax, setTax] = useState(0);
@@ -51,6 +45,8 @@ function ShopCheckout() {
     const [city, setCity] = useState("-1");
     const [district, setDistrict] = useState("-1");
     const [commune, setCommune] = useState("-1");
+
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -71,18 +67,8 @@ function ShopCheckout() {
         });
     };
 
-    const getData = useCallback(async () => {
-        const response = await deliveryMethodApi.getAll();
-        if (response.status === 200) {
-            setDeliveryMethods(response.data);
-        } else {
-            setDeliveryMethods([]);
-        }
-    }, []);
-
     useEffect(() => {
         document.title = "Thanh toán";
-        getData();
         const currCart = JSON.parse(localStorage.getItem("myCart")) || {
             cart: [],
         };
@@ -90,15 +76,24 @@ function ShopCheckout() {
             (acc, o) => acc + o.price * o.quantity,
             0
         );
+        const sumWeight = currCart.cart.reduce(
+            (acc, o) => acc + o.weight * o.quantity,
+            0
+        );
+        const extraFee = Math.ceil((sumWeight - 500) / 500) * 4000;
+        setTotalWeight(sumWeight);
         setProducts(currCart.cart);
         setSubtotal(sumPrice);
         setTax(sumPrice / 10);
-        setTotal(sumPrice + sumPrice / 10 + 30000);
-    }, [getData]);
+        setTotal(sumPrice + sumPrice / 10 + 40000 + extraFee);
+        setShippingFee((prev) => prev + extraFee);
+    }, []);
 
     useEffect(() => {
-        setTotal(subtotal + tax + parseInt(selectedDeliveryMethod.price));
-    }, [selectedDeliveryMethod, subtotal, tax]);
+        const extraFee = Math.ceil((totalWeight - 500) / 500) * 4000;
+        setShippingFee(40000 + extraFee);
+        setTotal(subtotal + tax + 40000 + extraFee);
+    }, [subtotal, tax, shippingFee, totalWeight]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -155,31 +150,34 @@ function ShopCheckout() {
             return;
         }
 
-        if (selectedDeliveryMethod.id === -1) {
-            showNoti("Vui lòng chọn phương thức vận chuyển", "error");
-            return;
-        }
+        const productList = products.map((item) => ({
+            id: item.id,
+            price: item.price,
+            quantity: item.quantity,
+        }));
 
         const data = {
             first_name: firstName,
             last_name: lastName,
             phone: phoneNumber,
             email,
-            address: address + ", " + getCommunePathWithType(commune),
+            address: address,
             sub_total: subtotal,
             tax,
             total,
-            commune_code: commune,
-            district_code: district,
-            province_code: city,
-            deliveryMethodsId: selectedDeliveryMethod.id,
+            ward: getCommuneNameWithType(commune),
+            district: getDistrictNameWithType(district),
+            province: getProvinceNameWithType(city),
             orderStatusId: 1,
-            products,
+            products: productList,
+            expected_fee: shippingFee,
         };
 
+        setLoading(true);
+
         const response = await orderApi.add(data);
-        console.log(response);
         if (response.status === 200) {
+            setLoading(false);
             showNoti("Đặt hàng thành công", "success");
             localStorage.setItem(
                 "myCart",
@@ -189,11 +187,12 @@ function ShopCheckout() {
             );
             navigate("/shop");
         } else {
+            setLoading(false);
             showNoti("Lỗi: không thể đặt hàng", "error");
         }
     };
 
-    const handleRemove = (e, index, price, quantity) => {
+    const handleRemove = (e, index, price, quantity, weight) => {
         e.preventDefault();
         try {
             let newProductList = [...products];
@@ -208,13 +207,14 @@ function ShopCheckout() {
             setProducts(newProductList);
             setSubtotal((prev) => prev - price * quantity);
             setTax((subtotal - price * quantity) / 10);
+            setTotalWeight((prev) => prev - weight * quantity);
             showNoti("Đã xóa sản phẩm khỏi giỏ hàng", "success");
         } catch {
             showNoti("Lỗi: không xóa được sản phẩm", "error");
         }
     };
 
-    const handleAdd = (e, id, price) => {
+    const handleAdd = (e, id, price, weight) => {
         e.preventDefault();
         let newProductList = [...products];
         newProductList.forEach((product) => {
@@ -229,11 +229,12 @@ function ShopCheckout() {
                 cart: newProductList,
             })
         );
+        setTotalWeight((prev) => prev + weight);
         setSubtotal((prev) => prev + price);
         setTax((subtotal + price) / 10);
     };
 
-    const handleSub = (e, id, price) => {
+    const handleSub = (e, id, price, weight) => {
         e.preventDefault();
         let newProductList = [...products];
         newProductList.forEach((product) => {
@@ -248,12 +249,22 @@ function ShopCheckout() {
                 cart: newProductList,
             })
         );
+        setTotalWeight((prev) => prev - weight);
         setSubtotal((prev) => prev - price);
         setTax((subtotal - price) / 10);
     };
 
     return (
         <div className="bg-white dark:bg-gray-900">
+            <Backdrop
+                sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <TopNav />
             <div className="pt-2 relative">
                 <nav
@@ -524,119 +535,6 @@ function ShopCheckout() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="mt-10 border-t border-gray-200 dark:border-gray-500 pt-10">
-                                <RadioGroup
-                                    value={selectedDeliveryMethod}
-                                    onChange={setSelectedDeliveryMethod}
-                                >
-                                    <RadioGroup.Label className="text-lg font-medium text-gray-900 dark:text-white">
-                                        Phương thức vận chuyển:(
-                                        <span className="text-red-500">*</span>)
-                                    </RadioGroup.Label>
-
-                                    <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                                        {deliveryMethods.length > 0 ? (
-                                            <>
-                                                {deliveryMethods.map(
-                                                    (deliveryMethod) => (
-                                                        <RadioGroup.Option
-                                                            key={
-                                                                deliveryMethod.id
-                                                            }
-                                                            value={
-                                                                deliveryMethod
-                                                            }
-                                                            className={({
-                                                                checked,
-                                                                active,
-                                                            }) =>
-                                                                classNames(
-                                                                    checked
-                                                                        ? "border-transparent"
-                                                                        : "border-gray-300 dark:border-gray-500",
-                                                                    active
-                                                                        ? "ring-2 ring-indigo-500"
-                                                                        : "",
-                                                                    "relative bg-white dark:bg-gray-800 border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none"
-                                                                )
-                                                            }
-                                                        >
-                                                            {({
-                                                                checked,
-                                                                active,
-                                                            }) => (
-                                                                <>
-                                                                    <div className="flex-1 flex">
-                                                                        <div className="flex flex-col">
-                                                                            <RadioGroup.Label
-                                                                                as="span"
-                                                                                className="block text-sm font-medium text-gray-900 dark:text-gray-200"
-                                                                            >
-                                                                                {
-                                                                                    deliveryMethod.name
-                                                                                }
-                                                                            </RadioGroup.Label>
-                                                                            <RadioGroup.Description
-                                                                                as="span"
-                                                                                className="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400"
-                                                                            >
-                                                                                {
-                                                                                    deliveryMethod.turnaround_noi_thanh
-                                                                                }
-                                                                                &nbsp;(nội
-                                                                                ô)
-                                                                            </RadioGroup.Description>
-                                                                            <RadioGroup.Description
-                                                                                as="span"
-                                                                                className="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400"
-                                                                            >
-                                                                                {
-                                                                                    deliveryMethod.turnaround_ngoai_tinh
-                                                                                }
-                                                                                &nbsp;(ngoại
-                                                                                tỉnh)
-                                                                            </RadioGroup.Description>
-                                                                            <RadioGroup.Description
-                                                                                as="span"
-                                                                                className="mt-6 text-sm font-medium text-gray-900 dark:text-white"
-                                                                            >
-                                                                                {formatterVND.format(
-                                                                                    deliveryMethod.price
-                                                                                )}
-                                                                            </RadioGroup.Description>
-                                                                        </div>
-                                                                    </div>
-                                                                    {checked ? (
-                                                                        <CheckCircleIcon
-                                                                            className="h-5 w-5 text-indigo-600"
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                    ) : null}
-                                                                    <div
-                                                                        className={classNames(
-                                                                            active
-                                                                                ? "border"
-                                                                                : "border-2",
-                                                                            checked
-                                                                                ? "border-indigo-500"
-                                                                                : "border-transparent",
-                                                                            "absolute -inset-px rounded-lg pointer-events-none"
-                                                                        )}
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                </>
-                                                            )}
-                                                        </RadioGroup.Option>
-                                                    )
-                                                )}
-                                            </>
-                                        ) : (
-                                            ""
-                                        )}
-                                    </div>
-                                </RadioGroup>
-                            </div>
                         </div>
 
                         {/* Order summary */}
@@ -697,7 +595,8 @@ function ShopCheckout() {
                                                                     e,
                                                                     index,
                                                                     product.price,
-                                                                    product.quantity
+                                                                    product.quantity,
+                                                                    product.weight
                                                                 )
                                                             }
                                                         >
@@ -738,7 +637,8 @@ function ShopCheckout() {
                                                                         handleSub(
                                                                             e,
                                                                             product.id,
-                                                                            product.price
+                                                                            product.price,
+                                                                            product.weight
                                                                         )
                                                                     }
                                                                 >
@@ -764,7 +664,8 @@ function ShopCheckout() {
                                                                         handleAdd(
                                                                             e,
                                                                             product.id,
-                                                                            product.price
+                                                                            product.price,
+                                                                            product.weight
                                                                         )
                                                                     }
                                                                 >
@@ -794,11 +695,7 @@ function ShopCheckout() {
                                             Phí vận chuyển
                                         </dt>
                                         <dd className="text-sm font-medium text-gray-900 dark:text-gray-200">
-                                            {formatterVND.format(
-                                                parseInt(
-                                                    selectedDeliveryMethod.price
-                                                )
-                                            )}
+                                            {formatterVND.format(shippingFee)}
                                         </dd>
                                     </div>
                                     <div className="flex items-center justify-between">

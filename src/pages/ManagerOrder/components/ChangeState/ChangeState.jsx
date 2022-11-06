@@ -24,7 +24,6 @@ function ChangeState(props) {
     const getStatus = useCallback(async () => {
         const responseForSelect = await orderStatusApi.getAll();
         setDataSelect(responseForSelect.data);
-        console.log("get");
     }, []);
 
     const showNoti = useCallback(

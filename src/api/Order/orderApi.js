@@ -25,6 +25,10 @@ const orderApi = {
         const url = "/order/change-status";
         return axiosClient.post(url, data);
     },
+    transferToGHN(data) {
+        const url = "/order/transfer-to-ghn";
+        return axiosClient.post(url, data);
+    },
 };
 
 export default orderApi;

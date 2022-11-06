@@ -14,7 +14,7 @@ function ProductList(props) {
         (e, product) => {
             e.preventDefault();
             try {
-                const { desc, publishingYear, category, ...newProduct } =
+                const { description, publishingYear, category, ...newProduct } =
                     product;
                 newProduct.quantity = 1;
                 newProduct.price = parseInt(newProduct.price);
