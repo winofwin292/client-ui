@@ -12,6 +12,7 @@ import { ManagerCourse } from "pages/ManagerCourse";
 import { ManagerCategory } from "pages/ManagerCategory";
 import { ManagerProduct } from "pages/ManagerProduct";
 import { ManagerOrder } from "pages/ManagerOrder";
+import { Tools } from "pages/Tools";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -39,7 +40,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý nhân viên",
+                name: "Nhân viên",
                 key: "app/dashboard/manage-staff",
                 icon: <Icon fontSize="small">badge</Icon>,
                 path: "manage-staff",
@@ -47,7 +48,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý giáo viên",
+                name: "Giáo viên",
                 key: "app/dashboard/manage-teacher",
                 icon: <Icon fontSize="small">school</Icon>,
                 path: "manage-teacher",
@@ -55,7 +56,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý học viên",
+                name: "Học viên",
                 key: "app/dashboard/manage-student",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-student",
@@ -63,7 +64,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý khóa học",
+                name: "Khóa học",
                 key: "app/dashboard/manage-course",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-course",
@@ -71,7 +72,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý loại hàng",
+                name: "Loại hàng",
                 key: "app/dashboard/manage-category",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-category",
@@ -79,7 +80,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý sản phẩm",
+                name: "Sản phẩm",
                 key: "app/dashboard/manage-product",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-product",
@@ -87,7 +88,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý đơn hàng",
+                name: "Đơn hàng",
                 key: "app/dashboard/manage-order",
                 icon: <Icon fontSize="small">local_mall</Icon>,
                 path: "manage-order",
@@ -95,11 +96,19 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Quản lý trang chủ",
+                name: "Trang chủ",
                 key: "app/dashboard/manage-home-page",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "manage-home-page",
                 component: <ManageHomePage />,
+            },
+            {
+                type: "collapse",
+                name: "Công cụ",
+                key: "app/dashboard/tools",
+                icon: <Icon fontSize="small">constructions</Icon>,
+                path: "tools",
+                component: <Tools />,
             },
         ],
     },

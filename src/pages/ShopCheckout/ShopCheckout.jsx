@@ -27,6 +27,7 @@ import validator from "validator";
 import { formatterVND } from "utils";
 
 import orderApi from "api/Order/orderApi";
+import ghnApi from "api/GHN/ghnApi";
 
 function ShopCheckout() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -42,9 +43,16 @@ function ShopCheckout() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
     const [address, setAddress] = useState("");
-    const [city, setCity] = useState("-1");
+    const [province, setProvince] = useState("-1");
+    const [provinceName, setProvinceName] = useState("");
     const [district, setDistrict] = useState("-1");
-    const [commune, setCommune] = useState("-1");
+    const [districtName, setDistrictName] = useState("");
+    const [ward, setWard] = useState("-1");
+    const [wardName, setWardName] = useState("");
+
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [wards, setWards] = useState([]);
 
     const [loading, setLoading] = useState(false);
 
@@ -67,6 +75,11 @@ function ShopCheckout() {
         });
     };
 
+    const getProvinces = useCallback(async () => {
+        const response = await ghnApi.getProvince();
+        setProvinces(response.data);
+    }, []);
+
     useEffect(() => {
         document.title = "Thanh toán";
         const currCart = JSON.parse(localStorage.getItem("myCart")) || {
@@ -80,7 +93,7 @@ function ShopCheckout() {
             (acc, o) => acc + o.weight * o.quantity,
             0
         );
-        const extraFee = Math.ceil((sumWeight - 500) / 500) * 4000;
+        const extraFee = Math.ceil((sumWeight - 500) / 500) * 5000;
         setTotalWeight(sumWeight);
         setProducts(currCart.cart);
         setSubtotal(sumPrice);
@@ -90,10 +103,14 @@ function ShopCheckout() {
     }, []);
 
     useEffect(() => {
-        const extraFee = Math.ceil((totalWeight - 500) / 500) * 4000;
+        const extraFee = Math.ceil((totalWeight - 500) / 500) * 5000;
         setShippingFee(40000 + extraFee);
         setTotal(subtotal + tax + 40000 + extraFee);
     }, [subtotal, tax, shippingFee, totalWeight]);
+
+    useEffect(() => {
+        getProvinces();
+    }, [getProvinces]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -135,7 +152,7 @@ function ShopCheckout() {
             return;
         }
 
-        if (!city || city === "-1") {
+        if (!province || province === "-1") {
             showNoti("Vui lòng chọn tỉnh/thành phố", "error");
             return;
         }
@@ -145,7 +162,7 @@ function ShopCheckout() {
             return;
         }
 
-        if (!commune || commune === "-1") {
+        if (!ward || ward === "-1") {
             showNoti("Vui lòng chọn xã/phường", "error");
             return;
         }
@@ -165,9 +182,11 @@ function ShopCheckout() {
             sub_total: subtotal,
             tax,
             total,
-            ward: getCommuneNameWithType(commune),
-            district: getDistrictNameWithType(district),
-            province: getProvinceNameWithType(city),
+            ward: wardName,
+            ward_code: ward,
+            district: districtName,
+            district_id: parseInt(district),
+            province: provinceName,
             orderStatusId: 1,
             products: productList,
             expected_fee: shippingFee,
@@ -252,6 +271,36 @@ function ShopCheckout() {
         setTotalWeight((prev) => prev - weight);
         setSubtotal((prev) => prev - price);
         setTax((subtotal - price) / 10);
+    };
+
+    const handleChangeProvince = async (e) => {
+        setProvince(e.target.value);
+        const index = e.nativeEvent.target.selectedIndex;
+        const label = e.nativeEvent.target[index].text;
+        setProvinceName(label);
+        const response = await ghnApi.getDistrict({
+            provinceId: parseInt(e.target.value),
+        });
+        setDistricts(response.data);
+        setWard(-1);
+    };
+
+    const handleChangeDistrict = async (e) => {
+        setDistrict(e.target.value);
+        const index = e.nativeEvent.target.selectedIndex;
+        const label = e.nativeEvent.target[index].text;
+        setDistrictName(label);
+        const response = await ghnApi.getWard({
+            districtId: parseInt(e.target.value),
+        });
+        setWards(response.data);
+    };
+
+    const handleChangeWard = (e) => {
+        setWard(e.target.value);
+        const index = e.nativeEvent.target.selectedIndex;
+        const label = e.nativeEvent.target[index].text;
+        setWardName(label);
     };
 
     return (
@@ -471,15 +520,33 @@ function ShopCheckout() {
                                             )
                                         </label>
                                         <div className="mt-1">
-                                            <SelectProvince
+                                            <select
                                                 type="text"
                                                 name="city"
                                                 id="city"
                                                 // autoComplete="address-level1"
                                                 className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
-                                                value={city}
-                                                onChange={setCity}
-                                            />
+                                                value={province}
+                                                onChange={(e) =>
+                                                    handleChangeProvince(e)
+                                                }
+                                            >
+                                                <option value="-1">
+                                                    Chọn tỉnh/thành phố
+                                                </option>
+                                                {provinces.map(
+                                                    (item, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={
+                                                                item.ProvinceID
+                                                            }
+                                                        >
+                                                            {item.ProvinceName}
+                                                        </option>
+                                                    )
+                                                )}
+                                            </select>
                                         </div>
                                     </div>
 
@@ -495,16 +562,41 @@ function ShopCheckout() {
                                             )
                                         </label>
                                         <div className="mt-1">
-                                            <SelectDistrict
+                                            <select
                                                 type="text"
                                                 name="district"
                                                 id="district"
                                                 // autoComplete="address-level2"
                                                 className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                                                 value={district}
-                                                onChange={setDistrict}
-                                                province={city}
-                                            />
+                                                onChange={(e) =>
+                                                    handleChangeDistrict(e)
+                                                }
+                                            >
+                                                <option value="-1">
+                                                    Chọn quận/huyện
+                                                </option>
+                                                {province === "-1" ? (
+                                                    ""
+                                                ) : (
+                                                    <>
+                                                        {districts.map(
+                                                            (item, index) => (
+                                                                <option
+                                                                    key={index}
+                                                                    value={
+                                                                        item.DistrictID
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        item.DistrictName
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
+                                                    </>
+                                                )}
+                                            </select>
                                         </div>
                                     </div>
 
@@ -520,17 +612,42 @@ function ShopCheckout() {
                                             )
                                         </label>
                                         <div className="mt-1">
-                                            <SelectCommune
+                                            <select
                                                 type="text"
-                                                name="commune"
-                                                id="commune"
+                                                name="ward"
+                                                id="ward"
                                                 // autoComplete="address-level3"
                                                 autoComplete="street-address"
                                                 className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
-                                                value={commune}
-                                                onChange={setCommune}
-                                                district={district}
-                                            />
+                                                value={ward}
+                                                onChange={(e) =>
+                                                    handleChangeWard(e)
+                                                }
+                                            >
+                                                <option value="-1">
+                                                    Chọn xã/phường
+                                                </option>
+                                                {district === "-1" ? (
+                                                    ""
+                                                ) : (
+                                                    <>
+                                                        {wards.map(
+                                                            (item, index) => (
+                                                                <option
+                                                                    key={index}
+                                                                    value={
+                                                                        item.WardCode
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        item.WardName
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
+                                                    </>
+                                                )}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

@@ -29,6 +29,14 @@ const orderApi = {
         const url = "/order/transfer-to-ghn";
         return axiosClient.post(url, data);
     },
+    getServices(data) {
+        const url = "/order/get-services";
+        return axiosClient.post(url, data);
+    },
+    getFee(data) {
+        const url = "/order/get-fee";
+        return axiosClient.post(url, data);
+    },
 };
 
 export default orderApi;

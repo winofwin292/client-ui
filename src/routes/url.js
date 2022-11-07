@@ -10,4 +10,5 @@ export const urls = {
     "manage-category": "Quản lý loại hàng",
     "manage-product": "Quản lý sản phẩm",
     "manage-order": "Quản lý đơn hàng",
+    tools: "Công cụ",
 };

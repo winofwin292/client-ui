@@ -469,81 +469,79 @@ function ManagerTeacherDG() {
     };
 
     return (
-        <>
-            <Grid item xs={12}>
-                <Card>
-                    <div style={{ height: 550, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
-                            <DataGrid
-                                rows={data}
-                                columns={columns}
-                                localeText={
-                                    viVN.components.MuiDataGrid.defaultProps
-                                        .localeText
-                                }
-                                rowModesModel={rowModesModel}
-                                onRowModesModelChange={(newModel) =>
-                                    setRowModesModel(newModel)
-                                }
-                                onRowEditStart={handleRowEditStart}
-                                onRowEditStop={handleRowEditStop}
-                                processRowUpdate={processRowUpdate}
-                                experimentalFeatures={{ newEditingApi: true }}
-                                components={{
-                                    Toolbar: EditToolbar,
-                                }}
-                                componentsProps={{
-                                    toolbar: { handleRefresh },
-                                }}
-                                loading={loading}
-                                initialState={{
-                                    columns: {
-                                        columnVisibilityModel: {
-                                            id: false,
-                                        },
+        <Grid item xs={12}>
+            <Card>
+                <div style={{ height: 550, width: "100%" }}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <DataGrid
+                            rows={data}
+                            columns={columns}
+                            localeText={
+                                viVN.components.MuiDataGrid.defaultProps
+                                    .localeText
+                            }
+                            rowModesModel={rowModesModel}
+                            onRowModesModelChange={(newModel) =>
+                                setRowModesModel(newModel)
+                            }
+                            onRowEditStart={handleRowEditStart}
+                            onRowEditStop={handleRowEditStop}
+                            processRowUpdate={processRowUpdate}
+                            experimentalFeatures={{ newEditingApi: true }}
+                            components={{
+                                Toolbar: EditToolbar,
+                            }}
+                            componentsProps={{
+                                toolbar: { handleRefresh },
+                            }}
+                            loading={loading}
+                            initialState={{
+                                columns: {
+                                    columnVisibilityModel: {
+                                        id: false,
                                     },
-                                }}
-                                editMode="row"
-                                density="compact"
-                            />
-                        </ThemeProvider>
-                    </div>
-                    <Dialog
-                        open={resultDialog}
-                        onClose={handleCloseResult}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            {"Đặt lại mật khẩu thành công"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Tài khoản: {username}
-                            </DialogContentText>
-                            <DialogContentText id="alert-dialog-description">
-                                Mật khẩu mới: {newPassword}
-                            </DialogContentText>
-                            <Button onClick={handleCopy} autoFocus>
-                                Sao chép
-                            </Button>
-                            <DialogContentText id="alert-dialog-description">
-                                {resultCopy}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseResult} autoFocus>
-                                Đóng
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                    <CourseAssign
-                        assignState={assignState}
-                        setAssignState={setAssignState}
-                    />
-                </Card>
-            </Grid>
-        </>
+                                },
+                            }}
+                            editMode="row"
+                            density="compact"
+                        />
+                    </ThemeProvider>
+                </div>
+                <Dialog
+                    open={resultDialog}
+                    onClose={handleCloseResult}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Đặt lại mật khẩu thành công"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Tài khoản: {username}
+                        </DialogContentText>
+                        <DialogContentText id="alert-dialog-description">
+                            Mật khẩu mới: {newPassword}
+                        </DialogContentText>
+                        <Button onClick={handleCopy} autoFocus>
+                            Sao chép
+                        </Button>
+                        <DialogContentText id="alert-dialog-description">
+                            {resultCopy}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseResult} autoFocus>
+                            Đóng
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <CourseAssign
+                    assignState={assignState}
+                    setAssignState={setAssignState}
+                />
+            </Card>
+        </Grid>
     );
 }
 

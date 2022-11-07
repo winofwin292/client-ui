@@ -32,6 +32,8 @@ import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
 import OrderDetail from "./components/OrderDetail/OrderDetail";
+import TransferToGHN from "./components/TransferToGHN/TransferToGHN";
+import PrintOrder from "./components/PrintOrder/PrintOrder";
 import orderApi from "api/Order/orderApi";
 
 import { formatterVND } from "utils";
@@ -77,6 +79,18 @@ function ManagerOrderDG() {
     const [orderDetail, setOrderDetail] = useState({
         open: false,
         id: null,
+    });
+
+    const [transferStatus, setTransferStatus] = useState({
+        open: false,
+        id: null,
+        districtId: "",
+        wardCode: "",
+    });
+
+    const [printState, setPrintState] = useState({
+        open: false,
+        orderCode: "",
     });
 
     const getData = useCallback(async () => {
@@ -128,24 +142,6 @@ function ManagerOrderDG() {
         },
         [getData, showNoti]
     );
-
-    const handleTransfer = useCallback(
-        async (e, id) => {
-            const response = await orderApi.transferToGHN({
-                id: id,
-            });
-
-            if (response.status === 200) {
-                // getData();
-                showNoti("Cập nhật thành công", "success");
-            } else {
-                showNoti(response.data, "error");
-            }
-        },
-        [getData, showNoti]
-    );
-
-    const handlePrint = useCallback(async (e, id) => {}, []);
 
     const columns = useMemo(
         () => [
@@ -200,9 +196,7 @@ function ManagerOrderDG() {
                     if (params.value == null) {
                         return "";
                     }
-                    return new Date(params.value.name).toLocaleDateString(
-                        "en-GB"
-                    );
+                    return new Date(params.value).toLocaleDateString("en-GB");
                 },
             },
 
@@ -252,7 +246,14 @@ function ManagerOrderDG() {
                         <GridActionsCellItem
                             icon={<ShoppingCartCheckoutIcon />}
                             label={"Chuyển đơn hàng cho vận chuyển"}
-                            onClick={(e) => handleTransfer(e, params.id)}
+                            onClick={(e) =>
+                                setTransferStatus({
+                                    open: true,
+                                    id: params.id,
+                                    districtId: params.row.district_id,
+                                    wardCode: params.row.ward_code,
+                                })
+                            }
                             title={"Chuyển đơn hàng cho vận chuyển"}
                             showInMenu
                             sx={
@@ -264,7 +265,12 @@ function ManagerOrderDG() {
                         <GridActionsCellItem
                             icon={<PrintIcon />}
                             label={"In phiếu của đơn vị vận chuyển"}
-                            onClick={(e) => handlePrint(e, params.id)}
+                            onClick={(e) =>
+                                setPrintState({
+                                    open: true,
+                                    orderCode: params.row.order_code,
+                                })
+                            }
                             title={"In phiếu của đơn vị vận chuyển"}
                             showInMenu
                             sx={
@@ -302,7 +308,7 @@ function ManagerOrderDG() {
                 },
             },
         ],
-        [handleChangeState, handlePrint, handleTransfer]
+        [handleChangeState]
     );
 
     useEffect(() => {
@@ -350,6 +356,15 @@ function ManagerOrderDG() {
                         <OrderDetail
                             orderDetail={orderDetail}
                             setOrderDetail={setOrderDetail}
+                        />
+                        <TransferToGHN
+                            transferStatus={transferStatus}
+                            setTransferStatus={setTransferStatus}
+                            getData={getData}
+                        />
+                        <PrintOrder
+                            printState={printState}
+                            setPrintState={setPrintState}
                         />
                     </div>
                 </Card>
