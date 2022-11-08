@@ -201,7 +201,7 @@ function ViewAvatar(props) {
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
                             Cập nhật hình ảnh (hiển thị tốt nhất với ảnh tỷ lệ{" "}
-                            <b>16:9</b> (ảnh vuông)): ( &lt;5MB )
+                            <b>1:1</b> (ảnh vuông)): ( &lt;5MB )
                         </InputLabel>
                         <Button
                             variant="outlined"

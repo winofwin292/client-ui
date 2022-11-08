@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 // @mui material components
 import { styled } from "@mui/material/styles";
@@ -21,7 +21,8 @@ import DashboardLayout from "components/MDComponents/examples/LayoutContainers/D
 import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardNavbar";
 import Footer from "components/MDComponents/examples/Footer";
 
-import { getObjectFromCookieValue } from "utils";
+import ChangePassword from "components/common/ChangePassword/ChangePassword";
+import ChangeEmail from "./components/ChangeEmail/ChangeEmail";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -30,16 +31,16 @@ const themeD = createTheme({
     },
 });
 const Item = styled(Paper)(({ theme }) => ({
-    // backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    // ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: "center",
-    // color: theme.palette.text.secondary,
 }));
 
 function ManagerStudent() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
+
+    const [changePassState, setChangePassState] = useState(false);
+    const [changeEmailState, setChangeEmailState] = useState(false);
 
     useEffect(() => {
         document.title = "Công cụ";
@@ -67,13 +68,9 @@ function ManagerStudent() {
                                                 <Button
                                                     variant="contained"
                                                     fullWidth
-                                                    onClick={(e) => {
-                                                        console.log(
-                                                            getObjectFromCookieValue(
-                                                                "userData"
-                                                            )
-                                                        );
-                                                    }}
+                                                    onClick={(e) =>
+                                                        setChangePassState(true)
+                                                    }
                                                 >
                                                     Đổi mật khẩu
                                                 </Button>
@@ -84,6 +81,11 @@ function ManagerStudent() {
                                                 <Button
                                                     variant="contained"
                                                     fullWidth
+                                                    onClick={(e) =>
+                                                        setChangeEmailState(
+                                                            true
+                                                        )
+                                                    }
                                                 >
                                                     Đổi email thông báo đơn hàng
                                                 </Button>
@@ -110,6 +112,14 @@ function ManagerStudent() {
                                             </Item>
                                         </Grid>
                                     </Grid>
+                                    <ChangePassword
+                                        open={changePassState}
+                                        setOpen={setChangePassState}
+                                    />
+                                    <ChangeEmail
+                                        open={changeEmailState}
+                                        setOpen={setChangeEmailState}
+                                    />
                                 </ThemeProvider>
                             </div>
                         </Card>

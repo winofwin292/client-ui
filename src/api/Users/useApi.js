@@ -24,6 +24,10 @@ const userApi = {
         const url = "/users/profile";
         return axiosClient.post(url, data);
     },
+    getProfileUpdate(data) {
+        const url = "/users/profile-update";
+        return axiosClient.post(url, data);
+    },
     getAllStaff(data) {
         const url = "/users/staff/get-all";
         return axiosClient.get(url, data);
