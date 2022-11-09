@@ -13,6 +13,7 @@ import { ManagerCategory } from "pages/ManagerCategory";
 import { ManagerProduct } from "pages/ManagerProduct";
 import { ManagerOrder } from "pages/ManagerOrder";
 import { Tools } from "pages/Tools";
+import { ToolsStaff } from "pages/ToolsStaff";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -134,6 +135,14 @@ const PrivateRoutesConfig = [
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "yeu-cau-lien-he",
                 component: <ManagerRequestContact />,
+            },
+            {
+                type: "collapse",
+                name: "Công cụ",
+                key: "app/dashboard/tools",
+                icon: <Icon fontSize="small">constructions</Icon>,
+                path: "tools",
+                component: <ToolsStaff />,
             },
         ],
     },

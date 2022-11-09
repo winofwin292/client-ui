@@ -22,7 +22,7 @@ import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardN
 import Footer from "components/MDComponents/examples/Footer";
 
 import ChangePassword from "components/common/ChangePassword/ChangePassword";
-import ChangeEmail from "./components/ChangeEmail/ChangeEmail";
+import ChangeInfo from "./components/ChangeInfo/ChangeInfo";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -35,12 +35,12 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: "center",
 }));
 
-function Tools() {
+function ToolsStaff() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
 
     const [changePassState, setChangePassState] = useState(false);
-    const [changeEmailState, setChangeEmailState] = useState(false);
+    const [changeInfoState, setChangeInfoState] = useState(false);
 
     useEffect(() => {
         document.title = "Công cụ";
@@ -82,12 +82,10 @@ function Tools() {
                                                     variant="contained"
                                                     fullWidth
                                                     onClick={(e) =>
-                                                        setChangeEmailState(
-                                                            true
-                                                        )
+                                                        setChangeInfoState(true)
                                                     }
                                                 >
-                                                    Đổi email thông báo đơn hàng
+                                                    Đổi thông tin cá nhân
                                                 </Button>
                                             </Item>
                                         </Grid>
@@ -116,9 +114,9 @@ function Tools() {
                                         open={changePassState}
                                         setOpen={setChangePassState}
                                     />
-                                    <ChangeEmail
-                                        open={changeEmailState}
-                                        setOpen={setChangeEmailState}
+                                    <ChangeInfo
+                                        open={changeInfoState}
+                                        setOpen={setChangeInfoState}
                                     />
                                 </ThemeProvider>
                             </div>
@@ -131,4 +129,4 @@ function Tools() {
     );
 }
 
-export default memo(Tools);
+export default memo(ToolsStaff);

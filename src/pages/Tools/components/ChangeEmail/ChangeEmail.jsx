@@ -15,7 +15,7 @@ import { getObjectFromCookieValue } from "utils";
 
 import userApi from "api/Users/useApi";
 
-function AddStaff(props) {
+function ChangeEmail(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -125,4 +125,4 @@ function AddStaff(props) {
         </div>
     );
 }
-export default memo(AddStaff);
+export default memo(ChangeEmail);

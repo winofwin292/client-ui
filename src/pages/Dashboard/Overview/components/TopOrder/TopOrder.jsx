@@ -1,19 +1,6 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
+import { React, memo, useState, useMemo, useRef } from "react";
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useState } from "react";
+import { useReactToPrint } from "react-to-print";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -28,15 +15,35 @@ import MDTypography from "components/MDComponents/MDTypography";
 // Material Dashboard 2 React examples
 import DataTable from "components/MDComponents/examples/Tables/DataTable";
 
-// Data
-import data from "pages/Dashboard/Overview/components/Projects/data";
-
-function Projects() {
-    const { columns, rows } = data();
+function TopOrder(props) {
     const [menu, setMenu] = useState(null);
+    const printRef = useRef();
 
     const openMenu = ({ currentTarget }) => setMenu(currentTarget);
     const closeMenu = () => setMenu(null);
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Khách Hàng",
+                accessor: "name",
+                width: "45%",
+                align: "left",
+            },
+            {
+                Header: "Giá đơn hàng",
+                accessor: "total",
+                width: "25%",
+                align: "left",
+            },
+            { Header: "Ngày đặt hàng", accessor: "createAt", align: "center" },
+        ],
+        []
+    );
+
+    const handlePrint = useReactToPrint({
+        content: () => printRef.current,
+    });
 
     const renderMenu = (
         <Menu
@@ -53,9 +60,7 @@ function Projects() {
             open={Boolean(menu)}
             onClose={closeMenu}
         >
-            <MenuItem onClick={closeMenu}>Action</MenuItem>
-            <MenuItem onClick={closeMenu}>Another action</MenuItem>
-            <MenuItem onClick={closeMenu}>Something else</MenuItem>
+            <MenuItem onClick={handlePrint}>In báo cáo</MenuItem>
         </Menu>
     );
 
@@ -69,7 +74,8 @@ function Projects() {
             >
                 <MDBox>
                     <MDTypography variant="h6" gutterBottom>
-                        Projects
+                        Các đơn hàng có giá trị cao trong tháng{" "}
+                        {(new Date().getMonth() + 1).toString()}
                     </MDTypography>
                     <MDBox display="flex" alignItems="center" lineHeight={0}>
                         <Icon
@@ -86,7 +92,11 @@ function Projects() {
                             fontWeight="regular"
                             color="text"
                         >
-                            &nbsp;<strong>30 done</strong> this month
+                            &nbsp;
+                            <strong>
+                                {props.countOrder.countWithTime} đơn hàng
+                            </strong>{" "}
+                            trong tháng này
                         </MDTypography>
                     </MDBox>
                 </MDBox>
@@ -101,9 +111,9 @@ function Projects() {
                 </MDBox>
                 {renderMenu}
             </MDBox>
-            <MDBox>
+            <MDBox ref={printRef}>
                 <DataTable
-                    table={{ columns, rows }}
+                    table={{ columns, rows: props.dataTable }}
                     showTotalEntries={false}
                     isSorted={false}
                     noEndBorder
@@ -114,4 +124,4 @@ function Projects() {
     );
 }
 
-export default Projects;
+export default memo(TopOrder);

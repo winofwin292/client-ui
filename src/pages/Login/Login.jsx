@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useCallback } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -8,8 +8,10 @@ import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
+import IconButton from "@mui/material/IconButton";
 
 // @mui icons
+import CloseIcon from "@mui/icons-material/Close";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -32,6 +34,8 @@ import { useMaterialUIController, setLayout } from "context";
 //i18next translate
 import { useTranslation } from "react-i18next";
 
+import { useSnackbar } from "notistack";
+
 import userApi from "api/Users/useApi";
 
 function Login() {
@@ -44,7 +48,29 @@ function Login() {
     const [controller, dispatch] = useMaterialUIController();
     // const { direction, layout, openConfigurator, darkMode } = controller;
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
     const { t } = useTranslation();
+
+    const showNoti = useCallback(
+        (msg, type) => {
+            enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
 
     useEffect(() => {
         setLayout(dispatch, "login");
@@ -60,19 +86,25 @@ function Login() {
         setRememberMe(!rememberMe);
     };
 
-    async function handleClick() {
+    const handleClick = async (e) => {
+        e.preventDefault();
+
+        if (!username || !password) {
+            showNoti("Vui lòng nhập tài khoản và mật khẩu", "error");
+            return;
+        }
+
         const response = await userApi.login({
             username,
             password,
         });
 
         if (response.status === 200) {
-            // navigate("/app");
             window.location.href = "/app";
         } else {
-            console.log(response);
+            showNoti(response.data, "error");
         }
-    }
+    };
 
     return (
         <BasicLayout image={bgImage}>
@@ -174,10 +206,11 @@ function Login() {
                         </MDBox>
                         <MDBox mt={4} mb={1}>
                             <MDButton
-                                onClick={handleClick}
+                                onClick={(e) => handleClick(e)}
                                 variant="gradient"
                                 color="info"
                                 fullWidth
+                                type="button"
                             >
                                 {t("login.signIn")}
                             </MDButton>

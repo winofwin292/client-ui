@@ -42,7 +42,6 @@
     "react-to-print": "^2.14.7",
     "tw-elements": "^1.0.0-alpha12",
     "validator": "^13.7.0",
-    "vn-ad": "^0.1.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

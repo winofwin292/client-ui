@@ -9,14 +9,6 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { useSnackbar } from "notistack";
-import {
-    SelectProvince,
-    SelectDistrict,
-    SelectCommune,
-    getProvinceNameWithType,
-    getDistrictNameWithType,
-    getCommuneNameWithType,
-} from "vn-ad";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";

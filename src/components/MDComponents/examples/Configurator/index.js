@@ -1,9 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
+// react-router-dom components
+import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Divider from "@mui/material/Divider";
 import Switch from "@mui/material/Switch";
 import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDComponents/MDBox";
@@ -23,9 +28,9 @@ import {
     setDarkMode,
 } from "context";
 
-//i18next translate
-import { useTranslation } from "react-i18next";
-import i18n from "translation/i18n";
+import { useSnackbar } from "notistack";
+
+import userApi from "api/Users/useApi";
 
 function Configurator() {
     const [controller, dispatch] = useMaterialUIController();
@@ -35,11 +40,31 @@ function Configurator() {
         transparentSidenav,
         whiteSidenav,
         darkMode,
+        sidenavColor,
     } = controller;
     const [disabled, setDisabled] = useState(false);
-    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const [lang, setLang] = useState(false);
+    const showNoti = useCallback(
+        (msg, type) => {
+            enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
 
     // Use the useEffect hook to change the button state for the sidenav type based on window size.
     useEffect(() => {
@@ -57,16 +82,12 @@ function Configurator() {
         handleDisabled();
 
         //Get curent language
-        const currLang = localStorage.getItem("lang");
-        if (currLang === "vi") {
-            setLang(false);
-        } else {
-            setLang(true);
-        }
+        const isDarkTheme = localStorage.getItem("darkTheme");
+        setDarkMode(dispatch, !isDarkTheme);
 
         // Remove event listener on cleanup
         return () => window.removeEventListener("resize", handleDisabled);
-    }, []);
+    }, [dispatch]);
 
     const handleCloseConfigurator = () => setOpenConfigurator(dispatch, false);
     const handleTransparentSidenav = () => {
@@ -87,18 +108,15 @@ function Configurator() {
         localStorage.setItem("darkTheme", !darkMode);
     };
 
-    function handleChangeLanguage() {
-        const currLang = localStorage.getItem("lang");
-        if (currLang === "vi") {
-            i18n.changeLanguage("en");
-            localStorage.setItem("lang", "en");
-            setLang(true);
+    const handleLogout = async () => {
+        const response = await userApi.logout();
+
+        if (response.status === 200) {
+            navigate("/");
         } else {
-            i18n.changeLanguage("vi");
-            localStorage.setItem("lang", "vi");
-            setLang(false);
+            console.log(response);
         }
-    }
+    };
 
     // sidenav type buttons styles
     const sidenavTypeButtonsStyles = ({
@@ -150,12 +168,7 @@ function Configurator() {
                 px={3}
             >
                 <MDBox>
-                    <MDTypography variant="h5">
-                        Material UI Configurator
-                    </MDTypography>
-                    <MDTypography variant="body2" color="text">
-                        See our dashboard options.
-                    </MDTypography>
+                    <MDTypography variant="h5">Tùy chọn</MDTypography>
                 </MDBox>
 
                 <Icon
@@ -177,10 +190,7 @@ function Configurator() {
             </MDBox>
             <MDBox pt={0.5} pb={3} px={3}>
                 <MDBox mt={3} lineHeight={1}>
-                    <MDTypography variant="h6">Sidenav Type</MDTypography>
-                    <MDTypography variant="button" color="text">
-                        Choose between different sidenav types.
-                    </MDTypography>
+                    <MDTypography variant="h6">Kiểu trình đơn</MDTypography>
 
                     <MDBox
                         sx={{
@@ -201,7 +211,7 @@ function Configurator() {
                                     : sidenavTypeButtonsStyles
                             }
                         >
-                            Dark
+                            Tối
                         </MDButton>
                         <MDBox sx={{ mx: 1, width: "8rem", minWidth: "8rem" }}>
                             <MDButton
@@ -216,7 +226,7 @@ function Configurator() {
                                         : sidenavTypeButtonsStyles
                                 }
                             >
-                                Transparent
+                                Trong suốt
                             </MDButton>
                         </MDBox>
                         <MDButton
@@ -231,7 +241,7 @@ function Configurator() {
                                     : sidenavTypeButtonsStyles
                             }
                         >
-                            White
+                            Sáng
                         </MDButton>
                     </MDBox>
                 </MDBox>
@@ -242,7 +252,9 @@ function Configurator() {
                     mt={3}
                     lineHeight={1}
                 >
-                    <MDTypography variant="h6">Navbar Fixed</MDTypography>
+                    <MDTypography variant="h6">
+                        Thanh điều hướng nổi
+                    </MDTypography>
 
                     <Switch
                         checked={fixedNavbar}
@@ -254,27 +266,25 @@ function Configurator() {
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
-                    mt={3}
                     lineHeight={1}
                 >
                     <MDTypography variant="h6">
-                        {t("login.changeLang")}
+                        Giao diện sáng / tối
                     </MDTypography>
-
-                    <Switch checked={lang} onChange={handleChangeLanguage} />
-                </MDBox>
-                <Divider />
-                <MDBox
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    lineHeight={1}
-                >
-                    <MDTypography variant="h6">Light / Dark</MDTypography>
 
                     <Switch checked={darkMode} onChange={handleDarkMode} />
                 </MDBox>
                 <Divider />
+                <MDBox mt="auto">
+                    <MDButton
+                        variant="gradient"
+                        color={sidenavColor}
+                        fullWidth
+                        onClick={handleLogout}
+                    >
+                        Đăng xuất
+                    </MDButton>
+                </MDBox>
             </MDBox>
         </ConfiguratorRoot>
     );

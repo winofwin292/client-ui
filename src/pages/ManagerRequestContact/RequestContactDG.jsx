@@ -309,7 +309,7 @@ function RequestContactDG() {
         <>
             <Grid item xs={12}>
                 <Card>
-                    <div style={{ height: 500, width: "100%" }}>
+                    <div style={{ height: 550, width: "100%" }}>
                         <ThemeProvider theme={darkMode ? themeD : theme}>
                             <DataGrid
                                 rows={data}

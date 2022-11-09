@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useCallback, useState, useMemo } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -11,15 +11,97 @@ import DashboardLayout from "components/MDComponents/examples/LayoutContainers/D
 import DashboardNavbar from "components/MDComponents/examples/Navbars/DashboardNavbar";
 import Footer from "components/MDComponents/examples/Footer";
 import ComplexStatisticsCard from "components/MDComponents/examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import VerticalBarChart from "components/MDComponents/examples/Charts/BarCharts/VerticalBarChart";
 
 // Dashboard components
-import Projects from "pages/Dashboard/Overview/components/Projects";
-import OrdersOverview from "pages/Dashboard/Overview/components/OrdersOverview";
+import NewOrders from "pages/Dashboard/Overview/components/NewOrders/NewOrders";
+import TopOrder from "./components/TopOrder/TopOrder";
+
+import overviewApi from "api/Overview/overviewApi";
 
 function Overview() {
+    const [countProduct, setCountProduct] = useState({
+        count: "",
+        countShow: 0,
+    });
+    const [countCourse, setCountCourse] = useState({ count: "", countShow: 0 });
+    const [countUser, setCountUser] = useState({ count: "", countDisabled: 0 });
+    const [countOrder, setCountOrder] = useState({
+        count: "",
+        countWithTime: 0,
+    });
+    const [dataChart, setDataChart] = useState([]);
+    const labelChart = useMemo(
+        () => [
+            "Tháng 1",
+            "Tháng 2",
+            "Tháng 3",
+            "Tháng 4",
+            "Tháng 5",
+            "Tháng 6",
+            "Tháng 7",
+            "Tháng 8",
+            "Tháng 9",
+            "Tháng 10",
+            "Tháng 11",
+            "Tháng 12",
+        ],
+        []
+    );
+    const [dataTable, setDataTable] = useState([]);
+    const [newOrders, setNewOrders] = useState([]);
+
+    const getData = useCallback(async () => {
+        const toDate = new Date();
+
+        const firstDay = new Date(
+            toDate.getFullYear(),
+            toDate.getMonth() - 1,
+            1
+        );
+
+        const lastDay = new Date(
+            toDate.getFullYear(),
+            toDate.getMonth() + 1,
+            0,
+            22,
+            59,
+            59
+        );
+
+        const firstDateOfYear = new Date(toDate.getFullYear(), 0, 1);
+        const lastDateOfYear = new Date(
+            toDate.getFullYear(),
+            11,
+            31,
+            23,
+            59,
+            59
+        );
+        const response = await overviewApi.getData({
+            startDate: firstDay,
+            endDate: lastDay,
+            startDateOfYear: firstDateOfYear,
+            endDateOfYear: lastDateOfYear,
+        });
+        setCountProduct(response.data.product);
+        setCountCourse(response.data.course);
+        setCountUser(response.data.user);
+        setCountOrder(response.data.order);
+        const temp = response.data.orderTotal.map((item) => parseInt(item));
+        setDataChart(temp);
+        setDataTable(response.data.orderTop);
+        setNewOrders(response.data.orderNew);
+    }, []);
+
     useEffect(() => {
         document.title = "Tổng quan";
     }, []);
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
+
     return (
         <DashboardLayout>
             <DashboardNavbar />
@@ -30,12 +112,12 @@ function Overview() {
                             <ComplexStatisticsCard
                                 color="dark"
                                 icon="weekend"
-                                title="Bookings"
-                                count={281}
+                                title="Khóa học"
+                                count={countCourse.count}
                                 percentage={{
-                                    color: "success",
-                                    amount: "+55%",
-                                    label: "than lask week",
+                                    color: "info",
+                                    amount: countCourse.countShow,
+                                    label: "khóa học đang hiển thị",
                                 }}
                             />
                         </MDBox>
@@ -43,13 +125,13 @@ function Overview() {
                     <Grid item xs={12} md={6} lg={3}>
                         <MDBox mb={1.5}>
                             <ComplexStatisticsCard
-                                icon="leaderboard"
-                                title="Today's Users"
-                                count="2,300"
+                                icon="inventory_2"
+                                title="Sản phẩm"
+                                count={countProduct.count}
                                 percentage={{
-                                    color: "success",
-                                    amount: "+3%",
-                                    label: "than last month",
+                                    color: "info",
+                                    amount: countProduct.countShow,
+                                    label: "sản phẩm đang hiển thị",
                                 }}
                             />
                         </MDBox>
@@ -59,12 +141,14 @@ function Overview() {
                             <ComplexStatisticsCard
                                 color="success"
                                 icon="store"
-                                title="Revenue"
-                                count="34k"
+                                title={"Tổng số đơn hàng"}
+                                count={countOrder.count}
                                 percentage={{
                                     color: "success",
-                                    amount: "+1%",
-                                    label: "than yesterday",
+                                    amount: "+" + countOrder.countWithTime,
+                                    label:
+                                        "đơn hàng trong tháng " +
+                                        (new Date().getMonth() + 1).toString(),
                                 }}
                             />
                         </MDBox>
@@ -74,12 +158,12 @@ function Overview() {
                             <ComplexStatisticsCard
                                 color="primary"
                                 icon="person_add"
-                                title="Followers"
-                                count="+91"
+                                title="Người dùng"
+                                count={countUser.count}
                                 percentage={{
-                                    color: "success",
-                                    amount: "",
-                                    label: "Just updated",
+                                    color: "error",
+                                    amount: countUser.countDisabled,
+                                    label: "bị khóa",
                                 }}
                             />
                         </MDBox>
@@ -88,11 +172,34 @@ function Overview() {
                 {/* Chart here */}
                 <MDBox>
                     <Grid container spacing={3}>
+                        <Grid item xs={12} sx={{ mt: 3 }}>
+                            <VerticalBarChart
+                                icon={{
+                                    color: "info",
+                                    component: "leaderboard",
+                                }}
+                                title="Doanh thu theo tháng"
+                                description="Tổng doanh thu của từng tháng trong năm"
+                                chart={{
+                                    labels: labelChart,
+                                    datasets: [
+                                        {
+                                            label: "Tổng doanh thu",
+                                            color: "info",
+                                            data: dataChart,
+                                        },
+                                    ],
+                                }}
+                            />
+                        </Grid>
                         <Grid item xs={12} md={6} lg={8}>
-                            <Projects />
+                            <TopOrder
+                                countOrder={countOrder}
+                                dataTable={dataTable}
+                            />
                         </Grid>
                         <Grid item xs={12} md={6} lg={4}>
-                            <OrdersOverview />
+                            <NewOrders newOrders={newOrders} />
                         </Grid>
                     </Grid>
                 </MDBox>
