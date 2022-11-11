@@ -1,5 +1,4 @@
 import React, { useState, memo, useEffect, useCallback } from "react";
-import { RadioGroup } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 
 import IconButton from "@mui/material/IconButton";
@@ -20,6 +19,11 @@ import { formatterVND } from "utils";
 
 import orderApi from "api/Order/orderApi";
 import ghnApi from "api/GHN/ghnApi";
+import productApi from "api/Product/productApi";
+
+function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+}
 
 function ShopCheckout() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -50,22 +54,61 @@ function ShopCheckout() {
 
     const navigate = useNavigate();
 
-    const showNoti = (msg, type) => {
-        return enqueueSnackbar(msg, {
-            variant: type,
-            action: (key) => (
-                <IconButton
-                    size="small"
-                    onClick={() => closeSnackbar(key)}
-                    style={{
-                        color: "white",
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-            ),
-        });
-    };
+    const showNoti = useCallback(
+        (msg, type) => {
+            return enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
+
+    const getData = useCallback(async () => {
+        const response = await productApi.getAll();
+        if (response.status === 200) {
+            const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+                cart: [],
+            };
+            const sumPrice = currCart.cart.reduce(
+                (acc, o) => acc + o.price * o.quantity,
+                0
+            );
+            const sumWeight = currCart.cart.reduce(
+                (acc, o) => acc + o.weight * o.quantity,
+                0
+            );
+
+            currCart.cart.forEach((itemInCart) => {
+                const product = response.data.find(
+                    (itemInProduct) => itemInProduct.id === itemInCart.id
+                );
+                if (product) {
+                    itemInCart.in_stock = product.in_stock;
+                }
+            });
+
+            const extraFee = Math.ceil((sumWeight - 500) / 500) * 5000;
+            setTotalWeight(sumWeight);
+            setProducts(currCart.cart);
+            setSubtotal(sumPrice);
+            setTax(sumPrice / 10);
+            setTotal(sumPrice + sumPrice / 10 + 40000 + extraFee);
+            setShippingFee((prev) => prev + extraFee);
+        } else {
+            showNoti("Lỗi: không lấy được thông tin");
+        }
+    }, [showNoti]);
 
     const getProvinces = useCallback(async () => {
         const response = await ghnApi.getProvince();
@@ -74,25 +117,8 @@ function ShopCheckout() {
 
     useEffect(() => {
         document.title = "Thanh toán";
-        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-            cart: [],
-        };
-        const sumPrice = currCart.cart.reduce(
-            (acc, o) => acc + o.price * o.quantity,
-            0
-        );
-        const sumWeight = currCart.cart.reduce(
-            (acc, o) => acc + o.weight * o.quantity,
-            0
-        );
-        const extraFee = Math.ceil((sumWeight - 500) / 500) * 5000;
-        setTotalWeight(sumWeight);
-        setProducts(currCart.cart);
-        setSubtotal(sumPrice);
-        setTax(sumPrice / 10);
-        setTotal(sumPrice + sumPrice / 10 + 40000 + extraFee);
-        setShippingFee((prev) => prev + extraFee);
-    }, []);
+        getData();
+    }, [getData]);
 
     useEffect(() => {
         const extraFee = Math.ceil((totalWeight - 500) / 500) * 5000;
@@ -159,10 +185,23 @@ function ShopCheckout() {
             return;
         }
 
+        for (let i = 0; i < products.length; i++) {
+            if (products[i].quantity > products[i].in_stock) {
+                showNoti(
+                    "Số lượng của sản phẩm " +
+                        products[i].name +
+                        " lớn hơn số lượng trong kho",
+                    "error"
+                );
+                return;
+            }
+        }
+
         const productList = products.map((item) => ({
             id: item.id,
             price: item.price,
             quantity: item.quantity,
+            in_stock: item.in_stock - item.quantity,
         }));
 
         const data = {
@@ -691,7 +730,8 @@ function ShopCheckout() {
                                                             </a>
                                                         </h4>
                                                         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                                            {product.author}
+                                                            Kho: &nbsp;
+                                                            {product.in_stock}
                                                         </p>
                                                     </div>
 
@@ -757,7 +797,13 @@ function ShopCheckout() {
                                                                 </button>
                                                                 <input
                                                                     type="number"
-                                                                    className="outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200 border-y"
+                                                                    className={classNames(
+                                                                        product.quantity >
+                                                                            product.in_stock
+                                                                            ? "text-red-500 hover:text-red-500"
+                                                                            : "",
+                                                                        "outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200 border-y"
+                                                                    )}
                                                                     name="custom-input-number"
                                                                     value={
                                                                         product.quantity

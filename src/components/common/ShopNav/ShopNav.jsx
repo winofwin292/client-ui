@@ -6,10 +6,7 @@ import React, {
     useCallback,
     useEffect,
 } from "react";
-import {
-    MagnifyingGlassIcon,
-    ShoppingBagIcon,
-} from "@heroicons/react/24/outline";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 import { Listbox, Transition } from "@headlessui/react";
@@ -36,8 +33,6 @@ function ShopNav(props) {
     }, [getData]);
 
     const handleFilter = (e) => {
-        // e.preventDefault();
-
         let newData = [];
         if (condition.length === 0) {
             newData.push(...props.dataRef);
@@ -50,6 +45,9 @@ function ShopNav(props) {
         }
 
         props.setData(newData);
+        props.setCount(Math.ceil(newData.length / props.perPage));
+        props.setCurrData(newData.slice(0, props.perPage));
+        props.setPage(0);
         buttonRef.current.click();
     };
 

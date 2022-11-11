@@ -18,12 +18,6 @@ import { formatterVND } from "utils";
 
 import productApi from "api/Product/productApi";
 
-const reviews = { href: "#", average: 4, totalCount: 117 };
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
-
 function ProductDetail() {
     let { id } = useParams();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -33,6 +27,26 @@ function ProductDetail() {
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const navigate = useNavigate();
+
+    const showNoti = useCallback(
+        (msg, type) => {
+            return enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
 
     const getData = useCallback(
         async (productId) => {
@@ -48,6 +62,7 @@ function ProductDetail() {
                         thumbnail: image.url,
                     })
                 );
+
                 setProductImages(temp);
                 setProduct(response.data);
                 document.title = response.data.name;
@@ -78,20 +93,7 @@ function ProductDetail() {
         (e) => {
             e.preventDefault();
             if (quantity <= 0) {
-                enqueueSnackbar("Vui lòng nhập số lượng sản phẩm", {
-                    variant: "error",
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti("Vui lòng nhập số lượng sản phẩm", "error");
                 return;
             }
             try {
@@ -107,6 +109,15 @@ function ProductDetail() {
                 );
 
                 if (productInCart) {
+                    if (productInCart.quantity >= newProduct.in_stock) {
+                        showNoti(
+                            "Chỉ có thể thêm tối đa " +
+                                newProduct.in_stock +
+                                " sản phẩm này vào giỏ hàng",
+                            "error"
+                        );
+                        return;
+                    }
                     currCart.cart.forEach((item) => {
                         if (item.id === newProduct.id)
                             item.quantity += quantity;
@@ -117,47 +128,42 @@ function ProductDetail() {
 
                 setCountCart((prev) => prev + quantity);
                 localStorage.setItem("myCart", JSON.stringify(currCart));
-                enqueueSnackbar(`Đã thêm ${quantity} sản phẩm vào hàng`, {
-                    variant: "success",
-                    style: {
-                        borderColor: "#43a047",
-                        color: "#43a047",
-                    },
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti(`Đã thêm ${quantity} sản phẩm vào hàng`, "success");
+                setQuantity(1);
             } catch (error) {
                 console.log(error);
-                enqueueSnackbar("Lỗi: không thêm được sản phẩm", {
-                    variant: "error",
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti("Lỗi: không thêm được sản phẩm", "error");
             }
         },
-        [closeSnackbar, enqueueSnackbar, product, quantity]
+        [product, quantity, showNoti]
     );
 
     const handleOpenCart = () => {
         setCartOpen(true);
+    };
+
+    const handleAdd = (e, id) => {
+        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+            cart: [],
+        };
+        const productInCart = currCart.cart.find((item) => item.id === id);
+
+        if (
+            productInCart &&
+            quantity >= productInCart.in_stock - productInCart.quantity
+        ) {
+            showNoti(
+                "Chỉ có thể thêm tối đa " +
+                    (productInCart.in_stock - productInCart.quantity) +
+                    " sản phẩm, vì đã có " +
+                    (parseInt(product.in_stock) -
+                        (productInCart.in_stock - productInCart.quantity)) +
+                    " sản phẩm này trong giỏ hàng",
+                "error"
+            );
+            return;
+        }
+        setQuantity((prev) => prev + 1);
     };
 
     return (
@@ -250,36 +256,6 @@ function ProductDetail() {
                                     {formatterVND.format(product.price)}
                                 </p>
 
-                                {/* Reviews */}
-                                <div className="mt-6">
-                                    <h3 className="sr-only">Reviews</h3>
-                                    <div className="flex items-center">
-                                        <div className="flex items-center">
-                                            {[0, 1, 2, 3, 4].map((rating) => (
-                                                <StarIcon
-                                                    key={rating}
-                                                    className={classNames(
-                                                        reviews.average > rating
-                                                            ? "text-gray-900  dark:text-white"
-                                                            : "text-gray-200  dark:text-gray-500",
-                                                        "h-5 w-5 flex-shrink-0"
-                                                    )}
-                                                    aria-hidden="true"
-                                                />
-                                            ))}
-                                        </div>
-                                        <p className="sr-only">
-                                            {reviews.average} out of 5 stars
-                                        </p>
-                                        <a
-                                            href={reviews.href}
-                                            className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-white"
-                                        >
-                                            {reviews.totalCount} đánh giá
-                                        </a>
-                                    </div>
-                                </div>
-
                                 <div className="mt-10">
                                     <div>
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-white">
@@ -306,6 +282,13 @@ function ProductDetail() {
                                                     <span className="text-gray-800 font-bold dark:text-white">
                                                         {product.Category.name}
                                                     </span>
+                                                </li>
+                                                <li className="text-gray-600 dark:text-white">
+                                                    Kho:&nbsp;còn&nbsp;
+                                                    <span className="text-gray-800 font-bold dark:text-white">
+                                                        {product.in_stock}
+                                                    </span>{" "}
+                                                    sản phẩm
                                                 </li>
                                             </ul>
                                         </div>
@@ -353,10 +336,9 @@ function ProductDetail() {
                                                 data-action="increment"
                                                 className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer dark:bg-gray-300"
                                                 onClick={(e) =>
-                                                    setQuantity(
-                                                        (prev) => prev + 1
-                                                    )
+                                                    handleAdd(e, product.id)
                                                 }
+                                                // disabled={canAdd === quantity}
                                             >
                                                 <span className="m-auto text-2xl font-thin">
                                                     +

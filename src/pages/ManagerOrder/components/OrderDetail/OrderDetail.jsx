@@ -96,10 +96,10 @@ function OrderDetail(props) {
             {
                 field: "name",
                 headerName: "Tên sách",
-                width: 150,
+                width: 250,
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 5,
+                flex: 8,
                 colSpan: ({ row }) => {
                     if (
                         row.id === "SUBTOTAL" ||
@@ -236,64 +236,80 @@ function OrderDetail(props) {
     };
 
     return (
-        <Dialog
-            open={props.orderDetail.open}
-            onClose={handleCloseManager}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            fullWidth
-            maxWidth="lg"
-        >
-            <style type="text/css" media="print">
-                {" @page { size: landscape; } "}
-            </style>
-            <DialogTitle id="alert-dialog-title">
-                {"Chi tiết đơn hàng"}
-            </DialogTitle>
-            <DialogContent ref={componentRef}>
-                <DialogContentText id="alert-dialog-description">
-                    <b>Thông tin đơn hàng:</b>
-                </DialogContentText>
-                {orderInfo ? (
-                    <DialogContentText
-                        id="alert-dialog-description"
-                        sx={{ ml: 2 }}
-                    >
-                        - Họ tên:{" "}
-                        {orderInfo.last_name + " " + orderInfo.first_name}
-                        <br />- Điện thoại: {orderInfo.phone}
-                        <br />- Email: {orderInfo.email}
-                        <br />- Địa chỉ: {orderInfo.address}, {orderInfo.ward},{" "}
-                        {orderInfo.district}, {orderInfo.province}
-                        <br />- Trạng thái đơn hàng:{" "}
-                        <b>{orderInfo.OrderStatus.name}</b>
-                        <br />- Mã GHN:{" "}
-                        <b>
-                            <i>
-                                {orderInfo.order_code
-                                    ? orderInfo.order_code
-                                    : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
-                            </i>
-                        </b>
-                        <br />- Ngày giao hàng dự kiến:{" "}
-                        <b>
-                            <i>
-                                {orderInfo.expected_delivery_time
-                                    ? new Date(
-                                          orderInfo.expected_delivery_time
-                                      ).toLocaleDateString("en-GB")
-                                    : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
-                            </i>
-                        </b>
+        <ThemeProvider theme={darkMode ? themeD : theme}>
+            <Dialog
+                open={props.orderDetail.open}
+                onClose={handleCloseManager}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth
+                maxWidth="lg"
+            >
+                <style type="text/css" media="print">
+                    {" @page { size: landscape; } "}
+                </style>
+                <DialogTitle id="alert-dialog-title">
+                    {"Chi tiết đơn hàng"}
+                </DialogTitle>
+                <DialogContent ref={componentRef}>
+                    <DialogContentText id="alert-dialog-description">
+                        <b>Thông tin đơn hàng:</b>
                     </DialogContentText>
-                ) : (
-                    ""
-                )}
-                <DialogContentText id="alert-dialog-description">
-                    <b>Danh sách sản phẩm:</b>
-                </DialogContentText>
-                <div style={{ height: "100%", width: "100%" }}>
-                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                    {orderInfo ? (
+                        <DialogContentText
+                            id="alert-dialog-description"
+                            sx={{ ml: 2 }}
+                        >
+                            - Họ tên:{" "}
+                            {orderInfo.last_name + " " + orderInfo.first_name}
+                            <br />- Điện thoại: {orderInfo.phone}
+                            <br />- Email: {orderInfo.email}
+                            <br />- Địa chỉ: {orderInfo.address},{" "}
+                            {orderInfo.ward}, {orderInfo.district},{" "}
+                            {orderInfo.province}
+                            <br />- Trạng thái đơn hàng:{" "}
+                            <b>{orderInfo.OrderStatus.name}</b>
+                            <br />- Mã GHN:{" "}
+                            <b>
+                                <i>
+                                    {orderInfo.order_code
+                                        ? orderInfo.order_code
+                                        : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
+                                </i>
+                            </b>{" "}
+                            {orderInfo.order_code ? (
+                                <a
+                                    href={
+                                        "https://tracking.ghn.dev/?order_code=" +
+                                        orderInfo.order_code
+                                    }
+                                    className="bg-gray-500 text-white rounded"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Theo dõi đơn hàng
+                                </a>
+                            ) : (
+                                ""
+                            )}
+                            <br />- Ngày giao hàng dự kiến:{" "}
+                            <b>
+                                <i>
+                                    {orderInfo.expected_delivery_time
+                                        ? new Date(
+                                              orderInfo.expected_delivery_time
+                                          ).toLocaleDateString("en-GB")
+                                        : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
+                                </i>
+                            </b>
+                        </DialogContentText>
+                    ) : (
+                        ""
+                    )}
+                    <DialogContentText id="alert-dialog-description">
+                        <b>Danh sách sản phẩm:</b>
+                    </DialogContentText>
+                    <div style={{ height: "100%", width: "100%" }}>
                         <DataGrid
                             rows={orderItem}
                             columns={columns}
@@ -319,19 +335,19 @@ function OrderDetail(props) {
                             showColumnRightBorder
                             getCellClassName={getCellClassName}
                         />
-                    </ThemeProvider>
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <ReactToPrint
-                    trigger={() => <Button>In đơn hàng</Button>}
-                    content={() => componentRef.current}
-                />
-                <Button onClick={handleCloseManager} autoFocus>
-                    Đóng
-                </Button>
-            </DialogActions>
-        </Dialog>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <ReactToPrint
+                        trigger={() => <Button>In đơn hàng</Button>}
+                        content={() => componentRef.current}
+                    />
+                    <Button onClick={handleCloseManager} autoFocus>
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </ThemeProvider>
     );
 }
 

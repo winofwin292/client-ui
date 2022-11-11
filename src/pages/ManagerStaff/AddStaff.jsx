@@ -103,9 +103,13 @@ function AddStaff(props) {
         }
 
         const data = {
-            username: removeAccents(
-                (firstName + lastName).replace(/\s+/g, "").toLowerCase()
-            ),
+            username:
+                removeAccents(
+                    (firstName + lastName).replace(/\s+/g, "").toLowerCase()
+                ) +
+                new Date(dob).getDate().toString() +
+                (new Date(dob).getMonth() + 1).toString() +
+                new Date(dob).getFullYear().toString(),
             firstName,
             lastName,
             sex,

@@ -11,9 +11,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { DataGrid, viVN } from "@mui/x-data-grid";
 
-// Material Dashboard 2 React contexts
-import { useMaterialUIController } from "context";
-
 import { formatterVND } from "utils";
 
 import orderApi from "api/Order/orderApi";
@@ -31,8 +28,7 @@ function OrderDetail(props) {
 
     const [loading, setLoading] = useState(true);
 
-    const [controller] = useMaterialUIController();
-    const { darkMode } = controller;
+    const [darkMode, setDarkMode] = useState(false);
 
     const getData = useCallback(async () => {
         const response = await orderApi.getById({
@@ -85,20 +81,19 @@ function OrderDetail(props) {
             {
                 field: "name",
                 headerName: "Tên sách",
-                width: 150,
+                width: 500,
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 5,
                 colSpan: ({ row }) => {
                     if (
                         row.id === "SUBTOTAL" ||
                         row.id === "TOTAL" ||
                         row.id === "DELIVERY"
                     ) {
-                        return 5;
+                        return 3;
                     }
                     if (row.id === "TAX") {
-                        return 4;
+                        return 2;
                     }
                     return undefined;
                 },
@@ -113,22 +108,6 @@ function OrderDetail(props) {
                     }
                     return value;
                 },
-            },
-            {
-                field: "author",
-                headerName: "Tác giả",
-                width: 150,
-                disableColumnMenu: true,
-                sortable: false,
-            },
-            {
-                field: "publishing_year",
-                headerName: "Năm xuất bản",
-                width: 110,
-                align: "right",
-                headerAlign: "right",
-                disableColumnMenu: true,
-                sortable: false,
             },
             {
                 field: "quantity",
@@ -156,7 +135,6 @@ function OrderDetail(props) {
                 },
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 2,
                 valueGetter: ({ row, value }) => {
                     if (row.id === "TAX") {
                         return `${row.taxRate}%`;
@@ -182,7 +160,6 @@ function OrderDetail(props) {
                 },
                 disableColumnMenu: true,
                 sortable: false,
-                flex: 2,
                 valueGetter: ({ row }) => {
                     if (row.id === "SUBTOTAL") {
                         return row.subtotal;
@@ -213,6 +190,21 @@ function OrderDetail(props) {
     };
 
     useEffect(() => {
+        if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+            setDarkMode(true);
+        }
+
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", function (e) {
+                setDarkMode((prev) => !prev);
+            });
+    }, []);
+
+    useEffect(() => {
         getData();
     }, [getData]);
 
@@ -225,60 +217,76 @@ function OrderDetail(props) {
     };
 
     return (
-        <Dialog
-            open={props.orderDetail.open}
-            onClose={handleCloseManager}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            fullWidth
-            maxWidth="lg"
-        >
-            <style type="text/css" media="print">
-                {" @page { size: landscape; } "}
-            </style>
-            <DialogTitle id="alert-dialog-title">
-                {"Chi tiết đơn hàng"}
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    <b>Thông tin đơn hàng:</b>
-                </DialogContentText>
-                {orderInfo ? (
-                    <DialogContentText
-                        id="alert-dialog-description"
-                        sx={{ ml: 2 }}
-                    >
-                        - Họ tên:{" "}
-                        {orderInfo.last_name + " " + orderInfo.first_name}
-                        <br />- Điện thoại: {orderInfo.phone}
-                        <br />- Email: {orderInfo.email}
-                        <br />- Địa chỉ: {orderInfo.address}, {orderInfo.ward},{" "}
-                        {orderInfo.district}, {orderInfo.province}
-                        <br />- Trạng thái đơn hàng:{" "}
-                        <b>{orderInfo.OrderStatus.name}</b>
-                        <br />- Mã GHN:{" "}
-                        <b>
-                            {orderInfo.order_code
-                                ? orderInfo.order_code
-                                : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
-                        </b>
-                        <br />- Ngày giao hàng dự kiến:{" "}
-                        <b>
-                            {orderInfo.expected_delivery_time
-                                ? new Date(
-                                      orderInfo.expected_delivery_time
-                                  ).toLocaleDateString("en-GB")
-                                : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
-                        </b>
+        <ThemeProvider theme={darkMode ? themeD : theme}>
+            <Dialog
+                open={props.orderDetail.open}
+                onClose={handleCloseManager}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth
+                maxWidth="md"
+            >
+                <style type="text/css" media="print">
+                    {" @page { size: landscape; } "}
+                </style>
+                <DialogTitle id="alert-dialog-title">
+                    {"Chi tiết đơn hàng"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <b>Thông tin đơn hàng:</b>
                     </DialogContentText>
-                ) : (
-                    ""
-                )}
-                <DialogContentText id="alert-dialog-description">
-                    <b>Danh sách sản phẩm:</b>
-                </DialogContentText>
-                <div style={{ height: "100%", width: "100%" }}>
-                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                    {orderInfo ? (
+                        <DialogContentText
+                            id="alert-dialog-description"
+                            sx={{ ml: 2 }}
+                        >
+                            - Họ tên:{" "}
+                            {orderInfo.last_name + " " + orderInfo.first_name}
+                            <br />- Điện thoại: {orderInfo.phone}
+                            <br />- Email: {orderInfo.email}
+                            <br />- Địa chỉ: {orderInfo.address},{" "}
+                            {orderInfo.ward}, {orderInfo.district},{" "}
+                            {orderInfo.province}
+                            <br />- Trạng thái đơn hàng:{" "}
+                            <b>{orderInfo.OrderStatus.name}</b>
+                            <br />- Mã GHN:{" "}
+                            <b>
+                                {orderInfo.order_code
+                                    ? orderInfo.order_code
+                                    : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
+                            </b>{" "}
+                            {orderInfo.order_code ? (
+                                <a
+                                    href={
+                                        "https://tracking.ghn.dev/?order_code=" +
+                                        orderInfo.order_code
+                                    }
+                                    className="bg-gray-500 text-white rounded"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Theo dõi đơn hàng
+                                </a>
+                            ) : (
+                                ""
+                            )}
+                            <br />- Ngày giao hàng dự kiến:{" "}
+                            <b>
+                                {orderInfo.expected_delivery_time
+                                    ? new Date(
+                                          orderInfo.expected_delivery_time
+                                      ).toLocaleDateString("en-GB")
+                                    : "Đơn hàng này chưa chuyển cho đơn vị vận chuyển"}
+                            </b>
+                        </DialogContentText>
+                    ) : (
+                        ""
+                    )}
+                    <DialogContentText id="alert-dialog-description">
+                        <b>Danh sách sản phẩm:</b>
+                    </DialogContentText>
+                    <div style={{ height: "100%", width: "802px" }}>
                         <DataGrid
                             rows={orderItem}
                             columns={columns}
@@ -304,15 +312,15 @@ function OrderDetail(props) {
                             showColumnRightBorder
                             getCellClassName={getCellClassName}
                         />
-                    </ThemeProvider>
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleCloseManager} autoFocus>
-                    Đóng
-                </Button>
-            </DialogActions>
-        </Dialog>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseManager} autoFocus>
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </ThemeProvider>
     );
 }
 

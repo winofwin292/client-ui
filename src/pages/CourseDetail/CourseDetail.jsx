@@ -2,7 +2,6 @@ import React, { memo, useState, useEffect, useCallback } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { StarIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { TopNav } from "components/common/TopNav";
@@ -35,11 +34,6 @@ const product = {
         },
     ],
 };
-const reviews = { href: "#", average: 4, totalCount: 117 };
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
 
 function CourseDetail() {
     const [cTDState, setCTDState] = useState({
@@ -171,36 +165,6 @@ function CourseDetail() {
                                 <p className="text-3xl tracking-tight text-gray-900 dark:text-white">
                                     {formatterVND.format(course.price)}
                                 </p>
-
-                                {/* Reviews */}
-                                <div className="mt-6">
-                                    <h3 className="sr-only">Reviews</h3>
-                                    <div className="flex items-center">
-                                        <div className="flex items-center">
-                                            {[0, 1, 2, 3, 4].map((rating) => (
-                                                <StarIcon
-                                                    key={rating}
-                                                    className={classNames(
-                                                        reviews.average > rating
-                                                            ? "text-gray-900  dark:text-white"
-                                                            : "text-gray-200  dark:text-gray-500",
-                                                        "h-5 w-5 flex-shrink-0"
-                                                    )}
-                                                    aria-hidden="true"
-                                                />
-                                            ))}
-                                        </div>
-                                        <p className="sr-only">
-                                            {reviews.average} out of 5 stars
-                                        </p>
-                                        <a
-                                            href={reviews.href}
-                                            className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-white"
-                                        >
-                                            {reviews.totalCount} đánh giá
-                                        </a>
-                                    </div>
-                                </div>
 
                                 <div className="mt-10">
                                     <div>

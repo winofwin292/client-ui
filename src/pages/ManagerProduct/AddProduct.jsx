@@ -38,6 +38,7 @@ function AddProduct(props) {
     const [length, setLength] = useState(0);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
+    const [inStock, setInStock] = useState(0);
     const [categoryId, setCategoryId] = useState("");
     const [description, setDescription] = useState("");
 
@@ -146,6 +147,11 @@ function AddProduct(props) {
             return;
         }
 
+        if (inStock <= 0) {
+            showNoti("Vui lòng nhập số lượng của sản phẩm", "error");
+            return;
+        }
+
         if (!author) {
             showNoti("Vui lòng nhập tên tác giả", "error");
             return;
@@ -202,10 +208,11 @@ function AddProduct(props) {
             publishing_year: parseInt(publishingYear),
             description,
             categoryId,
-            weight,
-            length,
-            width,
-            height,
+            weight: parseInt(weight),
+            length: parseInt(length),
+            width: parseInt(width),
+            height: parseInt(height),
+            in_stock: inStock,
         };
 
         let formData = new FormData();
@@ -267,7 +274,6 @@ function AddProduct(props) {
                         type="text"
                         fullWidth
                         variant="standard"
-                        inputProps={{ min: "0" }}
                         value={author}
                         onChange={(e) => setAuthor(e.target.value)}
                     />
@@ -302,6 +308,18 @@ function AddProduct(props) {
                             </MenuItem>
                         ))}
                     </Select>
+
+                    <TextField
+                        margin="dense"
+                        id="in-stock"
+                        label="Số lượng"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                        inputProps={{ min: "0" }}
+                        value={inStock}
+                        onChange={(e) => setInStock(e.target.value)}
+                    />
 
                     <TextField
                         margin="dense"

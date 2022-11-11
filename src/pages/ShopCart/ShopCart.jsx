@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, memo } from "react";
+import React, { Fragment, useState, useEffect, memo, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -7,24 +7,69 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useSnackbar } from "notistack";
 
+import productApi from "api/Product/productApi";
+
 import { formatterVND } from "utils";
+
+function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+}
 
 function ShopCart(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [products, setProducts] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
 
+    const showNoti = useCallback(
+        (msg, type) => {
+            enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
+
+    const getData = useCallback(async () => {
+        const response = await productApi.getAll();
+        if (response.status === 200) {
+            const currCart = JSON.parse(localStorage.getItem("myCart")) || {
+                cart: [],
+            };
+            const sumPrice = currCart.cart.reduce(
+                (acc, o) => acc + o.price * o.quantity,
+                0
+            );
+
+            currCart.cart.forEach((itemInCart) => {
+                const product = response.data.find(
+                    (itemInProduct) => itemInProduct.id === itemInCart.id
+                );
+                if (product) {
+                    itemInCart.in_stock = product.in_stock;
+                }
+            });
+
+            setProducts(currCart.cart);
+            setSubtotal(sumPrice);
+        } else {
+            showNoti("Lỗi: không lấy được thông tin");
+        }
+    }, [showNoti]);
+
     useEffect(() => {
-        const currCart = JSON.parse(localStorage.getItem("myCart")) || {
-            cart: [],
-        };
-        const sumPrice = currCart.cart.reduce(
-            (acc, o) => acc + o.price * o.quantity,
-            0
-        );
-        setProducts(currCart.cart);
-        setSubtotal(sumPrice);
-    }, [props.cartOpen]);
+        getData();
+    }, [props.cartOpen, getData]);
 
     const handleRemove = (e, index, price, quantity) => {
         e.preventDefault();
@@ -40,39 +85,9 @@ function ShopCart(props) {
             );
             props.setCountCart((prev) => prev - quantity);
             setSubtotal((prev) => prev - price * quantity);
-            enqueueSnackbar("Đã xóa sản phẩm khỏi giỏ hàng", {
-                variant: "success",
-                style: {
-                    borderColor: "#43a047",
-                    color: "#43a047",
-                },
-                action: (key) => (
-                    <IconButton
-                        size="small"
-                        onClick={() => closeSnackbar(key)}
-                        style={{
-                            color: "white",
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                ),
-            });
+            showNoti("Đã xóa sản phẩm khỏi giỏ hàng", "success");
         } catch {
-            enqueueSnackbar("Lỗi: không xóa được sản phẩm", {
-                variant: "error",
-                action: (key) => (
-                    <IconButton
-                        size="small"
-                        onClick={() => closeSnackbar(key)}
-                        style={{
-                            color: "white",
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                ),
-            });
+            showNoti("Lỗi: không xóa được sản phẩm", "error");
         }
     };
 
@@ -215,6 +230,10 @@ function ShopCart(props) {
                                                                                                         "/shop/" +
                                                                                                         product.id
                                                                                                     }
+                                                                                                    className="line-clamp-1"
+                                                                                                    title={
+                                                                                                        product.name
+                                                                                                    }
                                                                                                 >
                                                                                                     {
                                                                                                         product.name
@@ -228,8 +247,9 @@ function ShopCart(props) {
                                                                                             </p>
                                                                                         </div>
                                                                                         <p className="mt-1 text-sm text-gray-500 dark:text-white">
+                                                                                            Kho:&nbsp;
                                                                                             {
-                                                                                                product.author
+                                                                                                product.in_stock
                                                                                             }
                                                                                         </p>
                                                                                     </div>
@@ -261,7 +281,13 @@ function ShopCart(props) {
                                                                                                 </button>
                                                                                                 <input
                                                                                                     type="number"
-                                                                                                    className="outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200 border-y"
+                                                                                                    className={classNames(
+                                                                                                        product.quantity >
+                                                                                                            product.in_stock
+                                                                                                            ? "text-red-500 hover:text-red-500"
+                                                                                                            : "",
+                                                                                                        "outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200 border-y"
+                                                                                                    )}
                                                                                                     name="custom-input-number"
                                                                                                     value={
                                                                                                         product.quantity
@@ -279,6 +305,10 @@ function ShopCart(props) {
                                                                                                             product.id,
                                                                                                             product.price
                                                                                                         )
+                                                                                                    }
+                                                                                                    disabled={
+                                                                                                        product.quantity ===
+                                                                                                        product.in_stock
                                                                                                     }
                                                                                                 >
                                                                                                     <span className="m-auto text-2xl font-thin">

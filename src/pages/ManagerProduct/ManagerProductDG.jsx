@@ -74,7 +74,13 @@ function EditToolbar(props) {
             <GridToolbarColumnsButton />
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <GridToolbarExport />
+            <GridToolbarExport
+                csvOptions={{
+                    utf8WithBom: true,
+                    fileName: "San_pham_" + new Date().getTime().toString(),
+                }}
+                printOptions={{ disableToolbarButton: true }}
+            />
             <AddProduct open={open} setOpen={setOpen} getData={getData} />
         </GridToolbarContainer>
     );
@@ -253,9 +259,16 @@ function ManagerProductDG() {
                 editable: true,
             },
             {
+                field: "in_stock",
+                headerName: "Kho",
+                width: 30,
+                type: "number",
+                editable: true,
+            },
+            {
                 field: "description",
                 headerName: "Mô tả",
-                width: 220,
+                width: 200,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
@@ -304,7 +317,7 @@ function ManagerProductDG() {
             {
                 field: "height",
                 headerName: "Dày",
-                width: 60,
+                width: 40,
                 type: "number",
                 renderCell: (params) => {
                     if (params.value == null) {
@@ -335,7 +348,7 @@ function ManagerProductDG() {
             {
                 field: "is_show",
                 headerName: "Hiện/ẩn",
-                width: 80,
+                width: 70,
                 type: "singleSelect",
                 valueOptions: [
                     { value: true, label: "Hiện" },
@@ -450,8 +463,8 @@ function ManagerProductDG() {
         <>
             <Grid item xs={12}>
                 <Card>
-                    <div style={{ height: 550, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <div style={{ height: 550, width: "100%" }}>
                             <DataGrid
                                 rows={data}
                                 columns={columns}
@@ -484,12 +497,12 @@ function ManagerProductDG() {
                                 editMode="row"
                                 density="compact"
                             />
-                        </ThemeProvider>
-                        <ManagerProductImage
-                            managerProductImage={managerProductImage}
-                            setManagerProductImage={setManagerProductImage}
-                        />
-                    </div>
+                            <ManagerProductImage
+                                managerProductImage={managerProductImage}
+                                setManagerProductImage={setManagerProductImage}
+                            />
+                        </div>
+                    </ThemeProvider>
                 </Card>
             </Grid>
         </>

@@ -264,7 +264,7 @@ function ManagerOrderDG() {
                         />,
                         <GridActionsCellItem
                             icon={<PrintIcon />}
-                            label={"In phiếu của đơn vị vận chuyển"}
+                            label={"In vận đơn"}
                             onClick={(e) =>
                                 setPrintState({
                                     open: true,
@@ -327,8 +327,8 @@ function ManagerOrderDG() {
         <>
             <Grid item xs={12}>
                 <Card>
-                    <div style={{ height: 550, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <div style={{ height: 550, width: "100%" }}>
                             <DataGrid
                                 rows={data}
                                 columns={columns}
@@ -352,21 +352,21 @@ function ManagerOrderDG() {
                                 }}
                                 density="compact"
                             />
-                        </ThemeProvider>
-                        <OrderDetail
-                            orderDetail={orderDetail}
-                            setOrderDetail={setOrderDetail}
-                        />
-                        <TransferToGHN
-                            transferStatus={transferStatus}
-                            setTransferStatus={setTransferStatus}
-                            getData={getData}
-                        />
-                        <PrintOrder
-                            printState={printState}
-                            setPrintState={setPrintState}
-                        />
-                    </div>
+                            <OrderDetail
+                                orderDetail={orderDetail}
+                                setOrderDetail={setOrderDetail}
+                            />
+                            <TransferToGHN
+                                transferStatus={transferStatus}
+                                setTransferStatus={setTransferStatus}
+                                getData={getData}
+                            />
+                            <PrintOrder
+                                printState={printState}
+                                setPrintState={setPrintState}
+                            />
+                        </div>
+                    </ThemeProvider>
                 </Card>
             </Grid>
         </>

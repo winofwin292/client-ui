@@ -309,8 +309,8 @@ function RequestContactDG() {
         <>
             <Grid item xs={12}>
                 <Card>
-                    <div style={{ height: 550, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <div style={{ height: 550, width: "100%" }}>
                             <DataGrid
                                 rows={data}
                                 columns={columns}
@@ -328,8 +328,8 @@ function RequestContactDG() {
                                 loading={loading}
                                 density="compact"
                             />
-                        </ThemeProvider>
-                    </div>
+                        </div>
+                    </ThemeProvider>
                 </Card>
             </Grid>
         </>

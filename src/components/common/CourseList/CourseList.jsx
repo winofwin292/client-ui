@@ -1,41 +1,9 @@
-import React, { memo, useEffect, useState, useCallback } from "react";
-import { useSnackbar } from "notistack";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { memo } from "react";
 
 import { formatterVND } from "utils";
 
-import courseApi from "api/Course/courseApi";
-
 function CourseList(props) {
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [courses, setCourses] = useState([]);
-
-    const getData = useCallback(async () => {
-        const response = await courseApi.getAll();
-        if (response.status === 200) {
-            setCourses(response.data.filter((item) => item.is_show));
-        } else {
-            enqueueSnackbar(response.data, {
-                variant: "error",
-                action: (key) => (
-                    <IconButton
-                        size="small"
-                        onClick={() => closeSnackbar(key)}
-                        style={{
-                            color: "white",
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                ),
-            });
-        }
-    }, [closeSnackbar, enqueueSnackbar]);
-
-    useEffect(() => {
-        getData();
-    }, [getData]);
+    const courses = props.data;
 
     return (
         <div className="bg-white dark:bg-gray-900">
@@ -56,7 +24,7 @@ function CourseList(props) {
                                     />
                                 </a>
                             </div>
-                            <div className="mt-4 flex justify-between">
+                            <div className="mt-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-700 dark:text-white">
                                         <a
@@ -64,22 +32,26 @@ function CourseList(props) {
                                                 "/course-introduction/" +
                                                 course.id
                                             }
-                                            className="font-bold"
+                                            className="font-bold line-clamp-1"
+                                            title={course.name}
                                         >
-                                            {/* <span
-                                                aria-hidden="true"
-                                                className="absolute inset-0"
-                                            /> */}
                                             {course.name}
                                         </a>
                                     </h3>
-                                    <p className="mt-1 text-sm text-gray-500 dark:text-white">
-                                        Loại: {course.TypeOfContent.description}
-                                    </p>
                                 </div>
-                                <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                    {formatterVND.format(course.price)}
-                                </p>
+                                <div className="flex justify-between">
+                                    <span>
+                                        <p className="mt-1 text-sm text-gray-500 dark:text-white">
+                                            Loại:{" "}
+                                            {course.TypeOfContent.description}
+                                        </p>
+                                    </span>
+                                    <span>
+                                        <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                            {formatterVND.format(course.price)}
+                                        </p>
+                                    </span>
+                                </div>
                             </div>
                             <div className="mt-4 flex justify-between">
                                 <a

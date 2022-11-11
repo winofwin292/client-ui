@@ -17,8 +17,8 @@ const orderApi = {
         const url = "/order/get-by-id";
         return axiosClient.post(url, data);
     },
-    getByPhone(data) {
-        const url = "/order/get-by-phone";
+    getByKeyword(data) {
+        const url = "/order/get-by-keyword";
         return axiosClient.post(url, data);
     },
     changeStatus(data) {

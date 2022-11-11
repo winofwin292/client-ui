@@ -10,9 +10,30 @@ function ProductList(props) {
     const products = props.data;
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+    const showNoti = useCallback(
+        (msg, type) => {
+            enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
+
     const handleAddToCart = useCallback(
         (e, product) => {
             e.preventDefault();
+
             try {
                 const { description, publishingYear, category, ...newProduct } =
                     product;
@@ -26,6 +47,15 @@ function ProductList(props) {
                 );
 
                 if (productInCart) {
+                    if (productInCart.quantity >= newProduct.in_stock) {
+                        showNoti(
+                            "Chỉ có thể thêm tối đa " +
+                                newProduct.in_stock +
+                                " sản phẩm này vào giỏ hàng",
+                            "error"
+                        );
+                        return;
+                    }
                     currCart.cart.forEach((item) => {
                         if (item.id === newProduct.id) item.quantity++;
                     });
@@ -35,42 +65,12 @@ function ProductList(props) {
 
                 props.setCountCart((prev) => prev + 1);
                 localStorage.setItem("myCart", JSON.stringify(currCart));
-                enqueueSnackbar("Đã thêm 1 sản phẩm vào hàng", {
-                    variant: "success",
-                    style: {
-                        borderColor: "#43a047",
-                        color: "#43a047",
-                    },
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti("Đã thêm 1 sản phẩm vào hàng", "success");
             } catch {
-                enqueueSnackbar("Lỗi: không thêm được sản phẩm", {
-                    variant: "error",
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti("Lỗi: không thêm được sản phẩm", "error");
             }
         },
-        [closeSnackbar, enqueueSnackbar, props]
+        [props, showNoti]
     );
     return (
         <div className="bg-white dark:bg-gray-900">
@@ -110,34 +110,40 @@ function ProductList(props) {
                                             )}
                                         </a>
                                     </div>
-                                    <div className="mt-4 flex justify-between">
+                                    <div className="mt-4">
                                         <div>
                                             <h3 className="text-sm font-medium text-gray-700 dark:text-white">
                                                 <a
                                                     href={"/shop/" + product.id}
-                                                    className="font-bold"
+                                                    className="font-bold line-clamp-1"
+                                                    title={product.name}
                                                 >
-                                                    {/* <span
-                                                aria-hidden="true"
-                                                className="absolute inset-0"
-                                            /> */}
                                                     {product.name}
                                                 </a>
                                             </h3>
-                                            <p className="mt-1 text-sm text-gray-500 dark:text-white">
-                                                Tác giả: {product.author}
-                                            </p>
                                         </div>
-                                        <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {formatterVND.format(product.price)}
-                                        </p>
+                                        <div className="flex justify-between">
+                                            <span>
+                                                <p className="mt-1 text-sm text-gray-500 dark:text-white">
+                                                    Kho: {product.in_stock}
+                                                </p>
+                                            </span>
+                                            <span>
+                                                <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                                                    {formatterVND.format(
+                                                        product.price
+                                                    )}
+                                                </p>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="mt-4 flex justify-between">
+                                    <div className="mt-2 flex justify-between">
                                         <button
                                             onClick={(e) =>
                                                 handleAddToCart(e, product)
                                             }
-                                            className="text-white text-center w-full bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 ml-2 mr-2 mb-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                                            className="text-white text-center w-full bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 ml-2 mr-2 mb-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800 disabled:opacity-50"
+                                            disabled={product.in_stock === 0}
                                         >
                                             + Giỏ hàng
                                         </button>

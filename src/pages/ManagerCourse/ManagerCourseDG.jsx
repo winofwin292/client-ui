@@ -445,8 +445,8 @@ function ManagerTeacherDG() {
         <>
             <Grid item xs={12}>
                 <Card>
-                    <div style={{ height: 550, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <div style={{ height: 550, width: "100%" }}>
                             <DataGrid
                                 rows={data}
                                 columns={columns}
@@ -479,24 +479,26 @@ function ManagerTeacherDG() {
                                 editMode="row"
                                 density="compact"
                             />
-                        </ThemeProvider>
-                        <ManagerPracticalContent
-                            managerPracticalContent={managerPracticalContent}
-                            setManagerPracticalContent={
-                                setManagerPracticalContent
-                            }
-                        />
-                        <ManagerPurposeOfCourse
-                            managerPurposeOfCourse={managerPurposeOfCourse}
-                            setManagerPurposeOfCourse={
-                                setManagerPurposeOfCourse
-                            }
-                        />
-                        <ManagerCourseFormat
-                            managerCourseFormat={managerCourseFormat}
-                            setManagerCourseFormat={setManagerCourseFormat}
-                        />
-                    </div>
+                            <ManagerPracticalContent
+                                managerPracticalContent={
+                                    managerPracticalContent
+                                }
+                                setManagerPracticalContent={
+                                    setManagerPracticalContent
+                                }
+                            />
+                            <ManagerPurposeOfCourse
+                                managerPurposeOfCourse={managerPurposeOfCourse}
+                                setManagerPurposeOfCourse={
+                                    setManagerPurposeOfCourse
+                                }
+                            />
+                            <ManagerCourseFormat
+                                managerCourseFormat={managerCourseFormat}
+                                setManagerCourseFormat={setManagerCourseFormat}
+                            />
+                        </div>
+                    </ThemeProvider>
                 </Card>
             </Grid>
         </>

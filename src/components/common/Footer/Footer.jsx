@@ -19,7 +19,7 @@ function Footer() {
     };
     return (
         <footer className="p-4 bg-white sm:p-6 dark:bg-gray-900">
-            <div className="mx-auto max-w-screen-xl">
+            <div className="mx-auto max-w-screen-xl max-h-screen">
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">
                         <a href="/" className="flex items-center">
