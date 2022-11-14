@@ -2,6 +2,7 @@ import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import validator from "validator";
 import { useSnackbar } from "notistack";
+import * as XLSX from "xlsx";
 import {
     DataGrid,
     viVN,
@@ -10,7 +11,6 @@ import {
     GridToolbarContainer,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
-    GridToolbarExport,
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
@@ -30,6 +30,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import GetAppIcon from "@mui/icons-material/GetApp";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -55,11 +56,35 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { handleRefresh } = props;
+    const { handleRefresh, data, getData } = props;
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
         setOpen(true);
+    };
+
+    const handleExportXlsx = () => {
+        const filename =
+            "giao-vien-" + new Date().getTime().toString() + ".xlsx";
+
+        const exportData = data.map((item, index) => {
+            return {
+                STT: index + 1,
+                "Họ và tên": item.last_name + " " + item.first_name,
+                "Tên đăng nhập": item.username,
+                "Giới tính": item.sex ? "Nam" : "Nữ",
+                "Ngày sinh": new Date(item.dob).toLocaleDateString("en-GB"),
+                "Địa chỉ": item.address,
+                Email: item.email,
+                "Số điện thoại": item.phone,
+                "Trạng thái": item.disabled ? "Khóa" : "Hoạt động",
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(exportData, { dateNF: "dd/MM/yyyy" });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Danh sách giáo viên");
+        XLSX.writeFile(wb, filename);
     };
 
     return (
@@ -81,18 +106,22 @@ function EditToolbar(props) {
             <GridToolbarColumnsButton />
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <GridToolbarExport />
-            <AddTeacher
-                open={open}
-                setOpen={setOpen}
-                handleRefresh={handleRefresh}
-            />
+            <Button
+                color="primary"
+                startIcon={<GetAppIcon />}
+                onClick={handleExportXlsx}
+            >
+                Xuất Excel
+            </Button>
+            <AddTeacher open={open} setOpen={setOpen} getData={getData} />
         </GridToolbarContainer>
     );
 }
 
 EditToolbar.propTypes = {
+    getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
 };
 
 function ManagerTeacherDG() {
@@ -245,9 +274,7 @@ function ManagerTeacherDG() {
                 "username: " + username + " - password: " + newPassword
             );
             setResultCopy("Đã copy nội dung");
-            console.log("Content copied to clipboard");
         } catch (err) {
-            console.error("Failed to copy: ", err);
             setResultCopy("Lỗi, không copy được nội dung");
         }
     }, [newPassword, username]);
@@ -274,14 +301,14 @@ function ManagerTeacherDG() {
     const columns = useMemo(
         () => [
             {
-                field: "first_name",
+                field: "last_name",
                 headerName: "Họ",
                 width: 100,
                 renderCell: RenderCellExpand,
                 editable: true,
             },
             {
-                field: "last_name",
+                field: "first_name",
                 headerName: "Tên",
                 width: 100,
                 renderCell: RenderCellExpand,
@@ -492,7 +519,7 @@ function ManagerTeacherDG() {
                                 Toolbar: EditToolbar,
                             }}
                             componentsProps={{
-                                toolbar: { handleRefresh },
+                                toolbar: { handleRefresh, data, getData },
                             }}
                             loading={loading}
                             initialState={{

@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
+import * as XLSX from "xlsx";
 import {
     DataGrid,
     viVN,
@@ -8,7 +9,6 @@ import {
     GridToolbarContainer,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
-    GridToolbarExport,
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
@@ -24,6 +24,7 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import PrintIcon from "@mui/icons-material/Print";
+import GetAppIcon from "@mui/icons-material/GetApp";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -46,7 +47,34 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { handleRefresh } = props;
+    const { handleRefresh, data } = props;
+
+    const handleExportXlsx = () => {
+        console.log(data);
+        const filename =
+            "don-hang-" + new Date().getTime().toString() + ".xlsx";
+
+        const exportData = data.map((item, index) => {
+            return {
+                STT: index + 1,
+                "Họ và tên": item.last_name + " " + item.first_name,
+                "Địa chỉ": item.full_address,
+                Email: item.email,
+                "Số điện thoại": item.phone,
+                "Đơn giá": item.total,
+                "Trạng thái": item.OrderStatus.name,
+                "Ngày giao hàng dự kiến": new Date(
+                    item.expected_delivery_time
+                ).toLocaleDateString("en-GB"),
+                "Mã GHN": item.order_code,
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(exportData, { dateNF: "dd/MM/yyyy" });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Đơn hàng");
+        XLSX.writeFile(wb, filename);
+    };
 
     return (
         <GridToolbarContainer>
@@ -60,13 +88,20 @@ function EditToolbar(props) {
             <GridToolbarColumnsButton />
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <GridToolbarExport />
+            <Button
+                color="primary"
+                startIcon={<GetAppIcon />}
+                onClick={handleExportXlsx}
+            >
+                Xuất Excel
+            </Button>
         </GridToolbarContainer>
     );
 }
 
 EditToolbar.propTypes = {
     handleRefresh: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
 };
 
 function ManagerOrderDG() {
@@ -340,7 +375,7 @@ function ManagerOrderDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { handleRefresh },
+                                    toolbar: { handleRefresh, data },
                                 }}
                                 loading={loading}
                                 initialState={{

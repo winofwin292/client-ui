@@ -29,7 +29,6 @@ import {
     GridToolbarContainer,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
-    GridToolbarExport,
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
@@ -74,7 +73,6 @@ function EditToolbar(props) {
             <GridToolbarColumnsButton />
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <GridToolbarExport />
             <AddPracticalContent
                 open={open}
                 setOpen={setOpen}

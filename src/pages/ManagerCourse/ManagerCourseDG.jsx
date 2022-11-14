@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
+import * as XLSX from "xlsx";
 import {
     DataGrid,
     viVN,
@@ -9,7 +10,6 @@ import {
     GridToolbarContainer,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
-    GridToolbarExport,
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
@@ -28,6 +28,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import TypeSpecimenIcon from "@mui/icons-material/TypeSpecimen";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import GetAppIcon from "@mui/icons-material/GetApp";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -51,11 +52,54 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { getData, handleRefresh } = props;
+    const { getData, handleRefresh, data } = props;
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
         setOpen(true);
+    };
+
+    const handleExportXlsx = () => {
+        const filename =
+            "khoa-hoc-" + new Date().getTime().toString() + ".xlsx";
+
+        const exportData = data.map((item, index) => {
+            return {
+                STT: index + 1,
+                "Tên khóa học": item.name,
+                "Giá khóa học": item.price,
+                "Số lượng học viên": item.student_number,
+                "Nội dung":
+                    item.content +
+                    " " +
+                    (item.typeOfContentId === 1
+                        ? "buổi"
+                        : item.typeOfContentId === 2
+                        ? "chuyên đề"
+                        : ""),
+                "Thời lượng":
+                    item.time +
+                    " giờ/" +
+                    (item.typeOfContentId === 1
+                        ? "buổi"
+                        : item.typeOfContentId === 2
+                        ? "chuyên đề"
+                        : ""),
+                Loại:
+                    item.typeOfContentId === 1
+                        ? "Khóa học"
+                        : item.typeOfContentId === 2
+                        ? "Chuyên đề"
+                        : "",
+                "Thông tin khác": item.other_info,
+                "Hiện/Ẩn": item.is_show ? "Hiện" : "Ẩn",
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(exportData, { dateNF: "dd/MM/yyyy" });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Danh sách khóa học");
+        XLSX.writeFile(wb, filename);
     };
 
     return (
@@ -77,7 +121,13 @@ function EditToolbar(props) {
             <GridToolbarColumnsButton />
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <GridToolbarExport />
+            <Button
+                color="primary"
+                startIcon={<GetAppIcon />}
+                onClick={handleExportXlsx}
+            >
+                Xuất Excel
+            </Button>
             <AddCourse open={open} setOpen={setOpen} getData={getData} />
         </GridToolbarContainer>
     );
@@ -86,6 +136,7 @@ function EditToolbar(props) {
 EditToolbar.propTypes = {
     getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
 };
 
 function ManagerTeacherDG() {
@@ -466,7 +517,7 @@ function ManagerTeacherDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { getData, handleRefresh },
+                                    toolbar: { getData, handleRefresh, data },
                                 }}
                                 loading={loading}
                                 initialState={{

@@ -80,7 +80,7 @@ function AddStaff(props) {
         setDefaultState();
         setResultDialog(false);
         props.setOpen(false);
-        props.handleRefresh();
+        props.getData();
     };
 
     const handleSubmit = async (e) => {
@@ -105,7 +105,7 @@ function AddStaff(props) {
         const data = {
             username:
                 removeAccents(
-                    (firstName + lastName).replace(/\s+/g, "").toLowerCase()
+                    (lastName + firstName).replace(/\s+/g, "").toLowerCase()
                 ) +
                 new Date(dob).getDate().toString() +
                 (new Date(dob).getMonth() + 1).toString() +
@@ -155,23 +155,23 @@ function AddStaff(props) {
                     <TextField
                         autoFocus
                         margin="dense"
-                        id="firstName"
-                        label="Họ"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
                         id="lastName"
-                        label="Tên"
+                        label="Họ"
                         type="text"
                         fullWidth
                         variant="standard"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="firstName"
+                        label="Tên"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                     />
 
                     <InputLabel sx={{ mt: 1 }} id="sex-label">

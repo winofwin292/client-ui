@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
+import * as XLSX from "xlsx";
 import {
     DataGrid,
     viVN,
@@ -9,7 +10,6 @@ import {
     GridToolbarContainer,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
-    GridToolbarExport,
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
@@ -26,6 +26,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import GetAppIcon from "@mui/icons-material/GetApp";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -48,11 +49,40 @@ const themeD = createTheme({
 });
 
 function EditToolbar(props) {
-    const { getData, handleRefresh } = props;
+    const { getData, handleRefresh, data, categories } = props;
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
         setOpen(true);
+    };
+
+    const handleExportXlsx = () => {
+        const filename =
+            "san-pham-" + new Date().getTime().toString() + ".xlsx";
+
+        const exportData = data.map((item, index) => {
+            return {
+                STT: index + 1,
+                "Tên sản phẩm": item.name,
+                "Giá sản phẩm": item.price,
+                "Tác giả": item.author,
+                "Năm xuất bản": item.publishing_year,
+                "Số lượng kho": item.in_stock <= 0 ? "Hết hàng" : item.in_stock,
+                "Mô tả": item.description,
+                "Khối lượng": item.weight + "g",
+                "Chiều cao": item.length + "cm",
+                "Chiều rộng": item.width + "cm",
+                "Độ dày": item.height + "cm",
+                Loại: categories.find((cate) => cate.value === item.categoryId)
+                    ?.label,
+                "Hiện/Ẩn": item.is_show ? "Hiện" : "Ẩn",
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(exportData, { dateNF: "dd/MM/yyyy" });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Danh sách sản phẩm");
+        XLSX.writeFile(wb, filename);
     };
 
     return (
@@ -74,13 +104,13 @@ function EditToolbar(props) {
             <GridToolbarColumnsButton />
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <GridToolbarExport
-                csvOptions={{
-                    utf8WithBom: true,
-                    fileName: "San_pham_" + new Date().getTime().toString(),
-                }}
-                printOptions={{ disableToolbarButton: true }}
-            />
+            <Button
+                color="primary"
+                startIcon={<GetAppIcon />}
+                onClick={handleExportXlsx}
+            >
+                Xuất Excel
+            </Button>
             <AddProduct open={open} setOpen={setOpen} getData={getData} />
         </GridToolbarContainer>
     );
@@ -89,6 +119,8 @@ function EditToolbar(props) {
 EditToolbar.propTypes = {
     getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
+    categories: PropTypes.object.isRequired,
 };
 
 function ManagerProductDG() {
@@ -484,7 +516,12 @@ function ManagerProductDG() {
                                     Toolbar: EditToolbar,
                                 }}
                                 componentsProps={{
-                                    toolbar: { getData, handleRefresh },
+                                    toolbar: {
+                                        getData,
+                                        handleRefresh,
+                                        data,
+                                        categories,
+                                    },
                                 }}
                                 loading={loading}
                                 initialState={{
