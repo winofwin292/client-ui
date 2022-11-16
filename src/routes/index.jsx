@@ -1,7 +1,5 @@
 import React, { memo } from "react";
-import { Route, Routes } from "react-router-dom";
-import PrivateRoutes from "./PrivateRoutes";
-import Auth from "./Auth";
+import { Route, Routes, Outlet } from "react-router-dom";
 import {
     Shop,
     Home,
@@ -28,7 +26,7 @@ function CRoutes() {
 
     return (
         <Routes>
-            <Route path="" element={<Auth />}>
+            <Route path="" element={<Outlet />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/introduction" element={<Introduction />} />
                 <Route
@@ -49,8 +47,6 @@ function CRoutes() {
                 <Route path="/shop/checkout" element={<ShopCheckout />} />
                 <Route path="/shop/tracking" element={<TrackingOrder />} />
                 <Route path="/login" element={<Login />} />
-            </Route>
-            <Route path="app" element={<PrivateRoutes />}>
                 {allowedRoutes.map((route) => {
                     const {
                         path,

@@ -3,7 +3,6 @@ import { TeacherCourse, StudentCourse } from "pages";
 import { Dashboard } from "pages/Dashboard";
 import { Overview } from "pages/Dashboard/Overview";
 import { ManageHomePage } from "pages/ManageHomePage";
-import Loading from "components/common/Loading/Loading";
 import { ManagerRequestContact } from "pages/ManagerRequestContact";
 import { ManagerStaff } from "pages/ManagerStaff";
 import { ManagerTeacher } from "pages/ManagerTeacher";
@@ -20,11 +19,6 @@ import Icon from "@mui/material/Icon";
 
 const PrivateRoutesConfig = [
     {
-        component: Loading,
-        path: "",
-        title: "Loading",
-    },
-    {
         component: Dashboard,
         path: "dashboard/*",
         title: "Dashboard",
@@ -34,7 +28,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Tổng quan",
-                key: "app/dashboard/*",
+                key: "dashboard/*",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
                 component: <Overview />,
@@ -42,7 +36,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Nhân viên",
-                key: "app/dashboard/manage-staff",
+                key: "dashboard/manage-staff",
                 icon: <Icon fontSize="small">badge</Icon>,
                 path: "manage-staff",
                 component: <ManagerStaff />,
@@ -50,7 +44,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Giáo viên",
-                key: "app/dashboard/manage-teacher",
+                key: "dashboard/manage-teacher",
                 icon: <Icon fontSize="small">school</Icon>,
                 path: "manage-teacher",
                 component: <ManagerTeacher />,
@@ -58,7 +52,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Học viên",
-                key: "app/dashboard/manage-student",
+                key: "dashboard/manage-student",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-student",
                 component: <ManagerStudent />,
@@ -66,7 +60,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Khóa học",
-                key: "app/dashboard/manage-course",
+                key: "dashboard/manage-course",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-course",
                 component: <ManagerCourse />,
@@ -74,7 +68,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Loại hàng",
-                key: "app/dashboard/manage-category",
+                key: "dashboard/manage-category",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-category",
                 component: <ManagerCategory />,
@@ -82,7 +76,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Sản phẩm",
-                key: "app/dashboard/manage-product",
+                key: "dashboard/manage-product",
                 icon: <Icon fontSize="small">person</Icon>,
                 path: "manage-product",
                 component: <ManagerProduct />,
@@ -90,7 +84,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Đơn hàng",
-                key: "app/dashboard/manage-order",
+                key: "dashboard/manage-order",
                 icon: <Icon fontSize="small">local_mall</Icon>,
                 path: "manage-order",
                 component: <ManagerOrder />,
@@ -98,7 +92,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Trang chủ",
-                key: "app/dashboard/manage-home-page",
+                key: "dashboard/manage-home-page",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "manage-home-page",
                 component: <ManageHomePage />,
@@ -106,7 +100,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Công cụ",
-                key: "app/dashboard/tools",
+                key: "dashboard/tools",
                 icon: <Icon fontSize="small">constructions</Icon>,
                 path: "tools",
                 component: <Tools />,
@@ -123,7 +117,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Tổng quan",
-                key: "app/dashboard/*",
+                key: "dashboard/*",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "*",
                 component: <Overview />,
@@ -131,7 +125,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Yêu cầu liên hệ",
-                key: "app/dashboard/yeu-cau-lien-he",
+                key: "dashboard/yeu-cau-lien-he",
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "yeu-cau-lien-he",
                 component: <ManagerRequestContact />,
@@ -139,7 +133,7 @@ const PrivateRoutesConfig = [
             {
                 type: "collapse",
                 name: "Công cụ",
-                key: "app/dashboard/tools",
+                key: "dashboard/tools",
                 icon: <Icon fontSize="small">constructions</Icon>,
                 path: "tools",
                 component: <ToolsStaff />,

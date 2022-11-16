@@ -100,7 +100,12 @@ function Login() {
         });
 
         if (response.status === 200) {
-            window.location.href = "/app";
+            if (
+                response.data.role === "ADMIN" ||
+                response.data.role === "STAFF"
+            )
+                window.location.href = "/dashboard/*";
+            else window.location.href = "/";
         } else {
             showNoti(response.data, "error");
         }

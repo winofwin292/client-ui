@@ -120,7 +120,7 @@ EditToolbar.propTypes = {
     getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
-    categories: PropTypes.object.isRequired,
+    categories: PropTypes.array.isRequired,
 };
 
 function ManagerProductDG() {

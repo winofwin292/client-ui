@@ -116,6 +116,10 @@ function ShopCheckout() {
     }, []);
 
     useEffect(() => {
+        getProvinces();
+    }, [getProvinces]);
+
+    useEffect(() => {
         document.title = "Thanh toán";
         getData();
     }, [getData]);
@@ -125,10 +129,6 @@ function ShopCheckout() {
         setShippingFee(40000 + extraFee);
         setTotal(subtotal + tax + 40000 + extraFee);
     }, [subtotal, tax, shippingFee, totalWeight]);
-
-    useEffect(() => {
-        getProvinces();
-    }, [getProvinces]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

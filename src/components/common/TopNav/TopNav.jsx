@@ -13,6 +13,8 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 import { useLocation } from "react-router-dom";
 
+import { isLoggedIn } from "utils";
+
 const solutions = [
     {
         name: "Giới thiệu chung",
@@ -186,10 +188,10 @@ function TopNav() {
                     </Popover.Group>
                     <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
                         <a
-                            href="/login"
+                            href={isLoggedIn() ? "/dashboard/*" : "/login"}
                             className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
-                            Hệ thống quản lý
+                            {isLoggedIn() ? "Hệ thống quản lý" : "Đăng nhập"}
                         </a>
                     </div>
                 </div>
@@ -305,10 +307,14 @@ function TopNav() {
                             </div>
                             <div>
                                 <a
-                                    href="/login"
+                                    href={
+                                        isLoggedIn() ? "/dashboard/*" : "/login"
+                                    }
                                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                 >
-                                    Hệ thống quản lý
+                                    {isLoggedIn()
+                                        ? "Hệ thống quản lý"
+                                        : "Đăng nhập"}
                                 </a>
                             </div>
                         </div>
