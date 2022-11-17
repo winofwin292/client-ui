@@ -29,6 +29,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+
+import { getObjectFromCookieValue } from "utils";
+
 import courseApi from "api/Course/courseApi";
 
 const theme = createTheme();
@@ -147,9 +150,16 @@ function ManagerShowCourse() {
     const processRowUpdate = async (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         const response = await courseApi.changeShowLanding({
             id: newRow.id,
             show_in_landing: newRow.show_in_landing,
+            username: userData.username,
         });
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
@@ -173,7 +183,7 @@ function ManagerShowCourse() {
             {
                 field: "show_in_landing",
                 headerName: "Hiện/ẩn ở trang chủ",
-                width: 250,
+                width: 150,
                 type: "singleSelect",
                 valueOptions: [
                     { value: true, label: "Hiện" },
@@ -187,6 +197,18 @@ function ManagerShowCourse() {
                     return valueFormatted;
                 },
                 editable: true,
+            },
+            {
+                field: "User",
+                headerName: "Cập nhật bởi",
+                width: 120,
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    return params.value.username;
+                },
+                editable: false,
             },
             {
                 field: "actions",

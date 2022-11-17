@@ -34,8 +34,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+import { ConfirmDialog } from "components/common/ConfirmDialog";
+
 import AddProduct from "./AddProduct";
 import ManagerProductImage from "./components/ManagerProductImage/ManagerProductImage";
+
 import productApi from "api/Product/productApi";
 import categoryApi from "api/Category/categoryApi";
 
@@ -139,6 +142,11 @@ function ManagerProductDG() {
         name: "",
     });
 
+    const [confirmState, setConfirmState] = useState({
+        state: false,
+        data: {},
+    });
+
     const getData = useCallback(async () => {
         const response = await productApi.getAllAdmin();
         if (response.status === 200) {
@@ -198,18 +206,26 @@ function ManagerProductDG() {
         [rowModesModel]
     );
 
+    const handleDelete = async (data) => {
+        const response = await productApi.delete({ id: data.id });
+        if (response.status === 200) {
+            showNoti("Xóa thành công", "success");
+            getData();
+        } else {
+            showNoti("Lỗi: không xóa được sản phẩm", "error");
+        }
+    };
+
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await productApi.delete({ id: id });
-            if (response.status === 200) {
-                showNoti("Xóa thành công", "success");
-                getData();
-            } else {
-                showNoti("Lỗi: không xóa được sản phẩm", "error");
-            }
-            // setData(data.filter((row) => row.id !== id));
+            setConfirmState({
+                state: true,
+                data: {
+                    id: id,
+                },
+            });
         },
-        [getData, showNoti]
+        []
     );
 
     const handleCancelClick = useCallback(
@@ -540,6 +556,13 @@ function ManagerProductDG() {
                             />
                         </div>
                     </ThemeProvider>
+                    <ConfirmDialog
+                        open={confirmState}
+                        setOpen={setConfirmState}
+                        confirmFunc={handleDelete}
+                        title="Xác nhận xóa?"
+                        msg="Xác nhận xóa sản phẩm này?"
+                    />
                 </Card>
             </Grid>
         </>

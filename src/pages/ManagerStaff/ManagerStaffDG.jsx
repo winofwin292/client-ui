@@ -43,6 +43,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+import { ConfirmDialog } from "components/common/ConfirmDialog";
+
 import AddStaff from "./AddStaff";
 import userApi from "api/Users/useApi";
 
@@ -136,6 +138,11 @@ function ManagerStaffDG() {
     const [resultDialog, setResultDialog] = useState(false);
     const [resultCopy, setResultCopy] = useState("");
 
+    const [confirmState, setConfirmState] = useState({
+        state: false,
+        data: {},
+    });
+
     const getData = useCallback(async () => {
         const response = await userApi.getAllStaff();
         if (response.status === 200) {
@@ -195,18 +202,26 @@ function ManagerStaffDG() {
         [rowModesModel]
     );
 
+    const handleDelete = async (data) => {
+        const response = await userApi.deleteUser({ id: data.id });
+        if (response.status === 200) {
+            showNoti("Xóa thành công", "success");
+            getData();
+        } else {
+            showNoti("Lỗi: không xóa được tài khoản", "error");
+        }
+    };
+
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await userApi.deleteUser({ id: id });
-            if (response.status === 200) {
-                showNoti("Xóa thành công", "success");
-                getData();
-            } else {
-                showNoti("Lỗi: không xóa được tài khoản", "error");
-            }
-            // setData(data.filter((row) => row.id !== id));
+            setConfirmState({
+                state: true,
+                data: {
+                    id: id,
+                },
+            });
         },
-        [getData, showNoti]
+        []
     );
 
     const handleCancelClick = useCallback(
@@ -542,6 +557,13 @@ function ManagerStaffDG() {
                             </DialogActions>
                         </Dialog>
                     </ThemeProvider>
+                    <ConfirmDialog
+                        open={confirmState}
+                        setOpen={setConfirmState}
+                        confirmFunc={handleDelete}
+                        title="Xác nhận xóa?"
+                        msg="Xác nhận xóa nhân viên này?"
+                    />
                 </Card>
             </Grid>
         </>

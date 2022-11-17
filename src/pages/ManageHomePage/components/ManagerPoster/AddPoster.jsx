@@ -19,6 +19,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import { useSnackbar } from "notistack";
 
+import { getObjectFromCookieValue } from "utils";
+
 import posterApi from "api/Poster/posterApi";
 
 function AddPoster(props) {
@@ -77,6 +79,11 @@ function AddPoster(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+        }
+
         if (!content) {
             showNoti("Vui lòng nhập nội dung đánh giá", "error");
             return;
@@ -89,6 +96,7 @@ function AddPoster(props) {
 
         const data = {
             content,
+            username: userData.username,
         };
 
         let formData = new FormData();

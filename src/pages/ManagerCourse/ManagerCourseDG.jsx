@@ -36,10 +36,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+import { ConfirmDialog } from "components/common/ConfirmDialog";
+
 import AddCourse from "./AddCourse";
 import ManagerPracticalContent from "./components/ManagerPracticalContent/ManagerPracticalContent";
 import ManagerPurposeOfCourse from "./components/ManagerPurposeOfCourse/ManagerPurposeOfCourse";
 import ManagerCourseFormat from "./components/ManagerCourseFormat/ManagerCourseFormat";
+import ManagerCourseImage from "./components/ManagerCourseImage/ManagerCourseImage";
+
 import courseApi from "api/Course/courseApi";
 
 import { formatterVND } from "utils";
@@ -166,6 +170,17 @@ function ManagerTeacherDG() {
         name: "",
     });
 
+    const [managerCourseImage, setManagerCourseImage] = useState({
+        open: false,
+        id: null,
+        name: "",
+    });
+
+    const [confirmState, setConfirmState] = useState({
+        state: false,
+        data: {},
+    });
+
     const getData = useCallback(async () => {
         const response = await courseApi.getAllAdmin();
         if (response.status === 200) {
@@ -225,18 +240,26 @@ function ManagerTeacherDG() {
         [rowModesModel]
     );
 
+    const handleDelete = async (data) => {
+        const response = await courseApi.deleteCourse({ id: data.id });
+        if (response.status === 200) {
+            showNoti("Xóa thành công", "success");
+            getData();
+        } else {
+            showNoti("Lỗi: không xóa được khóa học", "error");
+        }
+    };
+
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await courseApi.deleteCourse({ id: id });
-            if (response.status === 200) {
-                showNoti("Xóa thành công", "success");
-                getData();
-            } else {
-                showNoti("Lỗi: không xóa được khóa học", "error");
-            }
-            // setData(data.filter((row) => row.id !== id));
+            setConfirmState({
+                state: true,
+                data: {
+                    id: id,
+                },
+            });
         },
-        [getData, showNoti]
+        []
     );
 
     const handleCancelClick = useCallback(
@@ -467,6 +490,19 @@ function ManagerTeacherDG() {
                             title="Quản lý hình thức khóa học"
                             showInMenu
                         />,
+                        <GridActionsCellItem
+                            icon={<HistoryEduIcon />}
+                            label={"Hình ảnh sản phẩm"}
+                            onClick={(e) =>
+                                setManagerCourseImage({
+                                    open: true,
+                                    id: params.id,
+                                    name: params.row.name,
+                                })
+                            }
+                            title={"Quản lý hình ảnh khóa học"}
+                            showInMenu
+                        />,
                     ];
                 },
             },
@@ -548,8 +584,19 @@ function ManagerTeacherDG() {
                                 managerCourseFormat={managerCourseFormat}
                                 setManagerCourseFormat={setManagerCourseFormat}
                             />
+                            <ManagerCourseImage
+                                managerCourseImage={managerCourseImage}
+                                setManagerCourseImage={setManagerCourseImage}
+                            />
                         </div>
                     </ThemeProvider>
+                    <ConfirmDialog
+                        open={confirmState}
+                        setOpen={setConfirmState}
+                        confirmFunc={handleDelete}
+                        title="Xác nhận xóa?"
+                        msg="Xác nhận xóa khóa học?"
+                    />
                 </Card>
             </Grid>
         </>

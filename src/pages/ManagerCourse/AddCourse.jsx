@@ -13,6 +13,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useSnackbar } from "notistack";
 
+import { getObjectFromCookieValue } from "utils";
+
 import courseApi from "api/Course/courseApi";
 import formatApi from "api/Format/formatApi";
 import typeOfContentApi from "api/TypeOfContent/typeOfContentApi";
@@ -85,6 +87,13 @@ function AddCourse(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         if (!name) {
             showNoti("Vui lòng nhập tên của khóa học", "error");
             return;
@@ -129,6 +138,7 @@ function AddCourse(props) {
             format,
             purposeOfCourses: purposeOfCourses.split(";"),
             practicalContents: practicalContents.split(";"),
+            username: userData.username,
         };
         const response = await courseApi.addCourse(data);
         if (response.status === 200) {

@@ -19,8 +19,6 @@ import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { RenderCellExpand } from "components/common/RenderCellExpand";
-
 import {
     DataGrid,
     viVN,
@@ -32,12 +30,15 @@ import {
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
-import practicalContentApi from "api/PracticalContent/practicalContentApi";
-
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
 
+import { RenderCellExpand } from "components/common/RenderCellExpand";
+import { ConfirmDialog } from "components/common/ConfirmDialog";
+
 import AddPracticalContent from "./AddPracticalContent";
+
+import practicalContentApi from "api/PracticalContent/practicalContentApi";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -100,6 +101,11 @@ function ManagerPracticalContent(props) {
 
     const [rowModesModel, setRowModesModel] = useState({});
 
+    const [confirmState, setConfirmState] = useState({
+        state: false,
+        data: {},
+    });
+
     const getData = useCallback(async () => {
         const response = await practicalContentApi.getByCourseId({
             courseId: props.managerPracticalContent.id,
@@ -161,18 +167,26 @@ function ManagerPracticalContent(props) {
         [rowModesModel]
     );
 
+    const handleDelete = async (data) => {
+        const response = await practicalContentApi.delete({ id: data.id });
+        if (response.status === 200) {
+            showNoti("Xóa thành công", "success");
+            getData();
+        } else {
+            showNoti("Lỗi: không xóa được", "error");
+        }
+    };
+
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await practicalContentApi.delete({ id: id });
-            if (response.status === 200) {
-                showNoti("Xóa thành công", "success");
-                getData();
-            } else {
-                showNoti("Lỗi: không xóa được tài khoản", "error");
-            }
-            // setData(data.filter((row) => row.id !== id));
+            setConfirmState({
+                state: true,
+                data: {
+                    id: id,
+                },
+            });
         },
-        [getData, showNoti]
+        []
     );
 
     const handleCancelClick = useCallback(
@@ -348,6 +362,13 @@ function ManagerPracticalContent(props) {
                             density="compact"
                         />
                     </ThemeProvider>
+                    <ConfirmDialog
+                        open={confirmState}
+                        setOpen={setConfirmState}
+                        confirmFunc={handleDelete}
+                        title="Xác nhận xóa?"
+                        msg="Xác nhận xóa nội dung này?"
+                    />
                 </div>
             </DialogContent>
             <DialogActions>

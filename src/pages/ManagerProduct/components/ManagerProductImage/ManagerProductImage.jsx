@@ -275,9 +275,7 @@ function ManagerProductImage(props) {
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
                             <AddCircleOutlineIcon sx={{ mr: 1 }} />
-                            Thêm mới hình ảnh: (tối đa 6 ảnh, có thể thêm số
-                            lượng ảnh sau khi <br />
-                            tạo sản phẩm ở công cụ Quản lý ảnh sản phẩm)
+                            Thêm mới hình ảnh:
                         </InputLabel>
                         <Button
                             variant="outlined"

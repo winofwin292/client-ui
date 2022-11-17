@@ -32,8 +32,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+import { ConfirmDialog } from "components/common/ConfirmDialog";
+
 import ViewImage from "./ViewImage";
 import AddPoster from "./AddPoster";
+
+import { getObjectFromCookieValue } from "utils";
+
 import posterApi from "api/Poster/posterApi";
 
 const theme = createTheme();
@@ -95,6 +100,11 @@ function ManagerPoster() {
         key: "",
     });
 
+    const [confirmState, setConfirmState] = useState({
+        state: false,
+        data: {},
+    });
+
     const getData = useCallback(async () => {
         const response = await posterApi.getAllAdmin();
         if (response.status === 200) {
@@ -154,20 +164,30 @@ function ManagerPoster() {
         [rowModesModel]
     );
 
+    const handleDelete = async (data) => {
+        const response = await posterApi.delete({
+            id: data.id,
+            aws_key: data.aws_key,
+        });
+        if (response.status === 200) {
+            showNoti("Xóa thành công", "success");
+            getData();
+        } else {
+            showNoti("Lỗi: không xóa được", "error");
+        }
+    };
+
     const handleDeleteClick = useCallback(
         (id, aws_key) => async () => {
-            const response = await posterApi.delete({
-                id: id,
-                aws_key: aws_key,
+            setConfirmState({
+                state: true,
+                data: {
+                    id: id,
+                    aws_key: aws_key,
+                },
             });
-            if (response.status === 200) {
-                showNoti("Xóa thành công", "success");
-                getData();
-            } else {
-                showNoti("Lỗi: không xóa được", "error");
-            }
         },
-        [getData, showNoti]
+        []
     );
 
     const handleCancelClick = useCallback(
@@ -188,9 +208,19 @@ function ManagerPoster() {
     const processRowUpdate = async (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
-        const { id, ...data } = newRow;
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
 
-        const response = await posterApi.edit({ id, data });
+        const { id, User, ...data } = newRow;
+
+        const response = await posterApi.edit({
+            id,
+            data,
+            username: userData.username,
+        });
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {
@@ -227,6 +257,18 @@ function ManagerPoster() {
                     return valueFormatted;
                 },
                 editable: true,
+            },
+            {
+                field: "User",
+                headerName: "Cập nhật bởi",
+                width: 120,
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    return params.value.username;
+                },
+                editable: false,
             },
             {
                 field: "actions",
@@ -312,52 +354,57 @@ function ManagerPoster() {
     };
 
     return (
-        <>
-            <Grid item xs={12}>
-                <Card>
-                    <div style={{ height: 500, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
-                            <DataGrid
-                                rows={data}
-                                columns={columns}
-                                localeText={
-                                    viVN.components.MuiDataGrid.defaultProps
-                                        .localeText
-                                }
-                                rowModesModel={rowModesModel}
-                                onRowModesModelChange={(newModel) =>
-                                    setRowModesModel(newModel)
-                                }
-                                onRowEditStart={handleRowEditStart}
-                                onRowEditStop={handleRowEditStop}
-                                processRowUpdate={processRowUpdate}
-                                experimentalFeatures={{ newEditingApi: true }}
-                                components={{
-                                    Toolbar: EditToolbar,
-                                }}
-                                componentsProps={{
-                                    toolbar: { handleRefresh, getData },
-                                }}
-                                loading={loading}
-                                initialState={{
-                                    columns: {
-                                        columnVisibilityModel: {
-                                            id: false,
-                                        },
+        <Grid item xs={12}>
+            <Card>
+                <div style={{ height: 500, width: "100%" }}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <DataGrid
+                            rows={data}
+                            columns={columns}
+                            localeText={
+                                viVN.components.MuiDataGrid.defaultProps
+                                    .localeText
+                            }
+                            rowModesModel={rowModesModel}
+                            onRowModesModelChange={(newModel) =>
+                                setRowModesModel(newModel)
+                            }
+                            onRowEditStart={handleRowEditStart}
+                            onRowEditStop={handleRowEditStop}
+                            processRowUpdate={processRowUpdate}
+                            experimentalFeatures={{ newEditingApi: true }}
+                            components={{
+                                Toolbar: EditToolbar,
+                            }}
+                            componentsProps={{
+                                toolbar: { handleRefresh, getData },
+                            }}
+                            loading={loading}
+                            initialState={{
+                                columns: {
+                                    columnVisibilityModel: {
+                                        id: false,
                                     },
-                                }}
-                                editMode="row"
-                                density="compact"
-                            />
-                        </ThemeProvider>
-                        <ViewImage
-                            viewImage={viewImage}
-                            setViewImage={setViewImage}
+                                },
+                            }}
+                            editMode="row"
+                            density="compact"
                         />
-                    </div>
-                </Card>
-            </Grid>
-        </>
+                    </ThemeProvider>
+                    <ViewImage
+                        viewImage={viewImage}
+                        setViewImage={setViewImage}
+                    />
+                    <ConfirmDialog
+                        open={confirmState}
+                        setOpen={setConfirmState}
+                        confirmFunc={handleDelete}
+                        title="Xác nhận xóa?"
+                        msg="Xác nhận xóa thông tin?"
+                    />
+                </div>
+            </Card>
+        </Grid>
     );
 }
 

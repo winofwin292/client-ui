@@ -19,6 +19,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import { useSnackbar } from "notistack";
 
+import { getObjectFromCookieValue } from "utils";
+
 import reviewApi from "api/Review/reviewApi";
 
 function AddReview(props) {
@@ -81,6 +83,11 @@ function AddReview(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+        }
+
         if (!name) {
             showNoti("Vui lòng nhập tên của người đánh giá", "error");
             return;
@@ -105,6 +112,7 @@ function AddReview(props) {
             name,
             info,
             content,
+            username: userData.username,
         };
 
         let formData = new FormData();

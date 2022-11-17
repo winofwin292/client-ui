@@ -33,6 +33,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
+import { ConfirmDialog } from "components/common/ConfirmDialog";
+
 import AddCategory from "./AddCategory";
 import categoryApi from "api/Category/categoryApi";
 
@@ -115,6 +117,11 @@ function ManagerCategoryDG() {
 
     const [rowModesModel, setRowModesModel] = useState({});
 
+    const [confirmState, setConfirmState] = useState({
+        state: false,
+        data: {},
+    });
+
     const getData = useCallback(async () => {
         const response = await categoryApi.getAllAdmin();
         if (response.status === 200) {
@@ -174,18 +181,26 @@ function ManagerCategoryDG() {
         [rowModesModel]
     );
 
+    const handleDelete = async (data) => {
+        const response = await categoryApi.delete({ id: data.id });
+        if (response.status === 200) {
+            showNoti("Xóa thành công", "success");
+            getData();
+        } else {
+            showNoti("Lỗi: không xóa được loại hàng", "error");
+        }
+    };
+
     const handleDeleteClick = useCallback(
         (id) => async () => {
-            const response = await categoryApi.delete({ id: id });
-            if (response.status === 200) {
-                showNoti("Xóa thành công", "success");
-                getData();
-            } else {
-                showNoti("Lỗi: không xóa được loại hàng", "error");
-            }
-            // setData(data.filter((row) => row.id !== id));
+            setConfirmState({
+                state: true,
+                data: {
+                    id: id,
+                },
+            });
         },
-        [getData, showNoti]
+        []
     );
 
     const handleCancelClick = useCallback(
@@ -309,48 +324,53 @@ function ManagerCategoryDG() {
     };
 
     return (
-        <>
-            <Grid item xs={12}>
-                <Card>
-                    <div style={{ height: 550, width: "100%" }}>
-                        <ThemeProvider theme={darkMode ? themeD : theme}>
-                            <DataGrid
-                                rows={data}
-                                columns={columns}
-                                localeText={
-                                    viVN.components.MuiDataGrid.defaultProps
-                                        .localeText
-                                }
-                                rowModesModel={rowModesModel}
-                                onRowModesModelChange={(newModel) =>
-                                    setRowModesModel(newModel)
-                                }
-                                onRowEditStart={handleRowEditStart}
-                                onRowEditStop={handleRowEditStop}
-                                processRowUpdate={processRowUpdate}
-                                experimentalFeatures={{ newEditingApi: true }}
-                                components={{
-                                    Toolbar: EditToolbar,
-                                }}
-                                componentsProps={{
-                                    toolbar: { handleRefresh, getData, data },
-                                }}
-                                loading={loading}
-                                initialState={{
-                                    columns: {
-                                        columnVisibilityModel: {
-                                            id: false,
-                                        },
+        <Grid item xs={12}>
+            <Card>
+                <div style={{ height: 550, width: "100%" }}>
+                    <ThemeProvider theme={darkMode ? themeD : theme}>
+                        <DataGrid
+                            rows={data}
+                            columns={columns}
+                            localeText={
+                                viVN.components.MuiDataGrid.defaultProps
+                                    .localeText
+                            }
+                            rowModesModel={rowModesModel}
+                            onRowModesModelChange={(newModel) =>
+                                setRowModesModel(newModel)
+                            }
+                            onRowEditStart={handleRowEditStart}
+                            onRowEditStop={handleRowEditStop}
+                            processRowUpdate={processRowUpdate}
+                            experimentalFeatures={{ newEditingApi: true }}
+                            components={{
+                                Toolbar: EditToolbar,
+                            }}
+                            componentsProps={{
+                                toolbar: { handleRefresh, getData, data },
+                            }}
+                            loading={loading}
+                            initialState={{
+                                columns: {
+                                    columnVisibilityModel: {
+                                        id: false,
                                     },
-                                }}
-                                editMode="row"
-                                density="compact"
-                            />
-                        </ThemeProvider>
-                    </div>
-                </Card>
-            </Grid>
-        </>
+                                },
+                            }}
+                            editMode="row"
+                            density="compact"
+                        />
+                    </ThemeProvider>
+                    <ConfirmDialog
+                        open={confirmState}
+                        setOpen={setConfirmState}
+                        confirmFunc={handleDelete}
+                        title="Xác nhận xóa?"
+                        msg="Xác nhận xóa loại hàng này?"
+                    />
+                </div>
+            </Card>
+        </Grid>
     );
 }
 
