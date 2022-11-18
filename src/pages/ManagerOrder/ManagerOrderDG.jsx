@@ -101,7 +101,7 @@ function EditToolbar(props) {
 
 EditToolbar.propTypes = {
     handleRefresh: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
 };
 
 function ManagerOrderDG() {

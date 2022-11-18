@@ -14,27 +14,6 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 import courseApi from "api/Course/courseApi";
 
-const product = {
-    images: [
-        {
-            src: "https://st.ielts-fighter.com/src/ielts-fighter/2021/07/15/ebook-30-ngay-chinh-phuc-6-5-ielts-1.jpg",
-            alt: "Two each of gray, white, and black shirts laying flat.",
-        },
-        {
-            src: "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg",
-            alt: "Model wearing plain black basic tee.",
-        },
-        {
-            src: "https://jolo.edu.vn/images/jolo-articles/4_bai_viet/exams-ielts-banner.jpg",
-            alt: "Model wearing plain gray basic tee.",
-        },
-        {
-            src: "https://www.aitutorsanta.com/vn/wp-content/uploads/sites/9/2021/08/paraphrasing.png",
-            alt: "Model wearing plain white basic tee.",
-        },
-    ],
-};
-
 function CourseDetail() {
     const [cTDState, setCTDState] = useState({
         isOpen: false,
@@ -119,31 +98,47 @@ function CourseDetail() {
                         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
                             <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
                                 <img
-                                    src={product.images[0].src}
-                                    alt={product.images[0].alt}
+                                    src={
+                                        course.CourseImage[0]
+                                            ? course.CourseImage[0].url
+                                            : "https://st.ielts-fighter.com/src/ielts-fighter/2021/07/15/ebook-30-ngay-chinh-phuc-6-5-ielts-1.jpg"
+                                    }
+                                    alt="Ảnh 1"
                                     className="h-full w-full object-cover object-center"
                                 />
                             </div>
                             <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
                                 <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
                                     <img
-                                        src={product.images[1].src}
-                                        alt={product.images[1].alt}
+                                        src={
+                                            course.CourseImage[1]
+                                                ? course.CourseImage[1].url
+                                                : "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg"
+                                        }
+                                        alt="Ảnh 2"
                                         className="h-full w-full object-cover object-center"
                                     />
                                 </div>
                                 <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
                                     <img
-                                        src={product.images[2].src}
-                                        alt={product.images[2].alt}
+                                        src={
+                                            course.CourseImage[2]
+                                                ? course.CourseImage[2].url
+                                                : "https://jolo.edu.vn/images/jolo-articles/4_bai_viet/exams-ielts-banner.jpg"
+                                        }
+                                        alt="Ảnh 3"
                                         className="h-full w-full object-cover object-center"
                                     />
                                 </div>
                             </div>
                             <div className="aspect-w-4 aspect-h-5 sm:overflow-hidden sm:rounded-lg lg:aspect-w-3 lg:aspect-h-4">
                                 <img
-                                    src={product.images[3].src}
-                                    alt={product.images[3].alt}
+                                    src={
+                                        course.CourseImage[3]
+                                            ? course.CourseImage[3].url
+                                            : "https://www.aitutorsanta.com/vn/wp-content/uploads/sites/9/2021/08/paraphrasing.png"
+                                    }
+                                    alt="Ảnh 4"
                                     className="h-full w-full object-cover object-center"
                                 />
                             </div>

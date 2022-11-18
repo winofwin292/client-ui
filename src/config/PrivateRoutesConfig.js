@@ -11,6 +11,7 @@ import { ManagerCourse } from "pages/ManagerCourse";
 import { ManagerCategory } from "pages/ManagerCategory";
 import { ManagerProduct } from "pages/ManagerProduct";
 import { ManagerOrder } from "pages/ManagerOrder";
+import { StatisticalPage } from "pages/StatisticalPage";
 import { Tools } from "pages/Tools";
 import { ToolsStaff } from "pages/ToolsStaff";
 
@@ -88,6 +89,14 @@ const PrivateRoutesConfig = [
                 icon: <Icon fontSize="small">local_mall</Icon>,
                 path: "manage-order",
                 component: <ManagerOrder />,
+            },
+            {
+                type: "collapse",
+                name: "Thống kê",
+                key: "dashboard/statistical",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "statistical",
+                component: <StatisticalPage />,
             },
             {
                 type: "collapse",

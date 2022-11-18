@@ -142,6 +142,7 @@ function ManagerCourseImage(props) {
 
     const handleFileEvent = (e) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files);
+        e.target.value = null;
         var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
         const checkResult = chosenFiles.some(
             (file) => !allowedExtensions.exec(file.name)

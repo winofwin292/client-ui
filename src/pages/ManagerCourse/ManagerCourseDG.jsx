@@ -140,7 +140,7 @@ function EditToolbar(props) {
 EditToolbar.propTypes = {
     getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
 };
 
 function ManagerTeacherDG() {
@@ -492,7 +492,7 @@ function ManagerTeacherDG() {
                         />,
                         <GridActionsCellItem
                             icon={<HistoryEduIcon />}
-                            label={"Hình ảnh sản phẩm"}
+                            label={"Hình ảnh khóa học"}
                             onClick={(e) =>
                                 setManagerCourseImage({
                                     open: true,

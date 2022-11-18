@@ -10,6 +10,12 @@ import MenuItem from "@mui/material/MenuItem";
 import { InputLabel } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import ImageListItemBar from "@mui/material/ImageListItemBar";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import { useSnackbar } from "notistack";
 
@@ -18,6 +24,8 @@ import { getObjectFromCookieValue } from "utils";
 import courseApi from "api/Course/courseApi";
 import formatApi from "api/Format/formatApi";
 import typeOfContentApi from "api/TypeOfContent/typeOfContentApi";
+
+const MAX_COUNT = 4;
 
 function AddCourse(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -34,6 +42,9 @@ function AddCourse(props) {
     const [format, setFormat] = useState([]);
     const [purposeOfCourses, setPurposeOfCourses] = useState("");
     const [practicalContents, setPracticalContents] = useState("");
+
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [fileLimit, setFileLimit] = useState(false);
 
     const showNoti = useCallback(
         (msg, type) => {
@@ -66,6 +77,8 @@ function AddCourse(props) {
         setFormat([]);
         setPracticalContents("");
         setPurposeOfCourses("");
+        setUploadedFiles([]);
+        setFileLimit(false);
     };
 
     const getDataSelect = useCallback(async () => {
@@ -83,6 +96,46 @@ function AddCourse(props) {
         if (reason && reason === "backdropClick") return;
         props.setOpen(false);
         setDefaultState();
+    };
+
+    const handleUploadFiles = (files) => {
+        const uploaded = [...uploadedFiles];
+        let limitExceeded = false;
+        files.some((file) => {
+            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+                uploaded.push(file);
+                if (uploaded.length === MAX_COUNT) setFileLimit(true);
+                if (uploaded.length > MAX_COUNT) {
+                    showNoti(
+                        `Bạn chỉ có thể tải lên tối đa ${MAX_COUNT} ảnh`,
+                        "error"
+                    );
+                    setFileLimit(false);
+                    limitExceeded = true;
+                    return true;
+                }
+            }
+            return false;
+        });
+        if (!limitExceeded) {
+            setUploadedFiles(uploaded);
+        }
+    };
+
+    const handleFileEvent = (e) => {
+        const chosenFiles = Array.prototype.slice.call(e.target.files);
+        e.target.value = null;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        const checkResult = chosenFiles.some(
+            (file) => !allowedExtensions.exec(file.name)
+        );
+
+        if (!checkResult) {
+            handleUploadFiles(chosenFiles);
+        } else {
+            showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
+            return;
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -140,7 +193,13 @@ function AddCourse(props) {
             practicalContents: practicalContents.split(";"),
             username: userData.username,
         };
-        const response = await courseApi.addCourse(data);
+
+        let formData = new FormData();
+
+        formData.append("data", JSON.stringify(data));
+        uploadedFiles.forEach((file) => formData.append("file", file));
+
+        const response = await courseApi.addCourse(formData);
         if (response.status === 200) {
             setDefaultState();
             props.getData();
@@ -149,6 +208,11 @@ function AddCourse(props) {
         } else {
             showNoti(response.data, "error");
         }
+    };
+
+    const handleDeleteImage = (e, name) => {
+        setUploadedFiles((prev) => prev.filter((item) => item.name !== name));
+        setFileLimit(false);
     };
 
     return (
@@ -292,6 +356,70 @@ function AddCourse(props) {
                         value={practicalContents}
                         onChange={(e) => setPracticalContents(e.target.value)}
                     />
+
+                    {/* upload */}
+                    <InputLabel sx={{ mt: 1 }} id="type-label">
+                        Hình ảnh khóa học: (tối đa 4 ảnh, có thể thêm số lượng
+                        ảnh sau khi <br />
+                        tạo khóa học ở công cụ Quản lý ảnh khóa học)
+                    </InputLabel>
+                    <Button
+                        variant="outlined"
+                        component="label"
+                        startIcon={<PhotoCamera fontSize="inherit" />}
+                        size="small"
+                    >
+                        Chọn ảnh
+                        <input
+                            hidden
+                            id="fileUpload"
+                            accept="image/*"
+                            multiple
+                            type="file"
+                            onChange={handleFileEvent}
+                            disabled={fileLimit}
+                        />
+                    </Button>
+
+                    <ImageList
+                        // sx={{ width: 500, height: 450 }}
+                        sx={{ mt: 1 }}
+                        cols={3}
+                        rowHeight={164}
+                    >
+                        {uploadedFiles.map((file, index) => (
+                            <ImageListItem key={index}>
+                                <img
+                                    src={URL.createObjectURL(file)}
+                                    srcSet={URL.createObjectURL(file)}
+                                    alt={file.name}
+                                    style={{ height: "164px" }}
+                                    // loading="lazy"
+                                />
+                                <ImageListItemBar
+                                    sx={{
+                                        background:
+                                            "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
+                                            "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+                                    }}
+                                    title={file.name}
+                                    position="top"
+                                    actionIcon={
+                                        <IconButton
+                                            sx={{ color: "white" }}
+                                            aria-label={`star ${file.name}`}
+                                            onClick={(e) =>
+                                                handleDeleteImage(e, file.name)
+                                            }
+                                        >
+                                            <ClearIcon />
+                                        </IconButton>
+                                    }
+                                    actionPosition="right"
+                                />
+                            </ImageListItem>
+                        ))}
+                    </ImageList>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Hủy</Button>

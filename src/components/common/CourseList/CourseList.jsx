@@ -4,6 +4,7 @@ import { formatterVND } from "utils";
 
 function CourseList(props) {
     const courses = props.data;
+    console.log(courses);
 
     return (
         <div className="bg-white dark:bg-gray-900">
@@ -18,7 +19,11 @@ function CourseList(props) {
                             <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80 ">
                                 <a href={"/course-introduction/" + course.id}>
                                     <img
-                                        src="https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg"
+                                        src={
+                                            course.CourseImage[0]
+                                                ? course.CourseImage[0].url
+                                                : "https://www.ieltsasia.org/vn/sites/www.ieltsasia.org.vn/files/ielts-registration-39516.jpg"
+                                        }
                                         alt={course.name}
                                         className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                                     />

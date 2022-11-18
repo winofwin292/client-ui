@@ -121,7 +121,7 @@ function EditToolbar(props) {
 EditToolbar.propTypes = {
     getData: PropTypes.func.isRequired,
     handleRefresh: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
 };
 
 function ManagerStudentDG() {

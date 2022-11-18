@@ -27,7 +27,9 @@ const courseApi = {
     },
     addCourse(data) {
         const url = "/course/add";
-        return axiosClient.post(url, data);
+        return axiosClient.post(url, data, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
     },
     editCourse(data) {
         const url = "/course/edit";
