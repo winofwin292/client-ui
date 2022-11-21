@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
+import { useSnackbar } from "notistack";
 import {
     DataGrid,
     viVN,
@@ -27,7 +28,7 @@ import { RenderCellExpand } from "components/common/RenderCellExpand";
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
 
-import { useSnackbar } from "notistack";
+import { getObjectFromCookieValue } from "utils";
 
 import requestContactApi from "api/RequestContact/requestContactApi";
 
@@ -69,6 +70,26 @@ function RequestContactDG() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const showNoti = useCallback(
+        (msg, type) => {
+            enqueueSnackbar(msg, {
+                variant: type,
+                action: (key) => (
+                    <IconButton
+                        size="small"
+                        onClick={() => closeSnackbar(key)}
+                        style={{
+                            color: "white",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                ),
+            });
+        },
+        [closeSnackbar, enqueueSnackbar]
+    );
+
     const getData = useCallback(async () => {
         const response = await requestContactApi.getAll();
         if (response.status === 200) {
@@ -83,56 +104,37 @@ function RequestContactDG() {
     const handleCancel = useCallback(
         async (e, id) => {
             e.preventDefault();
+
             const data = {
                 id: id,
             };
+
             const response = await requestContactApi.cancelChangeStatus(data);
             if (response.status === 200) {
-                enqueueSnackbar(response.data, {
-                    variant: "success",
-                    style: {
-                        borderColor: "#43a047",
-                        color: "#43a047",
-                    },
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti(response.data, "success");
                 getData();
             } else {
-                enqueueSnackbar(response.data, {
-                    variant: "error",
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti(response.data, "error");
             }
         },
-        [closeSnackbar, enqueueSnackbar, getData]
+        [getData, showNoti]
     );
 
     const handleChange = useCallback(
         async (e, id) => {
             e.preventDefault();
+
+            const userData = getObjectFromCookieValue("userData");
+            if (!userData) {
+                showNoti("Không lấy được thông tin người dùng", "error");
+                return;
+            }
+
             const data = {
                 id: id,
+                username: userData.username,
             };
+
             const response = await requestContactApi.changeStatus(data);
             if (response.status === 200) {
                 enqueueSnackbar(response.data, {
@@ -166,35 +168,21 @@ function RequestContactDG() {
                 });
                 getData();
             } else {
-                enqueueSnackbar(response.data, {
-                    variant: "error",
-                    action: (key) => (
-                        <IconButton
-                            size="small"
-                            onClick={() => closeSnackbar(key)}
-                            style={{
-                                color: "white",
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    ),
-                });
+                showNoti(response.data, "error");
             }
         },
-        [closeSnackbar, enqueueSnackbar, getData, handleCancel]
+        [closeSnackbar, enqueueSnackbar, getData, handleCancel, showNoti]
     );
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "ID", width: 50 },
             {
                 field: "full_name",
                 headerName: "Họ tên",
                 width: 150,
                 renderCell: RenderCellExpand,
             },
-            { field: "phone", headerName: "SĐT", width: 120 },
+            { field: "phone", headerName: "SĐT", width: 110 },
             {
                 field: "email",
                 headerName: "Email",
@@ -204,13 +192,13 @@ function RequestContactDG() {
             {
                 field: "note",
                 headerName: "Ghi chú",
-                width: 150,
+                width: 140,
                 renderCell: RenderCellExpand,
             },
             {
                 field: "subject",
                 headerName: "Chủ đề",
-                width: 150,
+                width: 140,
                 renderCell: RenderCellExpand,
             },
             {
@@ -246,9 +234,21 @@ function RequestContactDG() {
                 },
             },
             {
+                field: "User",
+                headerName: "Cập nhật bởi",
+                width: 120,
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    return params.value.username;
+                },
+                editable: false,
+            },
+            {
                 field: "actions",
                 type: "actions",
-                width: 80,
+                width: 40,
                 getActions: (params) => [
                     <GridActionsCellItem
                         icon={<CheckCircleIcon />}
@@ -306,33 +306,38 @@ function RequestContactDG() {
     };
 
     return (
-        <>
-            <Grid item xs={12}>
-                <Card>
-                    <ThemeProvider theme={darkMode ? themeD : theme}>
-                        <div style={{ height: 550, width: "100%" }}>
-                            <DataGrid
-                                rows={data}
-                                columns={columns}
-                                localeText={
-                                    viVN.components.MuiDataGrid.defaultProps
-                                        .localeText
-                                }
-                                experimentalFeatures={{ newEditingApi: true }}
-                                components={{
-                                    Toolbar: EditToolbar,
-                                }}
-                                componentsProps={{
-                                    toolbar: { handleRefresh },
-                                }}
-                                loading={loading}
-                                density="compact"
-                            />
-                        </div>
-                    </ThemeProvider>
-                </Card>
-            </Grid>
-        </>
+        <Grid item xs={12}>
+            <Card>
+                <ThemeProvider theme={darkMode ? themeD : theme}>
+                    <div style={{ height: 550, width: "100%" }}>
+                        <DataGrid
+                            rows={data}
+                            columns={columns}
+                            localeText={
+                                viVN.components.MuiDataGrid.defaultProps
+                                    .localeText
+                            }
+                            experimentalFeatures={{ newEditingApi: true }}
+                            components={{
+                                Toolbar: EditToolbar,
+                            }}
+                            componentsProps={{
+                                toolbar: { handleRefresh },
+                            }}
+                            initialState={{
+                                columns: {
+                                    columnVisibilityModel: {
+                                        id: false,
+                                    },
+                                },
+                            }}
+                            loading={loading}
+                            density="compact"
+                        />
+                    </div>
+                </ThemeProvider>
+            </Card>
+        </Grid>
     );
 }
 

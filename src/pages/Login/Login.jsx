@@ -1,20 +1,11 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
 
-// react-router-dom components
-import { Link } from "react-router-dom";
-
 // @mui material components
 import Card from "@mui/material/Card";
-import Switch from "@mui/material/Switch";
-import Grid from "@mui/material/Grid";
-import MuiLink from "@mui/material/Link";
 import IconButton from "@mui/material/IconButton";
 
 // @mui icons
 import CloseIcon from "@mui/icons-material/Close";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDComponents/MDBox";
@@ -39,8 +30,6 @@ import { useSnackbar } from "notistack";
 import userApi from "api/Users/useApi";
 
 function Login() {
-    // let navigate = useNavigate();
-    const [rememberMe, setRememberMe] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     //controller có thể lấy layout phục vụ cho chức năng thêm
@@ -79,12 +68,6 @@ function Login() {
     useEffect(() => {
         document.title = "Đăng nhập";
     }, []);
-
-    const handleSetRememberMe = async () => {
-        // const response = await userApi.getNewAccessToken();
-        // console.log(response);
-        setRememberMe(!rememberMe);
-    };
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -133,43 +116,6 @@ function Login() {
                     >
                         {t("login.signIn")}
                     </MDTypography>
-                    <Grid
-                        container
-                        spacing={3}
-                        justifyContent="center"
-                        sx={{ mt: 1, mb: 2 }}
-                    >
-                        <Grid item xs={2}>
-                            <MDTypography
-                                component={MuiLink}
-                                href="#"
-                                variant="body1"
-                                color="white"
-                            >
-                                <FacebookIcon color="inherit" />
-                            </MDTypography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <MDTypography
-                                component={MuiLink}
-                                href="#"
-                                variant="body1"
-                                color="white"
-                            >
-                                <GitHubIcon color="inherit" />
-                            </MDTypography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <MDTypography
-                                component={MuiLink}
-                                href="#"
-                                variant="body1"
-                                color="white"
-                            >
-                                <GoogleIcon color="inherit" />
-                            </MDTypography>
-                        </Grid>
-                    </Grid>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
                     <MDBox component="form" role="form">
@@ -190,25 +136,6 @@ function Login() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </MDBox>
-                        <MDBox display="flex" alignItems="center" ml={-1}>
-                            <Switch
-                                checked={rememberMe}
-                                onChange={handleSetRememberMe}
-                            />
-                            <MDTypography
-                                variant="button"
-                                fontWeight="regular"
-                                color="text"
-                                onClick={handleSetRememberMe}
-                                sx={{
-                                    cursor: "pointer",
-                                    userSelect: "none",
-                                    ml: -1,
-                                }}
-                            >
-                                &nbsp;&nbsp;{t("login.remember")}
-                            </MDTypography>
-                        </MDBox>
                         <MDBox mt={4} mb={1}>
                             <MDButton
                                 onClick={(e) => handleClick(e)}
@@ -219,21 +146,6 @@ function Login() {
                             >
                                 {t("login.signIn")}
                             </MDButton>
-                        </MDBox>
-                        <MDBox mt={3} mb={1} textAlign="center">
-                            <MDTypography variant="button" color="text">
-                                {t("login.haveAccount")}{" "}
-                                <MDTypography
-                                    component={Link}
-                                    to="/authentication/sign-up"
-                                    variant="button"
-                                    color="info"
-                                    fontWeight="medium"
-                                    textGradient
-                                >
-                                    {t("login.signUp")}
-                                </MDTypography>
-                            </MDTypography>
                         </MDBox>
                     </MDBox>
                 </MDBox>

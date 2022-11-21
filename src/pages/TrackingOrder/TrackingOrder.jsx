@@ -7,6 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -288,6 +289,7 @@ function TrackingOrder() {
                 setOrderDetail={setOrderDetail}
             />
             <Footer />
+            <ScrollTopButton />
         </div>
     );
 }

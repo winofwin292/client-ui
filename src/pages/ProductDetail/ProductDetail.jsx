@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
-import { StarIcon } from "@heroicons/react/20/solid";
 import { useParams, useNavigate } from "react-router-dom";
+import ImageGallery from "react-image-gallery";
+import { useSnackbar } from "notistack";
 
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -8,11 +9,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ShopCart } from "pages/ShopCart";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
-
-import ImageGallery from "react-image-gallery";
-import { useSnackbar } from "notistack";
 
 import { formatterVND } from "utils";
 
@@ -404,6 +403,7 @@ function ProductDetail() {
                 setCartOpen={setCartOpen}
                 setCountCart={setCountCart}
             />
+            <ScrollTopButton />
         </div>
     );
 }

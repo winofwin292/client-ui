@@ -1,6 +1,7 @@
-import React, { memo } from "react";
-import { TopNav } from "components/common/TopNav";
-import { Footer } from "components/common/Footer";
+import React, { memo, lazy } from "react";
+
+const TopNav = lazy(() => import("components/common/TopNav/TopNav"));
+const Footer = lazy(() => import("components/common/Footer/Footer"));
 
 function NotFound() {
     return (

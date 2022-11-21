@@ -42,7 +42,7 @@ import ManagerProductImage from "./components/ManagerProductImage/ManagerProduct
 import productApi from "api/Product/productApi";
 import categoryApi from "api/Category/categoryApi";
 
-import { formatterVND } from "utils";
+import { formatterVND, getObjectFromCookieValue } from "utils";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -249,9 +249,19 @@ function ManagerProductDG() {
             isNew: false,
         };
 
-        const { id, ...data } = newRow;
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
 
-        const response = await productApi.edit({ id, data });
+        const { id, User, ...data } = newRow;
+
+        const response = await productApi.edit({
+            id,
+            data,
+            username: userData.username,
+        });
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {
@@ -465,6 +475,22 @@ function ManagerProductDG() {
                             title={"Quản lý hình ảnh sản phẩm"}
                             showInMenu
                         />,
+                        <GridActionsCellItem
+                            label={
+                                "Chỉnh sửa gần đây: " +
+                                (params.row.User
+                                    ? params.row.User.username
+                                    : "")
+                            }
+                            title={
+                                "Chỉnh sửa gần đây: " +
+                                (params.row.User
+                                    ? params.row.User.username
+                                    : "")
+                            }
+                            showInMenu
+                            disabled
+                        />,
                     ];
                 },
             },
@@ -553,6 +579,7 @@ function ManagerProductDG() {
                             <ManagerProductImage
                                 managerProductImage={managerProductImage}
                                 setManagerProductImage={setManagerProductImage}
+                                getData={getData}
                             />
                         </div>
                     </ThemeProvider>

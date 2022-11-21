@@ -1,4 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
+import imageCompression from "browser-image-compression";
+
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import Dialog from "@mui/material/Dialog";
@@ -23,7 +25,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
-import { sleep } from "utils";
+import { sleep, getObjectFromCookieValue } from "utils";
 
 import reviewApi from "api/Review/reviewApi";
 
@@ -33,6 +35,12 @@ const themeD = createTheme({
         mode: "dark",
     },
 });
+
+const optionsImageCompress = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 500,
+    useWebWorker: true,
+};
 
 function ViewAvatar(props) {
     const [controller] = useMaterialUIController();
@@ -64,19 +72,23 @@ function ViewAvatar(props) {
         [closeSnackbar, enqueueSnackbar]
     );
 
-    const handleClose = (e, reason) => {
-        if (reason && reason === "backdropClick") return;
-        setImageUrl("");
-        setUploadedFile(null);
-        setSaveState(true);
-        props.setViewAvatar({
-            open: false,
-            url: "",
-            name: "",
-            id: "",
-            key: "",
-        });
-    };
+    const handleClose = useCallback(
+        (e, reason) => {
+            if (reason && reason === "backdropClick") return;
+            setImageUrl("");
+            setUploadedFile(null);
+            setSaveState(true);
+            props.getData();
+            props.setViewAvatar({
+                open: false,
+                url: "",
+                name: "",
+                id: "",
+                key: "",
+            });
+        },
+        [props]
+    );
 
     useEffect(() => {
         setImageUrl(
@@ -84,6 +96,7 @@ function ViewAvatar(props) {
                 ? props.viewAvatar.url + `?${new Date().getTime()}`
                 : props.viewAvatar.url
         );
+        console.log("call");
     }, [props.viewAvatar.url]);
 
     useEffect(() => {
@@ -92,23 +105,33 @@ function ViewAvatar(props) {
         }
     }, [uploadedFile]);
 
-    const handleFileEvent = (e) => {
-        const chosenFiles = Array.prototype.slice.call(e.target.files);
-        e.target.value = null;
-        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        const checkResult = chosenFiles.some(
-            (file) => !allowedExtensions.exec(file.name)
-        );
+    const handleFileEvent = useCallback(
+        async (e) => {
+            const chosenFiles = Array.prototype.slice.call(e.target.files);
+            e.target.value = null;
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            const checkResult = chosenFiles.some(
+                (file) => !allowedExtensions.exec(file.name)
+            );
 
-        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 5)) {
-            setUploadedFile(chosenFiles[0]);
-            setSaveState(false);
-        } else {
-            showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB", "error");
-        }
-        e.target.files = null;
-        return;
-    };
+            if (!checkResult) {
+                const compressedFile = await imageCompression(
+                    chosenFiles[0],
+                    optionsImageCompress
+                );
+                setUploadedFile(compressedFile);
+                setSaveState(false);
+            } else {
+                showNoti(
+                    "Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB",
+                    "error"
+                );
+            }
+            e.target.files = null;
+            return;
+        },
+        [showNoti]
+    );
 
     const handleDeleteImage = (e, name) => {
         setUploadedFile(null);
@@ -118,6 +141,12 @@ function ViewAvatar(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         if (!uploadedFile) {
             showNoti("Vui lòng chọn ảnh", "error");
             return;
@@ -126,6 +155,7 @@ function ViewAvatar(props) {
         const data = {
             reviewId: props.viewAvatar.id,
             aws_key: props.viewAvatar.key,
+            username: userData.username,
         };
 
         let formData = new FormData();
@@ -175,11 +205,11 @@ function ViewAvatar(props) {
                                             height: "300px",
                                             width: "300px",
                                         }}
-                                        // loading="lazy"
+                                        loading="lazy"
                                         onError={async ({ currentTarget }) => {
                                             currentTarget.onerror = null;
                                             const url = currentTarget.src;
-                                            await sleep(3000);
+                                            await sleep(1000);
                                             currentTarget.src = url;
                                         }}
                                     />
@@ -202,7 +232,7 @@ function ViewAvatar(props) {
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
                             Cập nhật hình ảnh (hiển thị tốt nhất với ảnh tỷ lệ{" "}
-                            <b>1:1</b> (ảnh vuông)): ( &lt;5MB )
+                            <b>1:1</b> (ảnh vuông)):
                         </InputLabel>
                         <Button
                             variant="outlined"

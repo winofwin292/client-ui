@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, Suspense, lazy } from "react";
 
 // react-router-dom components
 import { useNavigate } from "react-router-dom";
@@ -26,11 +26,15 @@ import Cookies from "js-cookie";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 
-import Routes from "routes";
+// import Routes from "routes";
+import Loading from "components/common/Loading/Loading";
+
 import userApi from "api/Users/useApi";
 
 import { isLoggedIn } from "utils";
 import "moment/locale/vi";
+
+const Routes = lazy(() => import("routes"));
 
 const App = () => {
     const [controller, dispatch] = useMaterialUIController();
@@ -90,14 +94,16 @@ const App = () => {
 
     return (
         <ThemeProvider theme={darkMode ? themeDark : theme}>
-            <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-                <LocalizationProvider
-                    dateAdapter={AdapterMoment}
-                    adapterLocale="vi"
-                >
-                    <Routes />
-                </LocalizationProvider>
-            </SnackbarProvider>
+            <Suspense fallback={<Loading />}>
+                <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+                    <LocalizationProvider
+                        dateAdapter={AdapterMoment}
+                        adapterLocale="vi"
+                    >
+                        <Routes />
+                    </LocalizationProvider>
+                </SnackbarProvider>
+            </Suspense>
         </ThemeProvider>
     );
 };

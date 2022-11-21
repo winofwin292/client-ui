@@ -1,4 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
+import imageCompression from "browser-image-compression";
+
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import Dialog from "@mui/material/Dialog";
@@ -23,7 +25,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
-import { sleep } from "utils";
+import { sleep, getObjectFromCookieValue } from "utils";
 
 import posterApi from "api/Poster/posterApi";
 
@@ -33,6 +35,12 @@ const themeD = createTheme({
         mode: "dark",
     },
 });
+
+const optionsImageCompress = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1280,
+    useWebWorker: true,
+};
 
 function ViewImage(props) {
     const [controller] = useMaterialUIController();
@@ -64,19 +72,23 @@ function ViewImage(props) {
         [closeSnackbar, enqueueSnackbar]
     );
 
-    const handleClose = (e, reason) => {
-        if (reason && reason === "backdropClick") return;
-        setImageUrl("");
-        setUploadedFile(null);
-        setSaveState(true);
-        props.setViewImage({
-            open: false,
-            url: "",
-            name: "",
-            id: "",
-            key: "",
-        });
-    };
+    const handleClose = useCallback(
+        (e, reason) => {
+            if (reason && reason === "backdropClick") return;
+            setImageUrl("");
+            setUploadedFile(null);
+            setSaveState(true);
+            props.getData();
+            props.setViewImage({
+                open: false,
+                url: "",
+                name: "",
+                id: "",
+                key: "",
+            });
+        },
+        [props]
+    );
 
     useEffect(() => {
         setImageUrl(
@@ -92,7 +104,7 @@ function ViewImage(props) {
         }
     }, [uploadedFile]);
 
-    const handleFileEvent = (e) => {
+    const handleFileEvent = async (e) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files);
         e.target.value = null;
         var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -100,8 +112,12 @@ function ViewImage(props) {
             (file) => !allowedExtensions.exec(file.name)
         );
 
-        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 5)) {
-            setUploadedFile(chosenFiles[0]);
+        if (!checkResult) {
+            const compressedFile = await imageCompression(
+                chosenFiles[0],
+                optionsImageCompress
+            );
+            setUploadedFile(compressedFile);
             setSaveState(false);
         } else {
             showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB", "error");
@@ -118,14 +134,21 @@ function ViewImage(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         if (!uploadedFile) {
             showNoti("Vui lòng chọn ảnh", "error");
             return;
         }
 
         const data = {
-            reviewId: props.viewImage.id,
+            posterId: props.viewImage.id,
             aws_key: props.viewImage.key,
+            username: userData.username,
         };
 
         let formData = new FormData();
@@ -179,7 +202,7 @@ function ViewImage(props) {
                                         onError={async ({ currentTarget }) => {
                                             currentTarget.onerror = null;
                                             const url = currentTarget.src;
-                                            await sleep(3000);
+                                            await sleep(2000);
                                             currentTarget.src = url;
                                         }}
                                     />
@@ -201,7 +224,7 @@ function ViewImage(props) {
 
                         <InputLabel sx={{ mt: 1 }} id="type-label">
                             Cập nhật hình ảnh (hiển thị tốt nhất với ảnh tỷ lệ{" "}
-                            <b>16:9</b>): ( &lt;5MB )
+                            <b>16:9</b>):
                         </InputLabel>
                         <Button
                             variant="outlined"
@@ -248,7 +271,7 @@ function ViewImage(props) {
                                             height: "164px",
                                             width: "164px",
                                         }}
-                                        // loading="lazy"
+                                        loading="lazy"
                                     />
                                     <ImageListItemBar
                                         sx={{

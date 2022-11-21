@@ -1,4 +1,6 @@
 import React, { memo, useState, useCallback, useEffect } from "react";
+import imageCompression from "browser-image-compression";
+
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import Dialog from "@mui/material/Dialog";
@@ -25,7 +27,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
-import { sleep } from "utils";
+import { sleep, getObjectFromCookieValue } from "utils";
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -35,6 +37,11 @@ const themeD = createTheme({
 });
 
 const MAX_COUNT = 6;
+const optionsImageCompress = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 1280,
+    useWebWorker: true,
+};
 
 function ManagerProductImage(props) {
     const [controller] = useMaterialUIController();
@@ -92,58 +99,77 @@ function ManagerProductImage(props) {
         }
     }, [uploadedFiles]);
 
-    const handleClose = (e, reason) => {
-        if (reason && reason === "backdropClick") return;
-        setImages([]);
-        setUploadedFiles([]);
-        setFileLimit(false);
-        props.setManagerProductImage({
-            open: false,
-            id: "",
-            name: "",
-        });
-    };
+    const handleClose = useCallback(
+        (e, reason) => {
+            if (reason && reason === "backdropClick") return;
+            setImages([]);
+            setUploadedFiles([]);
+            setFileLimit(false);
+            props.getData();
+            props.setManagerProductImage({
+                open: false,
+                id: "",
+                name: "",
+            });
+        },
+        [props]
+    );
 
-    const handleUploadFiles = (files) => {
-        const uploaded = [...uploadedFiles];
-        let limitExceeded = false;
-        files.some((file) => {
-            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
-                uploaded.push(file);
-                if (uploaded.length === MAX_COUNT) setFileLimit(true);
-                if (uploaded.length > MAX_COUNT) {
-                    showNoti(
-                        `Bạn chỉ có thể tải lên tối đa ${MAX_COUNT} ảnh`,
-                        "error"
-                    );
-                    setFileLimit(false);
-                    limitExceeded = true;
-                    return true;
+    const handleUploadFiles = useCallback(
+        async (files) => {
+            const uploaded = [...uploadedFiles];
+            let limitExceeded = false;
+            files.some((file) => {
+                if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+                    uploaded.push(file);
+                    if (uploaded.length === MAX_COUNT) setFileLimit(true);
+                    if (uploaded.length > MAX_COUNT) {
+                        showNoti(
+                            `Bạn chỉ có thể tải lên tối đa ${MAX_COUNT} ảnh`,
+                            "error"
+                        );
+                        setFileLimit(false);
+                        limitExceeded = true;
+                        return true;
+                    }
                 }
+                return false;
+            });
+            if (!limitExceeded) {
+                let temp = [];
+                for (const file of uploaded) {
+                    const compressedFile = await imageCompression(
+                        file,
+                        optionsImageCompress
+                    );
+                    temp.push(compressedFile);
+                }
+
+                setUploadedFiles(temp);
+                setSaveState(false);
             }
-            return false;
-        });
-        if (!limitExceeded) {
-            setUploadedFiles(uploaded);
-            setSaveState(false);
-        }
-    };
+        },
+        [showNoti, uploadedFiles]
+    );
 
-    const handleFileEvent = (e) => {
-        const chosenFiles = Array.prototype.slice.call(e.target.files);
-        e.target.value = null;
-        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        const checkResult = chosenFiles.some(
-            (file) => !allowedExtensions.exec(file.name)
-        );
+    const handleFileEvent = useCallback(
+        (e) => {
+            const chosenFiles = Array.prototype.slice.call(e.target.files);
+            e.target.value = null;
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            const checkResult = chosenFiles.some(
+                (file) => !allowedExtensions.exec(file.name)
+            );
 
-        if (!checkResult) {
-            handleUploadFiles(chosenFiles);
-        } else {
-            showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
-            return;
-        }
-    };
+            if (!checkResult) {
+                handleUploadFiles(chosenFiles);
+            } else {
+                showNoti("Vui lòng chỉ chọn tệp hình ảnh", "error");
+                return;
+            }
+        },
+        [handleUploadFiles, showNoti]
+    );
 
     const handleDeleteImage = (e, name) => {
         setUploadedFiles((prev) => prev.filter((item) => item.name !== name));
@@ -153,6 +179,12 @@ function ManagerProductImage(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         if (uploadedFiles.length === 0) {
             showNoti("Vui lòng chọn ít nhất 1 ảnh", "error");
             return;
@@ -160,6 +192,7 @@ function ManagerProductImage(props) {
 
         const data = {
             productId: props.managerProductImage.id,
+            username: userData.username,
         };
 
         let formData = new FormData();
@@ -180,7 +213,18 @@ function ManagerProductImage(props) {
     };
 
     const handleDelete = async (e, id, key) => {
-        const response = await productImageApi.delete({ id, key });
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
+        const response = await productImageApi.delete({
+            id,
+            key,
+            username: userData.username,
+            productId: props.managerProductImage.id,
+        });
         if (response.status === 200) {
             getData();
             showNoti("Xóa hình ảnh thành công", "success");
@@ -230,7 +274,7 @@ function ManagerProductImage(props) {
                                                         null;
                                                     const url =
                                                         currentTarget.src;
-                                                    await sleep(3000);
+                                                    await sleep(2000);
                                                     currentTarget.src = url;
                                                 }}
                                             />

@@ -1,4 +1,12 @@
-import React, { memo, useMemo, useCallback, useState, useEffect } from "react";
+import React, {
+    memo,
+    useMemo,
+    useCallback,
+    useState,
+    useEffect,
+    Suspense,
+    lazy,
+} from "react";
 import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
 import {
@@ -32,13 +40,21 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
-import { ConfirmDialog } from "components/common/ConfirmDialog";
+import Loading from "components/common/Loading/Loading";
 
 import { getObjectFromCookieValue } from "utils";
 
-import ViewAvatar from "./ViewAvatar";
-import AddReview from "./AddReview";
 import reviewApi from "api/Review/reviewApi";
+
+// import ConfirmDialog from "components/common/ConfirmDialog/ConfirmDialog";
+// import ViewAvatar from "./ViewAvatar";
+// import AddReview from "./AddReview";
+
+const ConfirmDialog = lazy(() =>
+    import("components/common/ConfirmDialog/ConfirmDialog")
+);
+const ViewAvatar = lazy(() => import("./ViewAvatar"));
+const AddReview = lazy(() => import("./AddReview"));
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -373,51 +389,54 @@ function ManagerReview() {
         <Grid item xs={12}>
             <Card>
                 <div style={{ height: 500, width: "100%" }}>
-                    <ThemeProvider theme={darkMode ? themeD : theme}>
-                        <DataGrid
-                            rows={data}
-                            columns={columns}
-                            localeText={
-                                viVN.components.MuiDataGrid.defaultProps
-                                    .localeText
-                            }
-                            rowModesModel={rowModesModel}
-                            onRowModesModelChange={(newModel) =>
-                                setRowModesModel(newModel)
-                            }
-                            onRowEditStart={handleRowEditStart}
-                            onRowEditStop={handleRowEditStop}
-                            processRowUpdate={processRowUpdate}
-                            experimentalFeatures={{ newEditingApi: true }}
-                            components={{
-                                Toolbar: EditToolbar,
-                            }}
-                            componentsProps={{
-                                toolbar: { handleRefresh, getData },
-                            }}
-                            loading={loading}
-                            initialState={{
-                                columns: {
-                                    columnVisibilityModel: {
-                                        id: false,
+                    <Suspense fallback={<Loading />}>
+                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                            <DataGrid
+                                rows={data}
+                                columns={columns}
+                                localeText={
+                                    viVN.components.MuiDataGrid.defaultProps
+                                        .localeText
+                                }
+                                rowModesModel={rowModesModel}
+                                onRowModesModelChange={(newModel) =>
+                                    setRowModesModel(newModel)
+                                }
+                                onRowEditStart={handleRowEditStart}
+                                onRowEditStop={handleRowEditStop}
+                                processRowUpdate={processRowUpdate}
+                                experimentalFeatures={{ newEditingApi: true }}
+                                components={{
+                                    Toolbar: EditToolbar,
+                                }}
+                                componentsProps={{
+                                    toolbar: { handleRefresh, getData },
+                                }}
+                                loading={loading}
+                                initialState={{
+                                    columns: {
+                                        columnVisibilityModel: {
+                                            id: false,
+                                        },
                                     },
-                                },
-                            }}
-                            editMode="row"
-                            density="compact"
+                                }}
+                                editMode="row"
+                                density="compact"
+                            />
+                        </ThemeProvider>
+                        <ViewAvatar
+                            viewAvatar={viewAvatar}
+                            setViewAvatar={setViewAvatar}
+                            getData={getData}
                         />
-                    </ThemeProvider>
-                    <ViewAvatar
-                        viewAvatar={viewAvatar}
-                        setViewAvatar={setViewAvatar}
-                    />
-                    <ConfirmDialog
-                        open={confirmState}
-                        setOpen={setConfirmState}
-                        confirmFunc={handleDelete}
-                        title="Xác nhận xóa?"
-                        msg="Xác nhận xóa đánh giá?"
-                    />
+                        <ConfirmDialog
+                            open={confirmState}
+                            setOpen={setConfirmState}
+                            confirmFunc={handleDelete}
+                            title="Xác nhận xóa?"
+                            msg="Xác nhận xóa đánh giá?"
+                        />
+                    </Suspense>
                 </div>
             </Card>
         </Grid>

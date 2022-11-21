@@ -10,7 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useSnackbar } from "notistack";
 
-import { removeAccents } from "utils";
+import { removeAccents, getObjectFromCookieValue } from "utils";
 import categoryApi from "api/Category/categoryApi";
 
 function AddCategory(props) {
@@ -53,6 +53,13 @@ function AddCategory(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         if (!name) {
             showNoti("Vui lòng điền tên loại hàng vào biểu mẫu", "error");
             return;
@@ -67,6 +74,7 @@ function AddCategory(props) {
             name,
             code,
             description,
+            username: userData.username,
         };
         const response = await categoryApi.add(data);
         if (response.status === 200) {

@@ -10,6 +10,7 @@ import { Footer } from "components/common/Footer";
 import { ProductList } from "components/common/ProductList";
 import { ShopNav } from "components/common/ShopNav";
 import { ShopCart } from "pages/ShopCart";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -132,6 +133,7 @@ function Shop() {
                 setCartOpen={setCartOpen}
                 setCountCart={setCountCart}
             />
+            <ScrollTopButton />
         </div>
     );
 }

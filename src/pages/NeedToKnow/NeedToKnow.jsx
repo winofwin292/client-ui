@@ -6,6 +6,7 @@ import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
 import { FAQ } from "components/common/FAQ";
 import { HeroSection } from "components/common/HeroSection";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -42,6 +43,7 @@ function NeedToKnow() {
             <CallToAction setCTDState={setCTDState} />
             <Footer />
             <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ScrollTopButton />
         </div>
     );
 }

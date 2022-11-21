@@ -1,22 +1,40 @@
+import React, { lazy } from "react";
 import Roles from "./Roles";
-import { TeacherCourse, StudentCourse } from "pages";
-import { Dashboard } from "pages/Dashboard";
-import { Overview } from "pages/Dashboard/Overview";
-import { ManageHomePage } from "pages/ManageHomePage";
-import { ManagerRequestContact } from "pages/ManagerRequestContact";
-import { ManagerStaff } from "pages/ManagerStaff";
-import { ManagerTeacher } from "pages/ManagerTeacher";
-import { ManagerStudent } from "pages/ManagerStudent";
-import { ManagerCourse } from "pages/ManagerCourse";
-import { ManagerCategory } from "pages/ManagerCategory";
-import { ManagerProduct } from "pages/ManagerProduct";
-import { ManagerOrder } from "pages/ManagerOrder";
-import { StatisticalPage } from "pages/StatisticalPage";
-import { Tools } from "pages/Tools";
-import { ToolsStaff } from "pages/ToolsStaff";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+
+const Dashboard = lazy(() => import("pages/Dashboard/Dashboard"));
+const Overview = lazy(() => import("pages/Dashboard/Overview/Overview"));
+const ManageHomePage = lazy(() =>
+    import("pages/ManageHomePage/ManageHomePage")
+);
+const ManagerRequestContact = lazy(() =>
+    import("pages/ManagerRequestContact/ManagerRequestContact")
+);
+const ManagerStaff = lazy(() => import("pages/ManagerStaff/ManagerStaff"));
+const ManagerTeacher = lazy(() =>
+    import("pages/ManagerTeacher/ManagerTeacher")
+);
+const ManagerStudent = lazy(() =>
+    import("pages/ManagerStudent/ManagerStudent")
+);
+const ManagerCourse = lazy(() => import("pages/ManagerCourse/ManagerCourse"));
+const ManagerCategory = lazy(() =>
+    import("pages/ManagerCategory/ManagerCategory")
+);
+const ManagerProduct = lazy(() =>
+    import("pages/ManagerProduct/ManagerProduct")
+);
+const ManagerOrder = lazy(() => import("pages/ManagerOrder/ManagerOrder"));
+const StatisticalPage = lazy(() =>
+    import("pages/StatisticalPage/StatisticalPage")
+);
+const Tools = lazy(() => import("pages/Tools/Tools"));
+const ToolsStaff = lazy(() => import("pages/ToolsStaff/ToolsStaff"));
+
+const TeacherCourse = lazy(() => import("pages/TeacherCourse"));
+const StudentCourse = lazy(() => import("pages/StudentCourse"));
 
 const PrivateRoutesConfig = [
     {
@@ -138,6 +156,46 @@ const PrivateRoutesConfig = [
                 icon: <Icon fontSize="small">assignment</Icon>,
                 path: "yeu-cau-lien-he",
                 component: <ManagerRequestContact />,
+            },
+            {
+                type: "collapse",
+                name: "Loại hàng",
+                key: "dashboard/manage-category",
+                icon: <Icon fontSize="small">person</Icon>,
+                path: "manage-category",
+                component: <ManagerCategory />,
+            },
+            {
+                type: "collapse",
+                name: "Sản phẩm",
+                key: "dashboard/manage-product",
+                icon: <Icon fontSize="small">person</Icon>,
+                path: "manage-product",
+                component: <ManagerProduct />,
+            },
+            {
+                type: "collapse",
+                name: "Đơn hàng",
+                key: "dashboard/manage-order",
+                icon: <Icon fontSize="small">local_mall</Icon>,
+                path: "manage-order",
+                component: <ManagerOrder />,
+            },
+            {
+                type: "collapse",
+                name: "Thống kê",
+                key: "dashboard/statistical",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "statistical",
+                component: <StatisticalPage />,
+            },
+            {
+                type: "collapse",
+                name: "Trang chủ",
+                key: "dashboard/manage-home-page",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "manage-home-page",
+                component: <ManageHomePage />,
             },
             {
                 type: "collapse",

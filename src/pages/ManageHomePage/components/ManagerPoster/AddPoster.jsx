@@ -1,4 +1,6 @@
 import React, { memo, useState, useCallback } from "react";
+import imageCompression from "browser-image-compression";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
@@ -22,6 +24,12 @@ import { useSnackbar } from "notistack";
 import { getObjectFromCookieValue } from "utils";
 
 import posterApi from "api/Poster/posterApi";
+
+const optionsImageCompress = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1280,
+    useWebWorker: true,
+};
 
 function AddPoster(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -61,21 +69,31 @@ function AddPoster(props) {
         setDefaultState();
     };
 
-    const handleFileEvent = (e) => {
-        const chosenFiles = Array.prototype.slice.call(e.target.files);
-        e.target.value = null;
-        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        const checkResult = chosenFiles.some(
-            (file) => !allowedExtensions.exec(file.name)
-        );
+    const handleFileEvent = useCallback(
+        async (e) => {
+            const chosenFiles = Array.prototype.slice.call(e.target.files);
+            e.target.value = null;
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            const checkResult = chosenFiles.some(
+                (file) => !allowedExtensions.exec(file.name)
+            );
 
-        if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 5)) {
-            setUploadedFile(chosenFiles[0]);
-        } else {
-            showNoti("Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB", "error");
-            return;
-        }
-    };
+            if (!checkResult && !(chosenFiles[0].size / 1024 / 1024 > 5)) {
+                const compressedFile = await imageCompression(
+                    chosenFiles[0],
+                    optionsImageCompress
+                );
+                setUploadedFile(compressedFile);
+            } else {
+                showNoti(
+                    "Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB",
+                    "error"
+                );
+                return;
+            }
+        },
+        [showNoti]
+    );
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -83,6 +101,7 @@ function AddPoster(props) {
         const userData = getObjectFromCookieValue("userData");
         if (!userData) {
             showNoti("Không lấy được thông tin người dùng", "error");
+            return;
         }
 
         if (!content) {

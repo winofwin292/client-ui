@@ -1,20 +1,40 @@
-import React, { memo, useEffect, useState } from "react";
-import { TopNav } from "components/common/TopNav";
-import { CarouselImage } from "components/common/CarouselImage";
-import { SocialProof } from "components/common/SocialProof";
-import { Feature } from "components/common/Feature";
-import { TeacherSection } from "components/common/TeacherSection";
-import { CourseSection } from "components/common/CourseSection";
-import { ReviewSection } from "components/common/ReviewSection";
-import { CallToAction } from "components/common/CallToAction";
-import { Footer } from "components/common/Footer";
-import { ContactDialog } from "components/common/ContactDialog";
+import React, { memo, useEffect, useState, lazy, Suspense } from "react";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
 
+import Loading from "components/common/Loading/Loading";
+
 //i18next translate
 // import { useTranslation } from "react-i18next";
+
+const TopNav = lazy(() => import("components/common/TopNav/TopNav"));
+const CarouselImage = lazy(() =>
+    import("components/common/CarouselImage/CarouselImage")
+);
+const SocialProof = lazy(() =>
+    import("components/common/SocialProof/SocialProof")
+);
+const Feature = lazy(() => import("components/common/Feature/Feature"));
+const TeacherSection = lazy(() =>
+    import("components/common/TeacherSection/TeacherSection")
+);
+const CourseSection = lazy(() =>
+    import("components/common/CourseSection/CourseSection")
+);
+const ReviewSection = lazy(() =>
+    import("components/common/ReviewSection/ReviewSection")
+);
+const CallToAction = lazy(() =>
+    import("components/common/CallToAction/CallToAction")
+);
+const Footer = lazy(() => import("components/common/Footer/Footer"));
+const ContactDialog = lazy(() =>
+    import("components/common/ContactDialog/ContactDialog")
+);
+const ScrollTopButton = lazy(() =>
+    import("components/common/ScrollTopButton/ScrollTopButton")
+);
 
 function Home() {
     //controller có thể lấy layout phục vụ cho chức năng thêm
@@ -37,7 +57,7 @@ function Home() {
     }, []);
 
     return (
-        <>
+        <Suspense fallback={<Loading />}>
             <TopNav />
             <div className="relative overflow-hidden bg-white dark:bg-gray-900">
                 <div className="mx-auto max-w-7xl bg-white dark:bg-gray-900">
@@ -82,7 +102,8 @@ function Home() {
             <CallToAction setCTDState={setCTDState} />
             <Footer />
             <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
-        </>
+            <ScrollTopButton />
+        </Suspense>
     );
 }
 

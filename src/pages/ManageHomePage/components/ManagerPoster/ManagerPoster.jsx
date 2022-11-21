@@ -394,6 +394,7 @@ function ManagerPoster() {
                     <ViewImage
                         viewImage={viewImage}
                         setViewImage={setViewImage}
+                        getData={getData}
                     />
                     <ConfirmDialog
                         open={confirmState}

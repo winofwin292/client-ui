@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { CourseList } from "components/common/CourseList";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -102,6 +103,7 @@ function CourseIntroduction() {
                 </div>
             </div>
             <Footer />
+            <ScrollTopButton />
         </div>
     );
 }

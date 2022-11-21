@@ -6,6 +6,7 @@ import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
 import { HeroSection } from "components/common/HeroSection";
 import { Content } from "components/common/Content";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -43,6 +44,7 @@ function TeacherIntroduction() {
             <CallToAction setCTDState={setCTDState} />
             <Footer />
             <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ScrollTopButton />
         </div>
     );
 }

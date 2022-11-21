@@ -1,4 +1,6 @@
 import React, { memo, useState, useCallback, useEffect } from "react";
+import imageCompression from "browser-image-compression";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
@@ -21,10 +23,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import { useSnackbar } from "notistack";
 
+import { getObjectFromCookieValue } from "utils";
+
 import productApi from "api/Product/productApi";
 import categoryApi from "api/Category/categoryApi";
 
 const MAX_COUNT = 6;
+const optionsImageCompress = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 1280,
+    useWebWorker: true,
+};
 
 function AddProduct(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -95,29 +104,41 @@ function AddProduct(props) {
         setDefaultState();
     };
 
-    const handleUploadFiles = (files) => {
-        const uploaded = [...uploadedFiles];
-        let limitExceeded = false;
-        files.some((file) => {
-            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
-                uploaded.push(file);
-                if (uploaded.length === MAX_COUNT) setFileLimit(true);
-                if (uploaded.length > MAX_COUNT) {
-                    showNoti(
-                        `Bạn chỉ có thể tải lên tối đa ${MAX_COUNT} ảnh`,
-                        "error"
-                    );
-                    setFileLimit(false);
-                    limitExceeded = true;
-                    return true;
+    const handleUploadFiles = useCallback(
+        async (files) => {
+            const uploaded = [...uploadedFiles];
+            let limitExceeded = false;
+            files.some((file) => {
+                if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+                    uploaded.push(file);
+                    if (uploaded.length === MAX_COUNT) setFileLimit(true);
+                    if (uploaded.length > MAX_COUNT) {
+                        showNoti(
+                            `Bạn chỉ có thể tải lên tối đa ${MAX_COUNT} ảnh`,
+                            "error"
+                        );
+                        setFileLimit(false);
+                        limitExceeded = true;
+                        return true;
+                    }
                 }
+                return false;
+            });
+            if (!limitExceeded) {
+                let temp = [];
+                for (const file of uploaded) {
+                    const compressedFile = await imageCompression(
+                        file,
+                        optionsImageCompress
+                    );
+                    temp.push(compressedFile);
+                }
+
+                setUploadedFiles(temp);
             }
-            return false;
-        });
-        if (!limitExceeded) {
-            setUploadedFiles(uploaded);
-        }
-    };
+        },
+        [showNoti, uploadedFiles]
+    );
 
     const handleFileEvent = (e) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files);
@@ -202,6 +223,17 @@ function AddProduct(props) {
             return;
         }
 
+        if (uploadedFiles <= 0) {
+            showNoti("Vui lòng chọn ít nhất 1 hình ảnh cho sản phẩm", "error");
+            return;
+        }
+
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
+
         const data = {
             name,
             price: parseInt(price),
@@ -214,6 +246,7 @@ function AddProduct(props) {
             width: parseInt(width),
             height: parseInt(height),
             in_stock: inStock,
+            username: userData.username,
         };
 
         let formData = new FormData();

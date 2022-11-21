@@ -35,6 +35,8 @@ import { useMaterialUIController } from "context";
 import { RenderCellExpand } from "components/common/RenderCellExpand";
 import { ConfirmDialog } from "components/common/ConfirmDialog";
 
+import { getObjectFromCookieValue } from "utils";
+
 import AddCategory from "./AddCategory";
 import categoryApi from "api/Category/categoryApi";
 
@@ -221,9 +223,19 @@ function ManagerCategoryDG() {
     const processRowUpdate = async (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
-        const { id, ...data } = newRow;
+        const userData = getObjectFromCookieValue("userData");
+        if (!userData) {
+            showNoti("Không lấy được thông tin người dùng", "error");
+            return;
+        }
 
-        const response = await categoryApi.edit({ id, data });
+        const { id, User, ...data } = newRow;
+
+        const response = await categoryApi.edit({
+            id,
+            data,
+            username: userData.username,
+        });
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {
@@ -253,9 +265,21 @@ function ManagerCategoryDG() {
             {
                 field: "description",
                 headerName: "Mô tả",
-                width: 600,
+                width: 500,
                 renderCell: RenderCellExpand,
                 editable: true,
+            },
+            {
+                field: "User",
+                headerName: "Cập nhật bởi",
+                width: 120,
+                renderCell: (params) => {
+                    if (params.value == null) {
+                        return "";
+                    }
+                    return params.value.username;
+                },
+                editable: false,
             },
             {
                 field: "actions",

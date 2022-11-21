@@ -1,4 +1,6 @@
 import React, { memo, useState, useCallback, useEffect } from "react";
+import imageCompression from "browser-image-compression";
+
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import Dialog from "@mui/material/Dialog";
@@ -34,6 +36,12 @@ const themeD = createTheme({
         mode: "dark",
     },
 });
+
+const optionsImageCompress = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 960,
+    useWebWorker: true,
+};
 
 function ManagerCourseImage(props) {
     const [controller] = useMaterialUIController();
@@ -95,6 +103,7 @@ function ManagerCourseImage(props) {
 
     useEffect(() => {
         getData();
+        console.log("call");
     }, [getData]);
 
     useEffect(() => {
@@ -115,30 +124,42 @@ function ManagerCourseImage(props) {
         });
     };
 
-    const handleUploadFiles = (files) => {
-        const uploaded = [...uploadedFiles];
-        let limitExceeded = false;
-        files.some((file) => {
-            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
-                uploaded.push(file);
-                if (uploaded.length === maxCount) setFileLimit(true);
-                if (uploaded.length > maxCount) {
-                    showNoti(
-                        `Bạn chỉ có thể tải lên tối đa ${maxCount} ảnh`,
-                        "error"
-                    );
-                    setFileLimit(false);
-                    limitExceeded = true;
-                    return true;
+    const handleUploadFiles = useCallback(
+        async (files) => {
+            const uploaded = [...uploadedFiles];
+            let limitExceeded = false;
+            files.some((file) => {
+                if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+                    uploaded.push(file);
+                    if (uploaded.length === maxCount) setFileLimit(true);
+                    if (uploaded.length > maxCount) {
+                        showNoti(
+                            `Bạn chỉ có thể tải lên tối đa ${maxCount} ảnh`,
+                            "error"
+                        );
+                        setFileLimit(false);
+                        limitExceeded = true;
+                        return true;
+                    }
                 }
+                return false;
+            });
+            if (!limitExceeded) {
+                let temp = [];
+                for (const file of uploaded) {
+                    const compressedFile = await imageCompression(
+                        file,
+                        optionsImageCompress
+                    );
+                    temp.push(compressedFile);
+                }
+
+                setUploadedFiles(temp);
+                setSaveState(false);
             }
-            return false;
-        });
-        if (!limitExceeded) {
-            setUploadedFiles(uploaded);
-            setSaveState(false);
-        }
-    };
+        },
+        [maxCount, showNoti, uploadedFiles]
+    );
 
     const handleFileEvent = (e) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files);
@@ -241,7 +262,7 @@ function ManagerCourseImage(props) {
                                                         null;
                                                     const url =
                                                         currentTarget.src;
-                                                    await sleep(3000);
+                                                    await sleep(2000);
                                                     currentTarget.src = url;
                                                 }}
                                             />

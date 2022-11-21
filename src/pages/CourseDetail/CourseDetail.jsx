@@ -2,15 +2,16 @@ import React, { memo, useState, useEffect, useCallback } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
+
 import { useParams, useNavigate } from "react-router-dom";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ContactDialog } from "components/common/ContactDialog";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 import { formatterVND } from "utils";
-
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 import courseApi from "api/Course/courseApi";
 
@@ -318,6 +319,7 @@ function CourseDetail() {
             </div>
             <Footer />
             <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />
+            <ScrollTopButton />
         </div>
     );
 }

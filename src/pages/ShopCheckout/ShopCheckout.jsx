@@ -11,6 +11,7 @@ import { useSnackbar } from "notistack";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
+import { ScrollTopButton } from "components/common/ScrollTopButton";
 
 import { TrashIcon } from "@heroicons/react/24/solid";
 import validator from "validator";
@@ -885,8 +886,8 @@ function ShopCheckout() {
                     </form>
                 </div>
             </main>
-
             <Footer />
+            <ScrollTopButton />
         </div>
     );
 }
