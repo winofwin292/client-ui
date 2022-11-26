@@ -90,7 +90,9 @@ function AddReview(props) {
                     chosenFiles[0],
                     optionsImageCompress
                 );
-                setUploadedFile(compressedFile);
+                setUploadedFile(
+                    new File([compressedFile], compressedFile.name)
+                );
             } else {
                 showNoti(
                     "Vui lòng chỉ chọn tệp hình ảnh và nhỏ hơn 5MB",

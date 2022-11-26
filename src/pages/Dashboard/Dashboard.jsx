@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, Suspense } from "react";
 
 //react-router-dom
 import { Routes, Route } from "react-router-dom";
@@ -13,23 +13,16 @@ import Configurator from "components/MDComponents/examples/Configurator";
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setLayout } from "context";
 
-// Images
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import { Loading } from "components/common/Loading";
 
 function Dashboard({ children }) {
     const [controller, dispatch] = useMaterialUIController();
-    const {
-        miniSidenav,
-        sidenavColor,
-        transparentSidenav,
-        whiteSidenav,
-        darkMode,
-    } = controller;
+    const { miniSidenav, sidenavColor } = controller;
     const [onMouseEnter, setOnMouseEnter] = useState(false);
 
     useEffect(() => {
         setLayout(dispatch, "dashboard");
+        // setMiniSidenav(dispatch, true);
     }, [dispatch]);
 
     // Open sidenav when mouse enter on mini sidenav
@@ -50,32 +43,29 @@ function Dashboard({ children }) {
 
     return (
         <>
-            <CssBaseline />
-            <Sidenav
-                color={sidenavColor}
-                brand={
-                    (transparentSidenav && !darkMode) || whiteSidenav
-                        ? brandDark
-                        : brandWhite
-                }
-                brandName="Material Dashboard 2"
-                routes={children}
-                onMouseEnter={handleOnMouseEnter}
-                onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            <Routes>
-                {children.map((route) => {
-                    const { path, component: Component } = route;
-                    return (
-                        <Route
-                            key={path}
-                            path={`${path}`}
-                            element={Component}
-                        />
-                    );
-                })}
-            </Routes>
+            <Suspense fallback={<Loading />}>
+                <CssBaseline />
+                <Sidenav
+                    color={sidenavColor}
+                    brandName="HTQL"
+                    routes={children}
+                    onMouseEnter={handleOnMouseEnter}
+                    onMouseLeave={handleOnMouseLeave}
+                />
+                <Configurator />
+                <Routes>
+                    {children.map((route) => {
+                        const { path, component: Component } = route;
+                        return (
+                            <Route
+                                key={path}
+                                path={`${path}`}
+                                element={Component}
+                            />
+                        );
+                    })}
+                </Routes>
+            </Suspense>
         </>
     );
 }

@@ -4,7 +4,6 @@ import { formatterVND } from "utils";
 
 function CourseList(props) {
     const courses = props.data;
-    console.log(courses);
 
     return (
         <div className="bg-white dark:bg-gray-900">

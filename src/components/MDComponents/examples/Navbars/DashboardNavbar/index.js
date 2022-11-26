@@ -30,7 +30,6 @@ import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDComponents/MDBox";
-import MDInput from "components/MDComponents/MDInput";
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from "components/MDComponents/examples/Breadcrumbs";
@@ -169,8 +168,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
                                 size="small"
                                 disableRipple
                                 color="inherit"
-                                sx={navbarMobileMenu}
-                                onClick={handleMiniSidenav}
+                                // sx={navbarMobileMenu}
+                                // onClick={handleMiniSidenav}
+                                onClick={() => handleMiniSidenav()}
                             >
                                 <Icon sx={iconsStyle} fontSize="medium">
                                     {miniSidenav ? "menu_open" : "menu"}

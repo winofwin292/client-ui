@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 
+import { MessengerChat } from "react-messenger-chat-plugin";
+
 //i18next translate
 import { useTranslation } from "react-i18next";
 import i18n from "translation/i18n";
@@ -19,6 +21,36 @@ function Footer() {
     };
     return (
         <footer className="p-4 bg-white sm:p-6 dark:bg-gray-900">
+            <MessengerChat
+                pageId="110791625194604"
+                language="vi_VN"
+                themeColor={"#4338ca"}
+                bottomSpacing={20}
+                loggedInGreeting="Nhấn bắt đầu chat để liên hệ với chúng tôi"
+                // loggedOutGreeting="loggedOutGreeting"
+                greetingDialogDisplay={"show"}
+                // debugMode={true}
+                // onMessengerShow={() => {
+                //     console.log("onMessengerShow");
+                // }}
+                // onMessengerHide={() => {
+                //     console.log("onMessengerHide");
+                // }}
+                // onMessengerDialogShow={() => {
+                //     console.log("onMessengerDialogShow");
+                // }}
+                // onMessengerDialogHide={() => {
+                //     console.log("onMessengerDialogHide");
+                // }}
+                // onMessengerMounted={() => {
+                //     console.log("onMessengerMounted");
+                // }}
+                // onMessengerLoad={() => {
+                //     console.log("onMessengerLoad");
+                // }}
+                version="v15.0"
+            />
+
             <div className="mx-auto max-w-screen-xl max-h-screen">
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">

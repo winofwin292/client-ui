@@ -28,8 +28,6 @@ import {
     setDarkMode,
 } from "context";
 
-import { useSnackbar } from "notistack";
-
 import userApi from "api/Users/useApi";
 
 function Configurator() {
@@ -44,27 +42,6 @@ function Configurator() {
     } = controller;
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-    const showNoti = useCallback(
-        (msg, type) => {
-            enqueueSnackbar(msg, {
-                variant: type,
-                action: (key) => (
-                    <IconButton
-                        size="small"
-                        onClick={() => closeSnackbar(key)}
-                        style={{
-                            color: "white",
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                ),
-            });
-        },
-        [closeSnackbar, enqueueSnackbar]
-    );
 
     // Use the useEffect hook to change the button state for the sidenav type based on window size.
     useEffect(() => {

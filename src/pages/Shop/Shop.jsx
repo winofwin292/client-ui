@@ -1,21 +1,40 @@
-import React, { memo, useEffect, useState, useCallback } from "react";
+import React, {
+    memo,
+    useEffect,
+    useState,
+    useCallback,
+    lazy,
+    Suspense,
+} from "react";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { TopNav } from "components/common/TopNav";
-import { Footer } from "components/common/Footer";
-import { ProductList } from "components/common/ProductList";
-import { ShopNav } from "components/common/ShopNav";
-import { ShopCart } from "pages/ShopCart";
-import { ScrollTopButton } from "components/common/ScrollTopButton";
+// import { TopNav } from "components/common/TopNav";
+// import { Footer } from "components/common/Footer";
+// import { ProductList } from "components/common/ProductList";
+// import { ShopNav } from "components/common/ShopNav";
+// import { ShopCart } from "pages/ShopCart";
+// import { ScrollTopButton } from "components/common/ScrollTopButton";
+import { Loading } from "components/common/Loading";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
 
 import productApi from "api/Product/productApi";
+
+const TopNav = lazy(() => import("components/common/TopNav/TopNav"));
+const Footer = lazy(() => import("components/common/Footer/Footer"));
+const ProductList = lazy(() =>
+    import("components/common/ProductList/ProductList")
+);
+const ShopNav = lazy(() => import("components/common/ShopNav/ShopNav"));
+const ShopCart = lazy(() => import("pages/ShopCart/ShopCart"));
+const ScrollTopButton = lazy(() =>
+    import("components/common/ScrollTopButton/ScrollTopButton")
+);
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -99,41 +118,43 @@ function Shop() {
 
     return (
         <div className="bg-white dark:bg-gray-900">
-            <TopNav />
-            <ShopNav
-                setData={setData}
-                dataRef={dataFilter}
-                countCart={countCart}
-                setCartOpen={setCartOpen}
-                setPage={setPage}
-                setCount={setCount}
-                setCurrData={setCurrData}
-                perPage={PER_PAGE}
-            />
-            <ProductList data={currData} setCountCart={setCountCart} />
+            <Suspense fallback={<Loading />}>
+                <TopNav />
+                <ShopNav
+                    setData={setData}
+                    dataRef={dataFilter}
+                    countCart={countCart}
+                    setCartOpen={setCartOpen}
+                    setPage={setPage}
+                    setCount={setCount}
+                    setCurrData={setCurrData}
+                    perPage={PER_PAGE}
+                />
+                <ProductList data={currData} setCountCart={setCountCart} />
 
-            <div className="bg-white dark:bg-gray-900 flex">
-                <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-2 items-center">
-                    <ThemeProvider theme={darkMode ? themeD : theme}>
-                        <Stack spacing={2}>
-                            <Pagination
-                                count={count}
-                                page={page}
-                                showFirstButton
-                                showLastButton
-                                onChange={handleChangePage}
-                            />
-                        </Stack>
-                    </ThemeProvider>
+                <div className="bg-white dark:bg-gray-900 flex">
+                    <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-2 items-center">
+                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                            <Stack spacing={2}>
+                                <Pagination
+                                    count={count}
+                                    page={page}
+                                    showFirstButton
+                                    showLastButton
+                                    onChange={handleChangePage}
+                                />
+                            </Stack>
+                        </ThemeProvider>
+                    </div>
                 </div>
-            </div>
-            <Footer />
-            <ShopCart
-                cartOpen={cartOpen}
-                setCartOpen={setCartOpen}
-                setCountCart={setCountCart}
-            />
-            <ScrollTopButton />
+                <Footer />
+                <ShopCart
+                    cartOpen={cartOpen}
+                    setCartOpen={setCartOpen}
+                    setCountCart={setCountCart}
+                />
+                <ScrollTopButton />
+            </Suspense>
         </div>
     );
 }

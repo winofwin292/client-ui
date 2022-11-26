@@ -39,8 +39,19 @@ function TeacherIntroduction() {
             <TopNav />
             <HeroSection />
             <TeacherSection />
-            <Content />
-            <Content alignRight />
+            <Content
+                title="Đội ngũ giảng giàu kinh nghiệm"
+                textContent={[
+                    "Hơn 50 giáo viên giỏi, giàu kinh nghiệm được tuyển chọn gắt gao; 100% có bằng quốc tế TESOL, CELTA & TEFL.",
+                ]}
+            />
+            <Content
+                title="Không ngừng đổi mới"
+                textContent={[
+                    "Sau gần 5 năm thành lập, chúng tôi không ngừng chuyển đổi nội tại, tiên phong chuyển đổi số và áp dụng công nghệ, cập nhật những xu hướng mới nhất nhằm cung cấp giải pháp tiên tiến, khơi mở những giá trị, đáp ứng những nhu cầu mới của thời đại.",
+                ]}
+                alignRight
+            />
             <CallToAction setCTDState={setCTDState} />
             <Footer />
             <ContactDialog cTDState={cTDState} setCTDState={setCTDState} />

@@ -30,6 +30,8 @@ import {
     setWhiteSidenav,
 } from "context";
 
+import sidenavLogoLabel from "components/MDComponents/examples/Sidenav/styles/sidenav";
+
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
     const [controller, dispatch] = useMaterialUIController();
     const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } =
@@ -49,7 +51,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     useEffect(() => {
         // A function that sets the mini state of the sidenav.
         function handleMiniSidenav() {
-            setMiniSidenav(dispatch, window.innerWidth < 1200);
+            // setMiniSidenav(dispatch, window.innerWidth < 1200);
             setTransparentSidenav(
                 dispatch,
                 window.innerWidth < 1200 ? false : transparentSidenav
@@ -162,6 +164,35 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                         <Icon sx={{ fontWeight: "bold" }}>close</Icon>
                     </MDTypography>
                 </MDBox>
+                {/* <MDBox
+                    component={NavLink}
+                    to="/"
+                    display="flex"
+                    alignItems="center"
+                >
+                    {brand && (
+                        <MDBox
+                            component="img"
+                            src={brand}
+                            alt="Brand"
+                            width="2rem"
+                        />
+                    )}
+                    <MDBox
+                        width={!brandName && "100%"}
+                        sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
+                    >
+                        <MDTypography
+                            component="h6"
+                            variant="button"
+                            fontWeight="medium"
+                            color={textColor}
+                        >
+                            {brandName}
+                            Hệ thống quản lý
+                        </MDTypography>
+                    </MDBox>
+                </MDBox> */}
             </MDBox>
             <List>{renderRoutes}</List>
         </SidenavRoot>

@@ -103,7 +103,6 @@ function ManagerCourseImage(props) {
 
     useEffect(() => {
         getData();
-        console.log("call");
     }, [getData]);
 
     useEffect(() => {
@@ -151,7 +150,7 @@ function ManagerCourseImage(props) {
                         file,
                         optionsImageCompress
                     );
-                    temp.push(compressedFile);
+                    temp.push(new File([compressedFile], compressedFile.name));
                 }
 
                 setUploadedFiles(temp);

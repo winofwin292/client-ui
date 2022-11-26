@@ -1,14 +1,18 @@
-import React, { memo, useEffect, useState, useCallback } from "react";
+import React, {
+    memo,
+    useEffect,
+    useState,
+    useCallback,
+    lazy,
+    Suspense,
+} from "react";
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { TopNav } from "components/common/TopNav";
-import { Footer } from "components/common/Footer";
-import { CourseList } from "components/common/CourseList";
-import { ScrollTopButton } from "components/common/ScrollTopButton";
+import { Loading } from "components/common/Loading";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setLayout } from "context";
@@ -17,6 +21,15 @@ import { useMaterialUIController, setLayout } from "context";
 // import { useTranslation } from "react-i18next";
 
 import courseApi from "api/Course/courseApi";
+
+const TopNav = lazy(() => import("components/common/TopNav/TopNav"));
+const Footer = lazy(() => import("components/common/Footer/Footer"));
+const CourseList = lazy(() =>
+    import("components/common/CourseList/CourseList")
+);
+const ScrollTopButton = lazy(() =>
+    import("components/common/ScrollTopButton/ScrollTopButton")
+);
 
 const theme = createTheme();
 const themeD = createTheme({
@@ -85,25 +98,27 @@ function CourseIntroduction() {
 
     return (
         <div className="bg-white dark:bg-gray-900">
-            <TopNav />
-            <CourseList data={currData} />
-            <div className="bg-white dark:bg-gray-900 flex">
-                <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-2 items-center">
-                    <ThemeProvider theme={darkMode ? themeD : theme}>
-                        <Stack spacing={2}>
-                            <Pagination
-                                count={count}
-                                page={page}
-                                showFirstButton
-                                showLastButton
-                                onChange={handleChangePage}
-                            />
-                        </Stack>
-                    </ThemeProvider>
+            <Suspense fallback={<Loading />}>
+                <TopNav />
+                <CourseList data={currData} />
+                <div className="bg-white dark:bg-gray-900 flex">
+                    <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-2 items-center">
+                        <ThemeProvider theme={darkMode ? themeD : theme}>
+                            <Stack spacing={2}>
+                                <Pagination
+                                    count={count}
+                                    page={page}
+                                    showFirstButton
+                                    showLastButton
+                                    onChange={handleChangePage}
+                                />
+                            </Stack>
+                        </ThemeProvider>
+                    </div>
                 </div>
-            </div>
-            <Footer />
-            <ScrollTopButton />
+                <Footer />
+                <ScrollTopButton />
+            </Suspense>
         </div>
     );
 }

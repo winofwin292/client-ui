@@ -119,7 +119,9 @@ function ViewAvatar(props) {
                     chosenFiles[0],
                     optionsImageCompress
                 );
-                setUploadedFile(compressedFile);
+                setUploadedFile(
+                    new File([compressedFile], compressedFile.name)
+                );
                 setSaveState(false);
             } else {
                 showNoti(

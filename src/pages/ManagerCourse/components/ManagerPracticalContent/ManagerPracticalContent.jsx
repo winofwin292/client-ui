@@ -317,7 +317,9 @@ function ManagerPracticalContent(props) {
             fullWidth
             maxWidth="md"
         >
-            <DialogTitle id="alert-dialog-title">{"Gán khóa học"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">
+                {"Quản lý nội dung thực hành"}
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                     Đang quản trị nội dung thực hành của khóa học:{" "}

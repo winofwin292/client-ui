@@ -10,25 +10,25 @@ const features = [
     {
         name: "Đội ngũ giáo viên giàu kinh nghiệm",
         description:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+            "Chúng tôi có một đội ngũ giáo viên giàu kinh nghiệm trong việc giảng dạy ngoại ngữ, bao gồm cà người bản xứ.",
         icon: GlobeAltIcon,
     },
     {
         name: "Môi trường thân thiện, năng động",
         description:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+            "Môi trường học tập được chúng tôi chú trọng nhằm nâng cao trải nghiệm cho học viên, giúp học viên có thể học tập một các thoải mái.",
         icon: ScaleIcon,
     },
     {
         name: "Cơ sở vật chất hiện đại",
         description:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+            "Trung tâm được đầu tư các trang thiết bị và vật chất hiện đại, nhằm phục mục đích năng cao chất lượng của các buổi học.",
         icon: BoltIcon,
     },
     {
         name: "Đa dạng khóa học cho từng nhu cầu",
         description:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+            "Các khóa học được chúng tôi xây dựng theo nhiều nhu cầu khác nhau, phù hợp cho mọi đối tượng.",
         icon: ChatBubbleBottomCenterTextIcon,
     },
 ];
@@ -45,9 +45,7 @@ function Feature() {
                         Nơi tốt nhất để đầu tư cho tương lai
                     </p>
                     <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
-                        Lorem ipsum dolor sit amet consect adipisicing elit.
-                        Possimus magnam voluptatum cupiditate veritatis in
-                        accusamus quisquam.
+                        Hơn 1.000 học viên đã tin tưởng và chọn chúng tôi
                     </p>
                 </div>
 

@@ -54,7 +54,7 @@ function ManageHomePage() {
                                 <Tab
                                     icon={<CollectionsIcon />}
                                     iconPosition="start"
-                                    label="Hình ảnh"
+                                    label="Quảng cáo"
                                     value="2"
                                 />
                                 <Tab

@@ -317,7 +317,9 @@ function ManagerPurposeOfCourse(props) {
             fullWidth
             maxWidth="md"
         >
-            <DialogTitle id="alert-dialog-title">{"Gán khóa học"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">
+                {"Quản lý mục tiêu khóa học"}
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                     Đang quản trị mục tiêu của khóa học:{" "}

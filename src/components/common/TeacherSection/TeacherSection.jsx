@@ -2,25 +2,25 @@ import React, { memo } from "react";
 
 const teachers = [
     {
-        name: "Nguyễn Văn A",
+        name: "Nguyễn Ngọc Thanh Hà",
         description: "Thạc sĩ Ngôn ngữ",
         avatar: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png",
         avtDesc: "A Avatar",
     },
     {
-        name: "Nguyễn Văn B",
+        name: "Mai Nguyễn Thiên Thanh",
         description: "Thạc sĩ Ngôn ngữ",
         avatar: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png",
         avtDesc: "B Avatar",
     },
     {
-        name: "Nguyễn Văn C",
+        name: "Trần Mạnh",
         description: "Thạc sĩ Ngôn ngữ",
         avatar: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png",
         avtDesc: "C Avatar",
     },
     {
-        name: "Nguyễn Văn D",
+        name: "Lê Thái Nguyên",
         description: "Thạc sĩ Ngôn ngữ",
         avatar: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png",
         avtDesc: "D Avatar",
@@ -30,7 +30,7 @@ const teachers = [
 function TeacherSection() {
     return (
         <section className="bg-white dark:bg-gray-900">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-6 lg:px-6">
+            <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-4 lg:px-6">
                 <div className="mx-auto mb-8 max-w-screen-sm lg:mb-16">
                     <h2 className="mb-4 text-4xl tracking-tight font-semibold text-gray-900 dark:text-white">
                         Đội ngũ giáo viên

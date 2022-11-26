@@ -135,6 +135,7 @@ function ManagerProductImage(props) {
                 }
                 return false;
             });
+
             if (!limitExceeded) {
                 let temp = [];
                 for (const file of uploaded) {
@@ -142,7 +143,7 @@ function ManagerProductImage(props) {
                         file,
                         optionsImageCompress
                     );
-                    temp.push(compressedFile);
+                    temp.push(new File([compressedFile], compressedFile.name));
                 }
 
                 setUploadedFiles(temp);

@@ -371,7 +371,7 @@ function ShopCart(props) {
                                                     được cộng vào khi thanh
                                                     toán.
                                                 </p>
-                                                <p className="mt-0.5 text-sm text-gray-700 dark:text-gray-500">
+                                                <p className="mt-0.5 text-sm text-orange-600 dark:text-gray-500">
                                                     - Lưu ý: giỏ hàng chỉ lưu
                                                     trên thiết bị này, nếu bạn
                                                     chuyển sang thiết bị khác sẽ
@@ -383,7 +383,7 @@ function ShopCart(props) {
                                                         href="/shop/checkout"
                                                         className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                                     >
-                                                        Thanh toán
+                                                        Đặt hàng
                                                     </a>
                                                 </div>
                                                 <div className="mt-6 flex justify-center text-center text-sm text-gray-500">

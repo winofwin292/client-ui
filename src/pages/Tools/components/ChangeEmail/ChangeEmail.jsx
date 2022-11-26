@@ -104,7 +104,7 @@ function ChangeEmail(props) {
                 onClose={handleClose}
                 disableEscapeKeyDown
             >
-                <DialogTitle>Đổi email thông báo giao hàng</DialogTitle>
+                <DialogTitle>Đổi email thông báo đơn hàng</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"

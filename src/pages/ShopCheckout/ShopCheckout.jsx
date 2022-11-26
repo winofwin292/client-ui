@@ -1,20 +1,19 @@
 import React, { useState, memo, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
+import validator from "validator";
 
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { TrashIcon } from "@heroicons/react/24/solid";
+
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-
-import { useSnackbar } from "notistack";
 
 import { TopNav } from "components/common/TopNav";
 import { Footer } from "components/common/Footer";
 import { ScrollTopButton } from "components/common/ScrollTopButton";
-
-import { TrashIcon } from "@heroicons/react/24/solid";
-import validator from "validator";
 
 import { formatterVND } from "utils";
 

@@ -91,7 +91,7 @@ function Tools() {
                                                 </Button>
                                             </Item>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        {/* <Grid item xs={6}>
                                             <Item elevation={0}>
                                                 <Button
                                                     variant="contained"
@@ -110,7 +110,7 @@ function Tools() {
                                                     Đang phát triển
                                                 </Button>
                                             </Item>
-                                        </Grid>
+                                        </Grid> */}
                                     </Grid>
                                     <ChangePassword
                                         open={changePassState}

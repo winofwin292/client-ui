@@ -153,8 +153,8 @@ function ChangeInfo(props) {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                     />
                     <TextField
                         margin="dense"
@@ -163,8 +163,8 @@ function ChangeInfo(props) {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                     />
 
                     <InputLabel sx={{ mt: 1 }} id="sex-label">

@@ -2,38 +2,20 @@ import React, { memo } from "react";
 
 const exampleQuestion = [
     {
-        question: 'What do you mean by "Figma assets"',
-        answer: "You will have access to download the full Figma project including all of the pages, the components, responsive pages, and also the icons, illustrations, and images included in the screens.",
+        question: "Làm cách nào để tôi có thể được tư vấn",
+        answer: "Bạn có thể nhấn vào nút 'Để lại thông tin' bên dưới mục này, sau đó điền đầy đủ thông tin cá nhân. Nhân viên của chúng tôi sẽ liên hệ cho bạn ngay khi nhận được yêu cầu.",
     },
     {
-        question: 'What does "lifetime access" exactly mean',
-        answer: "Once you have purchased either the design, code, or both packages, you will have access to all of the future updates based on the roadmap, free of charge.",
-    },
-
-    {
-        question: "How does support work",
-        answer: "We're aware of the importance of well qualified support, that is why we decided that support will only be provided by the authors that actually worked on this project. Feel free to contact us and we'll help you out as soon as we can.",
-    },
-
-    {
-        question: "I want to build more than one project. Is that allowed",
-        answer: "You can use Windster for an unlimited amount of projects, whether it's a personal website, a SaaS app, or a website for a client. As long as you don't build a product that will directly compete with Windster either as a UI kit, theme, or template, it's fine. Find out more information by reading the license .",
+        question: "Khi đặt mua tài liệu, bao lâu thì tôi có thể nhân được hàng",
+        answer: "Thời gian nhận hàng từ 3-5 ngày sau khi đơn hàng được xác nhận.",
     },
     {
-        question: 'What does "free updates" include',
-        answer: "The free updates that will be provided is based on the roadmap that we have laid out for this project. It is also possible that we will provide extra updates outside of the roadmap as well.",
+        question: "Làm thế nào để tôi có thể đăng ký khóa học",
+        answer: "Tại trang chi tiết của mỗi khóa học, bạn có thể để lại thông tin hoặc trực tiếp đến trung tâm tại địa chỉ 411, Đường 30 Tháng 4, Hưng Lợi, Ninh Kiều, Cần Thơ để đăng ký.",
     },
     {
-        question: "What does the free version include",
-        answer: "The free version of Windster includes a minimal style guidelines, component variants, and a dashboard page with the mobile version alongside it. You can use this version for any purposes, because it is open-source under the MIT license.",
-    },
-    {
-        question: "What is the difference between Windster and Tailwind UI",
-        answer: "Although both Windster and Tailwind UI are built for integration with Tailwind CSS, the main difference is in the design, the pages, the extra components and UI elements that Windster includes. Additionally, Windster is a project that is still in development, and later it will include both the application, marketing, and e-commerce UI interfaces.",
-    },
-    {
-        question: "Can I use Windster in open-source projects",
-        answer: "Generally, it is accepted to use Windster in open-source projects, as long as it is not a UI library, a theme, a template, a page-builder that would be considered as an alternative to Windster itself. With that being said, feel free to use this design kit for your open-source projects. Find out more information by reading the license.",
+        question: "Làm thế nào để tôi thanh toán khi đặt mua tài liệu",
+        answer: "Bạn sẽ thanh toán trực tiếp cho nhân viên giao hàng khi nhận hàng.",
     },
 ];
 
