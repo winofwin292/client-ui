@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 //Cấu hình chung cho axios
 const axiosClient = axios.create({
-    // baseURL: "http://127.0.0.1:8081/",
+    baseURL: "/api/v1",
     headers: {
         "content-type": "application/json",
     },

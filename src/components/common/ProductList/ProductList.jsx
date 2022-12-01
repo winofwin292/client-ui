@@ -74,7 +74,7 @@ function ProductList(props) {
     );
     return (
         <div className="bg-white dark:bg-gray-900">
-            <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-2">
+            <div className="mx-auto max-w-2xl py-6 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:py-2">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                     Danh sách tài liệu
                 </h2>

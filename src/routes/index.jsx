@@ -1,8 +1,9 @@
 import React, { memo, Suspense, lazy } from "react";
 import { Route, Routes, Outlet } from "react-router-dom";
-import Login from "pages/Login/Login";
 import { getAllowedRoutes, isLoggedIn } from "utils";
 import { PrivateRoutesConfig } from "config/index";
+
+// import Login from "pages/Login/Login";
 
 import Loading from "components/common/Loading/Loading";
 const NotFound = lazy(() => import("components/common/NotFound/NotFound"));
@@ -20,6 +21,7 @@ const CourseIntroduction = lazy(() =>
     import("pages/CourseIntroduction/CourseIntroduction")
 );
 const NeedToKnow = lazy(() => import("pages/NeedToKnow/NeedToKnow"));
+const Login = lazy(() => import("pages/Login/Login"));
 
 function CRoutes() {
     let allowedRoutes = [];
