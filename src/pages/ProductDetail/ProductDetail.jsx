@@ -91,10 +91,12 @@ function ProductDetail() {
     const handleAddToCart = useCallback(
         (e) => {
             e.preventDefault();
-            if (quantity <= 0) {
+            if (quantity <= 0 || !quantity) {
                 showNoti("Vui lòng nhập số lượng sản phẩm", "error");
+                setQuantity(1);
                 return;
             }
+
             try {
                 const { desc, publishingYear, category, ...newProduct } =
                     product;
@@ -108,6 +110,28 @@ function ProductDetail() {
                 );
 
                 if (productInCart) {
+                    if (
+                        quantity >
+                        newProduct.in_stock - productInCart.quantity
+                    ) {
+                        showNoti(
+                            "Chỉ có thể thêm tối đa " +
+                                (newProduct.in_stock - productInCart.quantity >=
+                                0
+                                    ? newProduct.in_stock -
+                                      productInCart.quantity
+                                    : 0) +
+                                " sản phẩm này vào giỏ hàng",
+                            "error"
+                        );
+                        setQuantity(
+                            newProduct.in_stock - productInCart.quantity > 1
+                                ? newProduct.in_stock - productInCart.quantity
+                                : 1
+                        );
+                        return;
+                    }
+
                     if (productInCart.quantity >= newProduct.in_stock) {
                         showNoti(
                             "Chỉ có thể thêm tối đa " +
@@ -115,13 +139,25 @@ function ProductDetail() {
                                 " sản phẩm này vào giỏ hàng",
                             "error"
                         );
+                        setQuantity(1);
                         return;
                     }
+
                     currCart.cart.forEach((item) => {
                         if (item.id === newProduct.id)
                             item.quantity += quantity;
                     });
                 } else {
+                    if (quantity > product.in_stock) {
+                        showNoti(
+                            "Chỉ có thể thêm tối đa " +
+                                product.in_stock +
+                                " sản phẩm này vào giỏ hàng",
+                            "error"
+                        );
+                        setQuantity(product.in_stock);
+                        return;
+                    }
                     currCart.cart.push(newProduct);
                 }
 
@@ -142,6 +178,17 @@ function ProductDetail() {
     };
 
     const handleAdd = (e, id) => {
+        if (quantity >= product.in_stock) {
+            showNoti(
+                "Chỉ có thể thêm tối đa " +
+                    product.in_stock +
+                    " sản phẩm này vào giỏ hàng",
+                "error"
+            );
+            setQuantity(product.in_stock);
+            return;
+        }
+
         const currCart = JSON.parse(localStorage.getItem("myCart")) || {
             cart: [],
         };
@@ -153,7 +200,9 @@ function ProductDetail() {
         ) {
             showNoti(
                 "Chỉ có thể thêm tối đa " +
-                    (productInCart.in_stock - productInCart.quantity) +
+                    (productInCart.in_stock - productInCart.quantity >= 0
+                        ? productInCart.in_stock - productInCart.quantity
+                        : 0) +
                     " sản phẩm, vì đã có " +
                     (parseInt(product.in_stock) -
                         (productInCart.in_stock - productInCart.quantity)) +
@@ -323,7 +372,8 @@ function ProductDetail() {
                                                 type="number"
                                                 className="outline-none focus:outline-none text-center w-full bg-gray-100 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 dark:bg-gray-200"
                                                 name="custom-input-number"
-                                                min={1}
+                                                // min={1}
+                                                // max={product.in_stock}
                                                 value={quantity}
                                                 onChange={(e) =>
                                                     setQuantity(
@@ -348,7 +398,8 @@ function ProductDetail() {
 
                                     <button
                                         onClick={(e) => handleAddToCart(e)}
-                                        className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        disabled={product.in_stock <= 0}
+                                        className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
                                     >
                                         Thêm vào giỏ hàng
                                     </button>

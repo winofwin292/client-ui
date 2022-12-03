@@ -96,7 +96,6 @@ function ViewAvatar(props) {
                 ? props.viewAvatar.url + `?${new Date().getTime()}`
                 : props.viewAvatar.url
         );
-        console.log("call");
     }, [props.viewAvatar.url]);
 
     useEffect(() => {
