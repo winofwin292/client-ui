@@ -27,7 +27,7 @@ function classNames(...classes) {
 
 function ShopCheckout() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [shippingFee, setShippingFee] = useState(40000);
+    const [shippingFee, setShippingFee] = useState(0);
     const [totalWeight, setTotalWeight] = useState(0);
     const [products, setProducts] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
@@ -49,6 +49,12 @@ function ShopCheckout() {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
+
+    const [service, setService] = useState({
+        id: "-1",
+        name: "",
+    });
+    const [services, setServices] = useState([]);
 
     const [loading, setLoading] = useState(false);
 
@@ -98,13 +104,11 @@ function ShopCheckout() {
                 }
             });
 
-            const extraFee = Math.ceil((sumWeight - 500) / 500) * 5000;
             setTotalWeight(sumWeight);
             setProducts(currCart.cart);
             setSubtotal(sumPrice);
             setTax(sumPrice / 10);
-            setTotal(sumPrice + sumPrice / 10 + 40000 + extraFee);
-            setShippingFee((prev) => prev + extraFee);
+            setTotal(sumPrice + sumPrice / 10);
         } else {
             showNoti("Lỗi: không lấy được thông tin");
         }
@@ -125,9 +129,7 @@ function ShopCheckout() {
     }, [getData]);
 
     useEffect(() => {
-        const extraFee = Math.ceil((totalWeight - 500) / 500) * 5000;
-        setShippingFee(40000 + extraFee);
-        setTotal(subtotal + tax + 40000 + extraFee);
+        setTotal(subtotal + tax + shippingFee);
     }, [subtotal, tax, shippingFee, totalWeight]);
 
     const handleSubmit = async (e) => {
@@ -185,6 +187,11 @@ function ShopCheckout() {
             return;
         }
 
+        if (!service.id || service.id === "-1") {
+            showNoti("Vui lòng chọn loại dịch vụ vận chuyển", "error");
+            return;
+        }
+
         for (let i = 0; i < products.length; i++) {
             if (products[i].quantity > products[i].in_stock) {
                 showNoti(
@@ -214,14 +221,16 @@ function ShopCheckout() {
             tax,
             total,
             ward: wardName,
-            ward_code: ward,
             district: districtName,
-            district_id: parseInt(district),
             province: provinceName,
             orderStatusId: 1,
             products: productList,
-            expected_fee: shippingFee,
+            total_fee: shippingFee,
+            service_id: parseInt(service.id),
+            service_name: service.name,
         };
+
+        console.log(data);
 
         setLoading(true);
 
@@ -314,6 +323,10 @@ function ShopCheckout() {
         });
         setDistricts(response.data);
         setWard(-1);
+        setService({
+            id: "-1",
+            name: "",
+        });
     };
 
     const handleChangeDistrict = async (e) => {
@@ -325,13 +338,58 @@ function ShopCheckout() {
             districtId: parseInt(e.target.value),
         });
         setWards(response.data);
+        setService({
+            id: "-1",
+            name: "",
+        });
     };
 
-    const handleChangeWard = (e) => {
+    const handleChangeWard = async (e) => {
         setWard(e.target.value);
         const index = e.nativeEvent.target.selectedIndex;
         const label = e.nativeEvent.target[index].text;
+
+        const responseForSelect = await orderApi.getServices({
+            districtId: district,
+        });
+        if (responseForSelect.status === 200)
+            setServices(responseForSelect.data);
+        else setServices([]);
+
         setWardName(label);
+        setService({
+            id: "-1",
+            name: "",
+        });
+    };
+
+    const handleChangeServices = async (e) => {
+        const index = e.nativeEvent.target.selectedIndex;
+        const label = e.nativeEvent.target[index].text;
+
+        setService({
+            id: e.target.value,
+            name: label,
+        });
+
+        const productList = products.map((item) => ({
+            weight: item.weight,
+            width: item.width,
+            height: item.height,
+            length: item.length,
+            quantity: item.quantity,
+        }));
+
+        const response = await orderApi.getFee({
+            service_id: parseInt(e.target.value),
+            district_id: district,
+            ward_code: ward,
+            products: productList,
+            sub_total: subtotal,
+        });
+        if (response.status === 200) {
+            setShippingFee(response.data.fee);
+        }
     };
 
     return (
@@ -680,6 +738,49 @@ function ShopCheckout() {
                                                 )}
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-10 border-t border-gray-200 dark:border-gray-500 pt-10">
+                                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                                    Vận chuyển:
+                                </h2>
+                                {/* Đơn vị vận chuyển */}
+                                <div>
+                                    <label
+                                        htmlFor="city"
+                                        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                                    >
+                                        Loại dịch vụ:(
+                                        <span className="text-red-500">*</span>
+                                        )( Vui lòng chọn địa chỉ trước khi chọn
+                                        loại dịch vụ )
+                                    </label>
+                                    <div className="mt-1">
+                                        <select
+                                            type="text"
+                                            name="services"
+                                            id="services"
+                                            // autoComplete="address-level1"
+                                            className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+                                            value={service.id}
+                                            onChange={(e) =>
+                                                handleChangeServices(e)
+                                            }
+                                        >
+                                            <option value="-1">
+                                                Chọn loại dịch vụ
+                                            </option>
+                                            {services.map((item, index) => (
+                                                <option
+                                                    key={index}
+                                                    value={item.service_id}
+                                                >
+                                                    {item.short_name}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </div>

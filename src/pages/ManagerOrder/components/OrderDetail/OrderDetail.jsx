@@ -73,7 +73,7 @@ function OrderDetail(props) {
                 {
                     id: "DELIVERY",
                     label: "Phí vận chuyển",
-                    price: formatterVND.format(parseInt(temp.expected_fee)),
+                    price: formatterVND.format(parseInt(temp.total_fee)),
                 },
                 {
                     id: "TOTAL",
@@ -267,6 +267,12 @@ function OrderDetail(props) {
                             <br />- Địa chỉ: {orderInfo.address},{" "}
                             {orderInfo.ward}, {orderInfo.district},{" "}
                             {orderInfo.province}
+                            <br />- Ngày đặt hàng:{" "}
+                            {new Date(orderInfo.createdAt).toLocaleDateString(
+                                "en-GB"
+                            )}
+                            <br />- Phương thức vận chuyển:{" "}
+                            <b>{orderInfo.service_name}</b>
                             <br />- Trạng thái đơn hàng:{" "}
                             <b>{orderInfo.OrderStatus.name}</b>
                             <br />- Mã GHN:{" "}

@@ -33,7 +33,6 @@ import { useMaterialUIController } from "context";
 
 import { RenderCellExpand } from "components/common/RenderCellExpand";
 import OrderDetail from "./components/OrderDetail/OrderDetail";
-import TransferToGHN from "./components/TransferToGHN/TransferToGHN";
 import PrintOrder from "./components/PrintOrder/PrintOrder";
 import orderApi from "api/Order/orderApi";
 
@@ -116,13 +115,6 @@ function ManagerOrderDG() {
         id: null,
     });
 
-    const [transferStatus, setTransferStatus] = useState({
-        open: false,
-        id: null,
-        districtId: "",
-        wardCode: "",
-    });
-
     const [printState, setPrintState] = useState({
         open: false,
         orderCode: "",
@@ -171,6 +163,24 @@ function ManagerOrderDG() {
             if (response.status === 200) {
                 getData();
                 showNoti("Cập nhật thành công", "success");
+            } else {
+                showNoti(response.data, "error");
+            }
+        },
+        [getData, showNoti]
+    );
+
+    const handleTransfer = useCallback(
+        async (e, id) => {
+            // e.preventDefault();
+
+            const response = await orderApi.transferToGHN({
+                id: id,
+            });
+
+            if (response.status === 200) {
+                getData();
+                showNoti("Đã chuyển đơn hàng cho vận chuyển", "success");
             } else {
                 showNoti(response.data, "error");
             }
@@ -281,14 +291,7 @@ function ManagerOrderDG() {
                         <GridActionsCellItem
                             icon={<ShoppingCartCheckoutIcon />}
                             label={"Chuyển đơn hàng cho vận chuyển"}
-                            onClick={(e) =>
-                                setTransferStatus({
-                                    open: true,
-                                    id: params.id,
-                                    districtId: params.row.district_id,
-                                    wardCode: params.row.ward_code,
-                                })
-                            }
+                            onClick={(e) => handleTransfer(e, params.id)}
                             title={"Chuyển đơn hàng cho vận chuyển"}
                             showInMenu
                             sx={
@@ -343,7 +346,7 @@ function ManagerOrderDG() {
                 },
             },
         ],
-        [handleChangeState]
+        [handleChangeState, handleTransfer]
     );
 
     useEffect(() => {
@@ -390,11 +393,6 @@ function ManagerOrderDG() {
                             <OrderDetail
                                 orderDetail={orderDetail}
                                 setOrderDetail={setOrderDetail}
-                            />
-                            <TransferToGHN
-                                transferStatus={transferStatus}
-                                setTransferStatus={setTransferStatus}
-                                getData={getData}
                             />
                             <PrintOrder
                                 printState={printState}
