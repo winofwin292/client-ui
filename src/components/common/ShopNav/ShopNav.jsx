@@ -47,7 +47,9 @@ function ShopNav(props) {
         }
 
         if (keyword) {
-            newData = newData.filter((item) => item.name.includes(keyword));
+            newData = newData.filter((item) =>
+                item.name.toLowerCase().includes(keyword.toLowerCase())
+            );
         }
 
         props.setData(newData);
@@ -55,7 +57,6 @@ function ShopNav(props) {
         props.setCurrData(newData.slice(0, props.perPage));
         props.setPage(0);
 
-        console.log(e.target.id);
         if (e.target.id === "filter-button") buttonRef.current.click();
     };
 
