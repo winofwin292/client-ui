@@ -54,11 +54,7 @@ function Overview() {
     const getData = useCallback(async () => {
         const toDate = new Date();
 
-        const firstDay = new Date(
-            toDate.getFullYear(),
-            toDate.getMonth() - 1,
-            1
-        );
+        const firstDay = new Date(toDate.getFullYear(), toDate.getMonth(), 1);
 
         const lastDay = new Date(
             toDate.getFullYear(),
@@ -78,6 +74,7 @@ function Overview() {
             59,
             59
         );
+
         const response = await overviewApi.getData({
             startDate: firstDay,
             endDate: lastDay,

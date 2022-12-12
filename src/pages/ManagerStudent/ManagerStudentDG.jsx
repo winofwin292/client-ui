@@ -242,7 +242,12 @@ function ManagerStudentDG() {
     const processRowUpdate = async (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
 
-        const response = await userApi.editUserInfo(updatedRow);
+        const data = {
+            ...newRow,
+            dob: new Date(newRow.dob.getTime() + 7 * 3600000).toISOString(),
+        };
+
+        const response = await userApi.editUserInfo(data);
         if (response.status === 200) {
             showNoti("Cập nhật dữ liệu thành công", "success");
         } else {

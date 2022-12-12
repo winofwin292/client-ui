@@ -64,6 +64,7 @@ function StatisticalToolbar(props) {
             0
         ).toISOString();
         const end = toDay.toISOString();
+
         const response = await orderItemApi.getStatistical({
             startDate: start,
             endDate: end,
@@ -84,11 +85,12 @@ function StatisticalToolbar(props) {
         setLoading(true);
         const startDateFormMoment = new Date(startDate);
         const endDateFormMoment = new Date(endDate);
+        console.log(startDateFormMoment);
         const start = new Date(
             startDateFormMoment.getFullYear(),
             startDateFormMoment.getMonth(),
             startDateFormMoment.getDate(),
-            0,
+            7,
             0,
             0
         ).toISOString();
@@ -96,10 +98,11 @@ function StatisticalToolbar(props) {
             endDateFormMoment.getFullYear(),
             endDateFormMoment.getMonth(),
             endDateFormMoment.getDate(),
-            23,
+            30,
             59,
             59
         ).toISOString();
+
         const response = await orderItemApi.getStatistical({
             startDate: start,
             endDate: end,

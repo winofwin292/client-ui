@@ -87,6 +87,7 @@ function AddProduct(props) {
         setLength(0);
         setWidth(0);
         setHeight(0);
+        setInStock(0);
     };
 
     const getDataSelect = useCallback(async () => {
@@ -133,7 +134,6 @@ function AddProduct(props) {
                     );
                     temp.push(new File([compressedFile], compressedFile.name));
                 }
-
                 setUploadedFiles(temp);
             }
         },
@@ -245,7 +245,7 @@ function AddProduct(props) {
             length: parseInt(length),
             width: parseInt(width),
             height: parseInt(height),
-            in_stock: inStock,
+            in_stock: parseInt(inStock),
             username: userData.username,
         };
 

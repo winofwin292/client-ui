@@ -123,6 +123,7 @@ function ManagerOrderDG() {
     const getData = useCallback(async () => {
         const response = await orderApi.getAllAdmin();
         if (response.status === 200) {
+            console.log(response.data);
             setData(response.data);
             setLoading(false);
             return true;
@@ -152,8 +153,15 @@ function ManagerOrderDG() {
     );
 
     const handleChangeState = useCallback(
-        async (e, id, state) => {
+        async (e, id, state, row) => {
             // e.preventDefault();
+
+            if (state === 4) {
+                if (new Date(row.expected_delivery_time) > new Date()) {
+                    showNoti("Lỗi: đơn hàng này đang vận chuyển", "error");
+                    return;
+                }
+            }
 
             const response = await orderApi.changeStatus({
                 orderId: id,
@@ -320,7 +328,9 @@ function ManagerOrderDG() {
                         <GridActionsCellItem
                             icon={<PriceCheckIcon />}
                             label={"Đánh dấu đã hoàn thành"}
-                            onClick={(e) => handleChangeState(e, params.id, 4)}
+                            onClick={(e) =>
+                                handleChangeState(e, params.id, 4, params.row)
+                            }
                             title={"Đánh dấu đã hoàn thành"}
                             showInMenu
                             sx={

@@ -60,7 +60,7 @@ function CourseDetail() {
     const handleOpenCTD = () => {
         setCTDState({
             isOpen: true,
-            subject: "Đăng ký khóa " + course.name,
+            subject: "Khóa " + course.name,
         });
     };
 

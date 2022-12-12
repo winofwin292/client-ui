@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 // react-router-dom components
 import { useNavigate } from "react-router-dom";
@@ -7,9 +7,6 @@ import { useNavigate } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import Switch from "@mui/material/Switch";
 import Icon from "@mui/material/Icon";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-
 // Material Dashboard 2 React components
 import MDBox from "components/MDComponents/MDBox";
 import MDTypography from "components/MDComponents/MDTypography";
