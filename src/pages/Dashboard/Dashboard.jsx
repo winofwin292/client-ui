@@ -42,31 +42,29 @@ function Dashboard({ children }) {
     };
 
     return (
-        <>
-            <Suspense fallback={<Loading />}>
-                <CssBaseline />
-                <Sidenav
-                    color={sidenavColor}
-                    brandName="HTQL"
-                    routes={children}
-                    onMouseEnter={handleOnMouseEnter}
-                    onMouseLeave={handleOnMouseLeave}
-                />
-                <Configurator />
-                <Routes>
-                    {children.map((route) => {
-                        const { path, component: Component } = route;
-                        return (
-                            <Route
-                                key={path}
-                                path={`${path}`}
-                                element={Component}
-                            />
-                        );
-                    })}
-                </Routes>
-            </Suspense>
-        </>
+        <Suspense fallback={<Loading />}>
+            <CssBaseline />
+            <Sidenav
+                color={sidenavColor}
+                brandName="HTQL"
+                routes={children}
+                onMouseEnter={handleOnMouseEnter}
+                onMouseLeave={handleOnMouseLeave}
+            />
+            <Configurator />
+            <Routes>
+                {children.map((route) => {
+                    const { path, component: Component } = route;
+                    return (
+                        <Route
+                            key={path}
+                            path={`${path}`}
+                            element={Component}
+                        />
+                    );
+                })}
+            </Routes>
+        </Suspense>
     );
 }
 

@@ -12,10 +12,7 @@ import {
     GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
+import { Button, IconButton, Card, Grid } from "@mui/material";
 
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CloseIcon from "@mui/icons-material/Close";
@@ -44,12 +41,10 @@ const themeD = createTheme({
         mode: "dark",
     },
 });
-
 function EditToolbar(props) {
     const { handleRefresh, data } = props;
 
     const handleExportXlsx = () => {
-        console.log(data);
         const filename =
             "don-hang-" + new Date().getTime().toString() + ".xlsx";
 
@@ -123,7 +118,6 @@ function ManagerOrderDG() {
     const getData = useCallback(async () => {
         const response = await orderApi.getAllAdmin();
         if (response.status === 200) {
-            console.log(response.data);
             setData(response.data);
             setLoading(false);
             return true;

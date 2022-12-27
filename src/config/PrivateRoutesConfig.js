@@ -33,7 +33,12 @@ const StatisticalPage = lazy(() =>
 const Tools = lazy(() => import("pages/Tools/Tools"));
 const ToolsStaff = lazy(() => import("pages/ToolsStaff/ToolsStaff"));
 
-const TeacherCourse = lazy(() => import("pages/TeacherCourse"));
+const ELTeacherHome = lazy(() => import("pages/ELTeacherHome/ELTeacherHome"));
+const ELCourse = lazy(() => import("pages/ELCourse/ELCourse"));
+const ELDashboard = lazy(() =>
+    import("pages/ELTeacherHome/components/Dashboard/Dashboard")
+);
+
 const StudentCourse = lazy(() => import("pages/StudentCourse"));
 
 const PrivateRoutesConfig = [
@@ -208,10 +213,28 @@ const PrivateRoutesConfig = [
         ],
     },
     {
-        component: TeacherCourse,
-        path: "teacher",
+        component: ELTeacherHome,
+        path: "teacher/*",
         title: "Giáo viên",
         permission: [Roles.TEACHER],
+        children: [
+            {
+                type: "collapse",
+                name: "Tổng quan",
+                key: "teacher/*",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "*",
+                component: <ELDashboard />,
+            },
+            {
+                type: "collapse",
+                name: "Công cụ",
+                key: "teacher/course",
+                icon: <Icon fontSize="small">constructions</Icon>,
+                path: "course/:id",
+                component: <ELCourse />,
+            },
+        ],
     },
     {
         component: StudentCourse,

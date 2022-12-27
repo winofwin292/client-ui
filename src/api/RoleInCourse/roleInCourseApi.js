@@ -9,6 +9,10 @@ const roleInCourseApi = {
         const url = "/role-in-course/delete";
         return axiosClient.post(url, data);
     },
+    getCourse(data) {
+        const url = "/role-in-course/get-course-by-user";
+        return axiosClient.post(url, data);
+    },
 };
 
 export default roleInCourseApi;
