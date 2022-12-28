@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef, memo } from "react";
 
-import CourseCard from "../CourseCard/CourseCard";
+import CourseCard from "../../../../components/common/CourseCard/CourseCard";
 
 import roleInCourseApi from "api/RoleInCourse/roleInCourseApi";
 import { getObjectFromCookieValue } from "utils";

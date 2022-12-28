@@ -231,7 +231,7 @@ const PrivateRoutesConfig = [
                 name: "Công cụ",
                 key: "teacher/course",
                 icon: <Icon fontSize="small">constructions</Icon>,
-                path: "course/:id",
+                path: "course/:courseId",
                 component: <ELCourse />,
             },
         ],

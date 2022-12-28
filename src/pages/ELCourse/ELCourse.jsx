@@ -1,16 +1,15 @@
+import React, { memo, useState, useEffect, useCallback } from "react";
+
 import { IconButton } from "@mui/material";
 import { SendOutlined } from "@mui/icons-material";
 import moment from "moment";
-import React, { memo, useState, useEffect } from "react";
-
-import ELNavBar from "components/common/ELNavBar/ELNavBar";
-import CreateClass from "pages/ELTeacherHome/components/CreateClass/CreateClass";
-import JoinClass from "pages/ELTeacherHome/components/JoinClass/JoinClass";
 
 // import { useAuthState } from "react-firebase-hooks/auth";
-// import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Announcement from "./components/Announcement/Announcement";
-// import { auth, db } from "../firebase";
+
+import courseApi from "api/Course/courseApi";
+
 import "./ELCourse.css";
 
 const posts = [
@@ -38,14 +37,29 @@ const posts = [
 ];
 
 function ELCourse() {
-    // const [classData, setClassData] = useState({});
+    const [data, setData] = useState({});
     const [announcementContent, setAnnouncementContent] = useState("");
     // const [posts, setPosts] = useState([]);
     // const [user, loading, error] = useAuthState(auth);
 
-    // const [createState, setCreateState] = useState(false);
-    // const [joinState, setJoinState] = useState(false);
-    // const { id } = useParams();
+    const { courseId } = useParams();
+
+    const getData = useCallback(async (courseId) => {
+        const response = await courseApi.getAnnouncement({
+            courseId: parseInt(courseId),
+        });
+        if (response.status === 200) {
+            console.log(response.data);
+            setData(response.data);
+            return true;
+        } else {
+            return false;
+        }
+    }, []);
+
+    useEffect(() => {
+        getData(courseId);
+    }, [getData, courseId]);
 
     // useEffect(() => {
     //     // reverse the array
@@ -95,14 +109,10 @@ function ELCourse() {
 
     return (
         <>
-            {/* <ELNavBar
-                setCreateState={setCreateState}
-                setJoinState={setJoinState}
-            /> */}
             <div className="class">
                 <div className="class__nameBox">
                     {/* <div className="class__name">{classData?.name}</div> */}
-                    <div className="class__name">"classData?.name"</div>
+                    <div className="class__name">{data?.course?.name}</div>
                 </div>
                 <div className="class__announce">
                     <img
@@ -132,12 +142,7 @@ function ELCourse() {
                     />
                 ))}
             </div>
-            {/* <CreateClass
-                createState={createState}
-                setCreateState={setCreateState}
-            />
-            <JoinClass joinState={joinState} setJoinState={setJoinState} /> */}
         </>
     );
 }
-export default ELCourse;
+export default memo(ELCourse);

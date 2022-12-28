@@ -43,6 +43,10 @@ const courseApi = {
         const url = "/course/change-show-landing";
         return axiosClient.post(url, data);
     },
+    getAnnouncement(data) {
+        const url = "/course/get-announcement";
+        return axiosClient.post(url, data);
+    },
 };
 
 export default courseApi;
