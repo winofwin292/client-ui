@@ -10,7 +10,6 @@ import { useMaterialUIController } from "context";
 import ELNavBar from "components/common/ELNavBar/ELNavBar";
 import CreateClass from "./components/CreateClass/CreateClass";
 import JoinClass from "./components/JoinClass/JoinClass";
-import Dashboard from "./components/Dashboard/Dashboard";
 
 import Configurator from "components/MDComponents/examples/Configurator";
 

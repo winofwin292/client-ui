@@ -8,9 +8,9 @@ function Announcement({ image, name, date, content, authorId }) {
         <div className="announcement">
             <div className="announcement__informationContainer">
                 <div className="announcement__infoSection">
-                    <div className="announcement__imageContainer">
+                    {/* <div className="announcement__imageContainer">
                         <img src={image} alt="Profile photo" />
-                    </div>
+                    </div> */}
                     <div className="announcement__nameAndDate">
                         <div className="announcement__name">{name}</div>
                         <div className="announcement__date">{date}</div>

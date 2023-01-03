@@ -1,12 +1,17 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
 
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
+import Grid from "@mui/material/Grid";
+
 import { SendOutlined } from "@mui/icons-material";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+
 import moment from "moment";
 
-// import { useAuthState } from "react-firebase-hooks/auth";
 import { useParams } from "react-router-dom";
 import Announcement from "./components/Announcement/Announcement";
+import CreateLesson from "./components/CreateLesson/CreateLesson";
 
 import courseApi from "api/Course/courseApi";
 
@@ -39,6 +44,10 @@ const posts = [
 function ELCourse() {
     const [data, setData] = useState({});
     const [announcementContent, setAnnouncementContent] = useState("");
+    const [createDialogState, setCreateDialogState] = useState({
+        state: false,
+        courseId: "",
+    });
     // const [posts, setPosts] = useState([]);
     // const [user, loading, error] = useAuthState(auth);
 
@@ -49,8 +58,8 @@ function ELCourse() {
             courseId: parseInt(courseId),
         });
         if (response.status === 200) {
-            console.log(response.data);
             setData(response.data);
+            console.log(response.data);
             return true;
         } else {
             return false;
@@ -61,51 +70,12 @@ function ELCourse() {
         getData(courseId);
     }, [getData, courseId]);
 
-    // useEffect(() => {
-    //     // reverse the array
-    //     let reversedArray = classData?.posts?.reverse();
-    //     setPosts(reversedArray);
-    // }, [classData]);
-
-    // const createPost = async () => {
-    //     try {
-    //         const myClassRef = await db.collection("classes").doc(id).get();
-    //         const myClassData = await myClassRef.data();
-    //         console.log(myClassData);
-    //         let tempPosts = myClassData.posts;
-    //         tempPosts.push({
-    //             authorId: user.uid,
-    //             content: announcementContent,
-    //             date: moment().format("MMM Do YY"),
-    //             image: user.photoURL,
-    //             name: user.displayName,
-    //         });
-    //         myClassRef.ref.update({
-    //             posts: tempPosts,
-    //         });
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert(
-    //             `There was an error posting the announcement, please try again!`
-    //         );
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     db.collection("classes")
-    //         .doc(id)
-    //         .onSnapshot((snapshot) => {
-    //             const data = snapshot.data();
-    //             if (!data) history.replace("/");
-    //             console.log(data);
-    //             setClassData(data);
-    //         });
-    // }, []);
-
-    // useEffect(() => {
-    //     if (loading) return;
-    //     if (!user) history.replace("/");
-    // }, [loading, user]);
+    const handleCreateLesson = (e, courseId) => {
+        setCreateDialogState({
+            state: true,
+            courseId: courseId,
+        });
+    };
 
     return (
         <>
@@ -113,6 +83,31 @@ function ELCourse() {
                 <div className="class__nameBox">
                     {/* <div className="class__name">{classData?.name}</div> */}
                     <div className="class__name">{data?.course?.name}</div>
+                </div>
+                <div className="class__announce">
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                style={{ color: "white" }}
+                                startIcon={<LibraryBooksIcon />}
+                                onClick={(e) => handleCreateLesson(e, courseId)}
+                            >
+                                Tạo mới bài học
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                style={{ color: "white" }}
+                                startIcon={<HistoryEduIcon />}
+                            >
+                                Tạo mới đề kiểm tra
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </div>
                 <div className="class__announce">
                     <img
@@ -142,6 +137,10 @@ function ELCourse() {
                     />
                 ))}
             </div>
+            <CreateLesson
+                open={createDialogState}
+                setOpen={setCreateDialogState}
+            />
         </>
     );
 }

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react";
@@ -13,7 +13,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 import { useLocation } from "react-router-dom";
 
-import { isLoggedIn } from "utils";
+import { isLoggedIn, getObjectFromCookieValue } from "utils";
 
 const solutions = [
     {
@@ -36,8 +36,17 @@ function classNames(...classes) {
 }
 
 function TopNav() {
+    const [userData, setUserData] = useState();
     const location = useLocation();
     const path = location.pathname;
+
+    useEffect(() => {
+        if (isLoggedIn()) {
+            const userDataFromLocalStorage =
+                getObjectFromCookieValue("userData");
+            setUserData(userDataFromLocalStorage);
+        }
+    }, []);
 
     return (
         <Popover className="relative bg-white dark:bg-gray-900">
@@ -188,7 +197,15 @@ function TopNav() {
                     </Popover.Group>
                     <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
                         <a
-                            href={isLoggedIn() ? "/dashboard/*" : "/login"}
+                            href={
+                                !isLoggedIn()
+                                    ? "/login"
+                                    : userData?.role === "ADMIN"
+                                    ? "/dashboard/*"
+                                    : userData?.role === "TEACHER"
+                                    ? "/teacher/*"
+                                    : "/student/*"
+                            }
                             className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
                             {isLoggedIn() ? "Hệ thống quản lý" : "Đăng nhập"}
@@ -308,7 +325,13 @@ function TopNav() {
                             <div>
                                 <a
                                     href={
-                                        isLoggedIn() ? "/dashboard/*" : "/login"
+                                        !isLoggedIn()
+                                            ? "/login"
+                                            : userData?.role === "ADMIN"
+                                            ? "/dashboard/*"
+                                            : userData?.role === "TEACHER"
+                                            ? "/teacher/*"
+                                            : "/student/*"
                                     }
                                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                                 >
