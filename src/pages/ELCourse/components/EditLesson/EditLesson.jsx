@@ -1,8 +1,9 @@
-import React, { memo, useState, useCallback } from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -34,6 +35,8 @@ import { useSnackbar } from "notistack";
 import { useMaterialUIController } from "context";
 
 import axiosClient from "api/axiosClient";
+import lessonApi from "api/Lesson/lessonApi";
+import lessonFileApi from "api/LessonFile/lessonFileApi";
 
 import LinearProgressWithLabel from "components/common/LinearProgressWithLabel/LinearProgressWithLabel";
 
@@ -46,7 +49,7 @@ const themeD = createTheme({
     },
 });
 
-function CreateLesson(props) {
+function EditLesson(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
@@ -55,6 +58,8 @@ function CreateLesson(props) {
     const [editorState, setEditorState] = useState(() =>
         EditorState.createEmpty()
     );
+
+    const [lessonFile, setLessonFile] = useState([]);
 
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [fileLimit, setFileLimit] = useState(false);
@@ -89,11 +94,32 @@ function CreateLesson(props) {
         setEditorState(() => EditorState.createEmpty());
     };
 
+    const getData = useCallback(async (id) => {
+        const response = await lessonApi.getById({ id: id });
+        setTitle(response.data.title || "");
+
+        const blocksFromHtml = htmlToDraft(response.data.content);
+        const { contentBlocks, entityMap } = blocksFromHtml;
+        const contentState = ContentState.createFromBlockArray(
+            contentBlocks,
+            entityMap
+        );
+        setEditorState(EditorState.createWithContent(contentState));
+
+        setLessonFile(response.data.LessonFile);
+    }, []);
+
+    useEffect(() => {
+        if (props.open.id) {
+            getData(props.open.id);
+        }
+    }, [getData, props.open.id]);
+
     const handleClose = (e, reason) => {
         if (reason && reason === "backdropClick") return;
         props.setOpen({
             state: false,
-            courseId: "",
+            id: null,
         });
         setDefaultState();
     };
@@ -145,9 +171,9 @@ function CreateLesson(props) {
         }
 
         const data = {
+            id: props.open.id,
             title,
             content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-            courseId: parseInt(props.open.courseId),
         };
 
         let formData = new FormData();
@@ -156,7 +182,7 @@ function CreateLesson(props) {
         uploadedFiles.forEach((file) => formData.append("file", file));
 
         await axiosClient
-            .post("/lesson/add", formData, {
+            .post("/lesson/edit", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -171,16 +197,27 @@ function CreateLesson(props) {
                 });
                 setDefaultState();
                 props.getData(props.courseId);
-                showNoti("Tạo bài học mới thành công", "success");
+                showNoti("Sửa bài học mới thành công", "success");
             })
             .catch((error) => {
                 showNoti("Đã có lỗi xảy ra, vui lòng thử lại sau", "error");
             });
     };
 
-    const handleDeleteFile = (e, name) => {
+    const handleDeleteFileUpload = (e, name) => {
         setUploadedFiles((prev) => prev.filter((item) => item.name !== name));
         setFileLimit(false);
+    };
+
+    const handleDeleteFile = async (e, id, key) => {
+        e.preventDefault();
+        const resultDelete = await lessonFileApi.delete({ id: id, key: key });
+        if (resultDelete.status === 200) {
+            setLessonFile((prev) => prev.filter((item) => item.id !== id));
+            showNoti("Xóa tệp đính kèm thành công", "success");
+        } else {
+            showNoti("Đã có lỗi xảy ra, vui lòng thử lại sau", "error");
+        }
     };
 
     return (
@@ -190,7 +227,7 @@ function CreateLesson(props) {
                 onClose={handleClose}
                 disableEscapeKeyDown
             >
-                <DialogTitle>Tạo mới bài học</DialogTitle>
+                <DialogTitle>Chỉnh sửa bài học</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -212,6 +249,42 @@ function CreateLesson(props) {
                         editorState={editorState}
                         onEditorStateChange={setEditorState}
                     />
+
+                    <InputLabel sx={{ mt: 1 }} id="type-label">
+                        Tệp đính kèm hiện tại:
+                    </InputLabel>
+
+                    <List dense={true}>
+                        {lessonFile.map((file, index) => (
+                            <ListItem
+                                key={index}
+                                secondaryAction={
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="delete"
+                                        // href={file.file_url}
+                                        onClick={(e) =>
+                                            handleDeleteFile(
+                                                e,
+                                                file.id,
+                                                file.key
+                                            )
+                                        }
+                                    >
+                                        <ClearIcon fontSize="inherit" />
+                                    </IconButton>
+                                }
+                                sx={{ mt: 1 }}
+                            >
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <FilePresentIcon fontSize="inherit" />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={file.name} />
+                            </ListItem>
+                        ))}
+                    </List>
 
                     {/* upload */}
                     <InputLabel sx={{ mt: 1 }} id="type-label">
@@ -237,15 +310,14 @@ function CreateLesson(props) {
                     {progress && <LinearProgressWithLabel value={progress} />}
 
                     <List dense={true}>
-                        {uploadedFiles.map((file, index) => (
+                        {uploadedFiles.map((file) => (
                             <ListItem
-                                key={index}
                                 secondaryAction={
                                     <IconButton
                                         edge="end"
                                         aria-label="delete"
                                         onClick={(e) =>
-                                            handleDeleteFile(e, file.name)
+                                            handleDeleteFileUpload(e, file.name)
                                         }
                                     >
                                         <ClearIcon fontSize="inherit" />
@@ -270,4 +342,4 @@ function CreateLesson(props) {
         </ThemeProvider>
     );
 }
-export default memo(CreateLesson);
+export default memo(EditLesson);

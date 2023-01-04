@@ -40,11 +40,11 @@ function ELNavBar({ setCreateState, setJoinState }) {
                         <MenuIcon />
                     </IconButton>
                     <img
-                        src="https://1000logos.net/wp-content/uploads/2021/05/Google-logo.png"
-                        alt="Google Logo"
+                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                        alt="Logo"
                         className="navbar__logo"
                     />{" "}
-                    <span>Classroom</span>
+                    <span>E-Learning</span>
                 </div>
                 <div className="navbar__right">
                     <IconButton
@@ -60,7 +60,7 @@ function ELNavBar({ setCreateState, setJoinState }) {
                     <IconButton
                     // onClick={logout}
                     >
-                        <Avatar src="https://1000logos.net/wp-content/uploads/2021/05/Google-logo.png" />
+                        <Avatar src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" />
                     </IconButton>
                     <Menu
                         id="simple-menu"

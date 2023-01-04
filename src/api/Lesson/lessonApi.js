@@ -1,6 +1,10 @@
 import axiosClient from "api/axiosClient";
 
 const lessonApi = {
+    getById(data) {
+        const url = "/lesson/get-by-id";
+        return axiosClient.post(url, data);
+    },
     add(data) {
         const url = "/lesson/add";
         return axiosClient.post(url, data, {
