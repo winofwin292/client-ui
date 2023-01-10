@@ -39,6 +39,11 @@ const ELDashboard = lazy(() =>
     import("pages/ELTeacherHome/components/Dashboard/Dashboard")
 );
 
+const ELStudentHome = lazy(() => import("pages/ELStudentHome/ELStudentHome"));
+const ELStudentDashboard = lazy(() =>
+    import("pages/ELStudentHome/components/StudentDashboard/StudentDashboard")
+);
+
 const StudentCourse = lazy(() => import("pages/StudentCourse"));
 
 const PrivateRoutesConfig = [
@@ -228,7 +233,7 @@ const PrivateRoutesConfig = [
             },
             {
                 type: "collapse",
-                name: "Công cụ",
+                name: "Khóa học",
                 key: "teacher/course",
                 icon: <Icon fontSize="small">constructions</Icon>,
                 path: "course/:courseId",
@@ -237,10 +242,20 @@ const PrivateRoutesConfig = [
         ],
     },
     {
-        component: StudentCourse,
-        path: "student",
+        component: ELStudentHome,
+        path: "student/*",
         title: "Học viên",
         permission: [Roles.STUDENT],
+        children: [
+            {
+                type: "collapse",
+                name: "Tổng quan",
+                key: "student/*",
+                icon: <Icon fontSize="small">assignment</Icon>,
+                path: "*",
+                component: <ELStudentDashboard />,
+            },
+        ],
     },
 ];
 export default PrivateRoutesConfig;

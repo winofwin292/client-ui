@@ -286,9 +286,7 @@ function ManagerStaffDG() {
                 "username: " + username + " - password: " + newPassword
             );
             setResultCopy("Đã copy nội dung");
-            console.log("Content copied to clipboard");
         } catch (err) {
-            console.error("Failed to copy: ", err);
             setResultCopy("Lỗi, không copy được nội dung");
         }
     }, [newPassword, username]);

@@ -1,12 +1,12 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
-import { useParams } from "react-router-dom";
 import Announcement from "./components/Announcement/Announcement";
 import CreateLesson from "./components/CreateLesson/CreateLesson";
 

@@ -11,7 +11,6 @@ export const getObjectFromCookieValue = (cookieName) => {
 };
 
 export const isLoggedIn = () => {
-    // return !!localStorage.getItem("roles");
     return !!getObjectFromCookieValue("userData");
 };
 
